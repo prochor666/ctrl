@@ -1,0 +1,28 @@
+{
+    "python-digitalocean": {
+        "cmd": "git clone -b v1.16.0 https://github.com/koalalorenzo/python-digitalocean.git",
+        "postCmd": [
+            "python setup.py install"
+        ],
+        "type": "stable"
+    },
+    "pyArubaCloud": {
+        "cmd": "git clone -b 0.7.6 https://github.com/Arubacloud/pyArubaCloud.git",
+        "postCmd": [
+            "python setup.py install"
+        ],
+        "type": "experimental"
+    },
+    "validate_email": {
+        "cmd": "pip install py3-validate-email",
+        "type": "stable"
+    },
+    "pyopenssl": {
+        "cmd": "pip install pyopenssl",
+        "type": "stable"
+    },
+    "tinydb": {
+        "cmd": "pip install tinydb",
+        "type": "stable"
+    }
+}

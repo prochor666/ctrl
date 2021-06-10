@@ -1,0 +1,36 @@
+{% for key, part in data.items() %}
+<table>
+<thead>
+<tr>
+    <th colspan="2">{{ key }}</th>
+</tr>
+</thead>
+
+<tbody>
+{% for desc, value in part.items() %}
+
+    {% if value is iterable and value is not string %}
+
+    <tr>
+        <th colspan="2">{{ desc }}</th>
+    </tr>
+    {% for subkey, item in value.items() %}
+    <tr>
+        <th>{{ subkey }}</th>
+        <td>{{ item }}</td>
+    </tr>
+    {% endfor %}
+
+    {% else %}
+    <tr>
+        <th>{{ desc }}</th>
+        <td>{{ value }}</td>
+    </tr>
+    {% endif %}
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+{% endfor %}

@@ -1,0 +1,24 @@
+{
+    "name": "CTRL",
+    "version": "1.0",
+    "filesystem": {
+        "secure": "storage/secure",
+        "recipes": "storage/recipes",
+        "templates": "storage/templates"
+    },
+    "api": {
+        "cli": {
+            "register": {},
+            "ip": {},
+            "test": {},
+            "countries": {},
+            "token": {},
+            "disk": {},
+            "memory": {},
+            "cpu": {},
+            "system": {},
+            "network": {},
+            "scan": {}
+        }
+    }
+}

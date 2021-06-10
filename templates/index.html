@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="google" content="notranslate">
+
+    <link rel="apple-touch-icon" sizes="180x180"       href="{{ config.dirs.static }}/img/brand/logo-180x180.png" />
+    <link rel="apple-touch-icon" sizes="152x152"       href="{{ config.dirs.static }}/img/brand/logo-152x152.png" />
+    <link rel="apple-touch-icon" sizes="144x144"       href="{{ config.dirs.static }}/img/brand/logo-144x144.png" />
+    <link rel="apple-touch-icon" sizes="120x120"       href="{{ config.dirs.static }}/img/brand/logo-120x120.png" />
+    <link rel="apple-touch-icon" sizes="114x114"       href="{{ config.dirs.static }}/img/brand/logo-114x114.png" />
+    <link rel="apple-touch-icon" sizes="76x76"         href="{{ config.dirs.static }}/img/brand/logo-76x76.png" />
+    <link rel="apple-touch-icon" sizes="72x72"         href="{{ config.dirs.static }}/img/brand/logo-72x72.png" />
+    <link rel="apple-touch-icon" sizes="60x60"         href="{{ config.dirs.static }}/img/brand/logo-60x60.png" />
+    <link rel="apple-touch-icon" sizes="57x57"         href="{{ config.dirs.static }}/img/brand/logo-57x57.png" />
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{ config.dirs.static }}/img/brand/logo-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32"    href="{{ config.dirs.static }}/img/brand/logo-32x32.png" />
+    <link rel="icon" type="image/png" sizes="96x96"    href="{{ config.dirs.static }}/img/brand/logo-96x96.png" />
+    <link rel="icon" type="image/png" sizes="16x16"    href="{{ config.dirs.static }}/img/brand/logo-16x16.png" />
+
+
+    <title>{{ config.name }} {{ config.version }}</title>
+    <link rel="stylesheet" href="{{ config.dirs.static }}/css/normalize.css" media='all' />
+    <link rel="stylesheet" href="{{ config.dirs.static }}/css/main.css" media='all' />
+</head>
+<body>
+<div class="app">
+    <h1>App: {{ config.name }}</h1>
+    <p>Version: {{ config.version }}</p>
+    <p>App root: {{ config.app_root }}</p>
+    <p>Client IP: {{ config.client_ip }}</p>
+
+    <h2>Filesystem endpoints</h2>
+    <ul>
+    {% for dir, path in config.filesystem.items() %}
+    <li>{{ dir }} [{{ path }}]</li>
+    {% endfor %}
+    </ul>
+
+    <h2>API CLI ACL</h2>
+    <ul>
+    {% for method, restriction in config.api.cli.items() %}
+    <li>{{ method }}</li>
+    {% endfor %}
+    </ul>
+</div>
+
+<script defer src="{{ config.dirs.static }}/js/app.js?src={{ range(31571, 937171) | random }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log(lst.test('authKey'));
+    console.log(lst.set('authKey', 'blind'));
+    console.log(lst.get('authKey'));
+    console.log(lst.remove('authKey'));
+    console.log(lst.get('authKey'));
+});
+</script>
+
+</body>
+</html>
