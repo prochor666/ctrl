@@ -1,4 +1,32 @@
 {
+    "Flask": {
+        "cmd": "pip install Flask",
+        "type": "stable"
+    },
+    "pyopenssl": {
+        "cmd": "pip install pyopenssl",
+        "type": "stable"
+    },
+    "tinydb": {
+        "cmd": "pip install tinydb",
+        "type": "stable"
+    },
+    "validate_email": {
+        "cmd": "pip install py3-validate-email",
+        "type": "stable"
+    },
+    "psutil": {
+        "cmd": "pip install psutil",
+        "type": "stable"
+    },
+    "websocket": {
+        "cmd": "pip install websocket",
+        "type": "stable"
+    },
+    "websocket-client": {
+        "cmd": "pip install websocket-client",
+        "type": "stable"
+    },
     "python-digitalocean": {
         "cmd": "git clone -b v1.16.0 https://github.com/koalalorenzo/python-digitalocean.git",
         "postCmd": [
@@ -12,17 +40,5 @@
             "python setup.py install"
         ],
         "type": "experimental"
-    },
-    "validate_email": {
-        "cmd": "pip install py3-validate-email",
-        "type": "stable"
-    },
-    "pyopenssl": {
-        "cmd": "pip install pyopenssl",
-        "type": "stable"
-    },
-    "tinydb": {
-        "cmd": "pip install tinydb",
-        "type": "stable"
     }
 }
