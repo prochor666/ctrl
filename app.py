@@ -1,6 +1,9 @@
 from flask import Flask, render_template, Response, request
 import json
+from core import compat
 from core.ctrl import config, api, utils
+
+compat.check_version()
 
 app = Flask(__name__)
 

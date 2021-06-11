@@ -1,5 +1,8 @@
 import argparse, os, sys
+from core import compat
 from core.ctrl import config, utils, colors, auth, api, network
+
+compat.check_version()
 
 conf = config.configure()
 

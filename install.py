@@ -1,5 +1,8 @@
 import os, json
+from core import compat
 from core.ctrl import colors
+
+compat.check_version()
 
 def packagesSrc():
     with open('json/install.json') as install:
