@@ -1,9 +1,10 @@
 from flask import render_template
 import json, os
-from core.ctrl import device, network as net, auth, secret, utils
+from core import utils
+from core.ctrl import device, network as net, auth, secret
 
 
-def about(data_pass=None):
+def about(app, data_pass=None):
     data = {
         'OS': device.sys_info(),
         'Network': device.network_info(),
@@ -14,49 +15,53 @@ def about(data_pass=None):
     return render_template('about.html', data=data)
 
 
-def system(data_pass=None):
+def system(app, data_pass=None):
     return device.sys_info()
 
 
-def network(data_pass=None):
+def network(app, data_pass=None):
     return device.network_info()
 
 
-def cpu(data_pass=None):
+def cpu(app, data_pass=None):
     return device.cpu_info()
 
 
-def memory(data_pass=None):
+def memory(app, data_pass=None):
     return device.memory_info()
 
 
-def disk(data_pass=None):
+def disk(app, data_pass=None):
     return device.disk_info()
 
 
-def login(data_pass=None):
+def login(app, data_pass=None):
     return auth.login(data_pass)
 
 
-def register(data_pass=None):
+def register(app, data_pass=None):
     return auth.register(data_pass)
 
 
-def token(data_pass=None):
+def token(app, data_pass=None):
     return secret.token_core()
 
 
-def countries(data_pass=None):
+def countries(app, data_pass=None):
     with open('json/iso-3166-1.json') as countries:
         return json.load(countries)
     return []
 
 
-def ip(data_pass=None):
+def client_ip(app, data_pass=None):
+    return app.config['client_ip']
+
+
+def ip(app, data_pass=None):
     return net.device_ip()
 
 
-def scan_ip(data_pass=None):
+def scan_ip(app, data_pass=None):
 
     result = {
         'status': False,
@@ -73,9 +78,9 @@ def scan_ip(data_pass=None):
     return result
 
 
-def headers(data_pass=None):
-    return data_pass['config']['headers']
+def headers(app, data_pass=None):
+    return app.config['headers']
 
 
-def test(data_pass=None):
+def test(app, data_pass=None):
     return {'test':'Ok'}

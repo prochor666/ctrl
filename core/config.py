@@ -1,5 +1,6 @@
 import json, os
 
+
 def locate_dirs():
     return {'templates': 'templates', 'json': 'json', 'static': 'static'}
 

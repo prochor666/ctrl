@@ -1,9 +1,8 @@
 import psutil, platform, socket
-from core.ctrl import utils
+from core import utils
 
 
 def sys_info():
-
     uname = platform.uname()
     return {
         'system': uname.system,

@@ -1,5 +1,6 @@
 import os
-from core.ctrl import secret, utils
+from core import utils
+from core.ctrl import secret
 
 
 def login(token=None):
@@ -15,7 +16,7 @@ def send_auth_code():
     return {}
 
 
-def register(data_pass=None):
+def register(app, data_pass=None):
 
     result = {
         'status': False,
@@ -41,7 +42,7 @@ def register(data_pass=None):
             result['message'] = '"' + str(data_pass['username']) + '" is not a valid username. Only aplhanumeric and spaces are allowed'
             return result
 
-        storage = os.path.join(utils.app_root(), data_pass['config']['filesystem']['secure'])
+        storage = os.path.join(utils.app_root(), app.config['filesystem']['secure'])
         secret_content = secret.create_secret({'email': data_pass['email'], 'username': data_pass['username']})
         secret_file = os.path.join(storage, data_pass['username']+'.secret')
 

@@ -3,5 +3,5 @@
 @ECHO Python 3 is required
 @EXIT /B 0
 ) ELSE (
-@python app.py %*
+@python webapp.py %*
 )

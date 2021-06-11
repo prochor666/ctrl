@@ -1,6 +1,6 @@
 import os
 from validate_email import validate_email
-from core.ctrl import colors
+from core import colors
 
 def byte_size(bytes, suffix="B"):
     factor = 1024
@@ -40,7 +40,7 @@ def is_username(username=None):
 
 def app_root():
     p = os.path.dirname(os.path.abspath(__file__))
-    return strip_end(p, os.path.sep+'core'+os.path.sep+'ctrl')
+    return strip_end(p, os.path.sep+'core')
 
 
 def strip_end(text, suffix):

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 $PYTHON=$(which python3)
+clear
 
 if [ -n "$PYTHON" ]: then
     $PYTHON install.py "$@"

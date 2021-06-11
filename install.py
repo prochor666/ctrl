@@ -1,6 +1,5 @@
 import os, json
-from core import compat
-from core.ctrl import config, colors, utils
+from core import compat, initialize as app, utils, colors
 
 compat.check_version()
 
@@ -15,33 +14,32 @@ def shell_output(stream):
     return stream.read()
 
 
-
 def packages_install():
-    packages =packages_source()
+    packages = packages_source()
 
-    for package, conf in packages.items():
-        package_path = 'vendor/' + str(package)
-        deploy_commamd = str(conf['cmd'])
+    for package_name, package_config in packages.items():
+        package_path = 'vendor/' + str(package_name)
+        deploy_commamd = str(package_config['command'])
 
         if deploy_commamd.startswith('git clone'):
             deploy_commamd = deploy_commamd + ' ' + str(package_path)
 
-        print(colors.blue('::deploy command: ' + deploy_commamd))
+        print(colors.blue('INFO') + ': deploy package ' + package_name + ' [' + deploy_commamd + ']')
 
         if not os.path.isdir(str(package_path)):
 
             stream = os.popen(deploy_commamd)
             print(shell_output(stream))
 
-            print(colors.green('Done'))
+            print(colors.green('DONE'))
 
             # Run  post commands in package dir
             if deploy_commamd.startswith('git clone'):
                 os.chdir(str(package_path))
 
-            if 'postCmd' in conf.keys():
-                for post_command in conf['postCmd']:
-                    print(colors.blue('   -post command: ' + str(post_command)))
+            if 'post_command' in package_config.keys():
+                for post_command in package_config['post_command']:
+                    print(colors.blue('INFO') +  ': post command ' + str(post_command))
 
                     stream = os.popen(post_command)
                     print(shell_output(stream))
@@ -51,36 +49,49 @@ def packages_install():
                 os.chdir('../../')
 
         else:
-            print(colors.yellow('    !WARNING: package ' + package + ' is already installed.'))
+            print(colors.blue('INFO') + ': package ' + package_name + ' is already installed from gihub repository.')
 
 def directories_install():
-    conf = config.configure()
 
-    for directory, path in conf['filesystem'].items():
-
+    for directory, path in app.config['filesystem'].items():
         dir_abs_path = os.path.join(utils.app_root(), path)
 
         if not os.path.isdir(dir_abs_path):
             try:
-                os.mkdir(dir_abs_path)
-                print(colors.green('Directory created') + ': ' + dir_abs_path)
+                os.makedirs(dir_abs_path)
+                print(colors.green('DONE') + ': directory ' + path +' created')
             except OSError as error:
-                print(error)
-                print(colors.red('Directory error') + ': ' + error)
+                print(colors.red('ERROR') + ': ' + path  + str(error))
         else:
-            print(colors.blue('Directory already exists') + ': ' + dir_abs_path)
+            print(colors.blue('INFO') + ': directory ' + path + ' already exists')
 
 
 def database_install():
-    conf = config.configure()
 
-    return True
+    try:
+        db_info = app.db.server_info()
+        print(colors.green('DONE') + ': MongoDB version ' + db_info['version'] + ' at ' + app.config['mongodb']['host'] + ':' + str(app.config['mongodb']['port']))
+    except Exception as error:
+        print(colors.red('ERROR') + ': ' + str(error))
+
 
 
 def run():
+
+    print("\n")
+    print(colors.blue(app.config['full_name'] + ' v'+ app.config['version'] +' installer'))
+
+    print("\n")
+    print(colors.magenta('SECTION') + ': packages')
     #packages_install()
+
+    print("\n")
+    print(colors.magenta('SECTION') + ': directories')
     directories_install()
-    #database_install()
+
+    print("\n")
+    print(colors.magenta('SECTION') + ': database')
+    database_install()
 
 
 

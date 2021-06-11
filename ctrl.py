@@ -1,10 +1,8 @@
 import argparse, os, sys
-from core import compat
-from core.ctrl import config, utils, colors, auth, api, network
+from core import compat, initialize as app, utils, colors
+from core.ctrl import api
 
 compat.check_version()
-
-conf = config.configure()
 
 parser = argparse.ArgumentParser(
     description='CTRL command line tool',
@@ -23,10 +21,10 @@ data_pass = dict(vars(args))
 
 method = data_pass.pop('method', None)
 
-if method in conf['api']['cli']:
+if method in app.config['api']['cli']:
 
-    data_pass['config'] = conf
-    result = getattr(api, str(method))(data_pass)
+    data_pass['config'] = app.config
+    result = getattr(api, str(method))(app, data_pass)
 
     if type(result) == dict:
         status = True

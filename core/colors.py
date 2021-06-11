@@ -19,10 +19,8 @@ from functools import partial
 
 __version__ = '1.0.2'
 
-COLORS = ('black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan',
-          'white')
-STYLES = ('bold', 'faint', 'italic', 'underline', 'blink', 'blink2',
-          'negative', 'concealed', 'crossed')
+COLORS = ('black', 'red', 'green', 'yellow', 'blue', 'orange', 'magenta', 'white')
+STYLES = ('bold', 'faint', 'italic', 'underline', 'blink', 'blink2', 'negative', 'concealed', 'crossed')
 
 
 def color(s, fg=None, bg=None, style=None):
@@ -69,8 +67,8 @@ red = partial(color, fg='red')
 green = partial(color, fg='green')
 yellow = partial(color, fg='yellow')
 blue = partial(color, fg='blue')
+orange = partial(color, fg='orange')
 magenta = partial(color, fg='magenta')
-cyan = partial(color, fg='cyan')
 white = partial(color, fg='white')
 
 # Style shortcuts
