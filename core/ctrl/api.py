@@ -56,7 +56,7 @@ def ip(data_pass=None):
     return net.device_ip()
 
 
-def scan(data_pass=None):
+def scan_ip(data_pass=None):
 
     result = {
         'status': False,

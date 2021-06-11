@@ -40,7 +40,7 @@ def is_username(username=None):
 
 def app_root():
     p = os.path.dirname(os.path.abspath(__file__))
-    return strip_end(p, os.path.sep+'ctrl')
+    return strip_end(p, os.path.sep+'core'+os.path.sep+'ctrl')
 
 
 def strip_end(text, suffix):
