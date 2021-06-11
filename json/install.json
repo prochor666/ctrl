@@ -7,8 +7,8 @@
         "cmd": "pip install pyopenssl",
         "type": "stable"
     },
-    "tinydb": {
-        "cmd": "pip install tinydb",
+    "pymongo": {
+        "cmd": "pip install pymongo",
         "type": "stable"
     },
     "validate_email": {

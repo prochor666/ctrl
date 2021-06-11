@@ -15,7 +15,6 @@ def send_auth_code():
     return {}
 
 
-
 def register(data_pass=None):
 
     result = {

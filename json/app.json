@@ -6,6 +6,10 @@
         "recipes": "storage/recipes",
         "templates": "storage/templates"
     },
+    "db": {
+        "host": "",
+        "port": ""
+    },
     "api": {
         "cli": {
             "register": {},
