@@ -1,5 +1,5 @@
 import time, datetime, socket
-from ctrl import device
+from core.ctrl import device
 from websocket import create_connection
 
 def device_ip():

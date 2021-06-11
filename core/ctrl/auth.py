@@ -1,5 +1,5 @@
 import os
-from ctrl import secret, utils
+from core.ctrl import secret, utils
 
 
 def login(token=None):

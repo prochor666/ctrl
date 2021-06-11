@@ -1,0 +1,9 @@
+#!/bin/bash
+
+$PYTHON=$(which python3)
+
+if [ -n "$PYTHON" ]: then
+    $PYTHON install.py "$@"
+else
+    print("Python 3 is required, exiting...")
+fi

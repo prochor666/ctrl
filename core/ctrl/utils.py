@@ -1,6 +1,6 @@
 import os
 from validate_email import validate_email
-from ctrl import colors
+from core.ctrl import colors
 
 def byte_size(bytes, suffix="B"):
     factor = 1024

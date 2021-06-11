@@ -1,5 +1,5 @@
 import os, json
-from ctrl import colors
+from core.ctrl import colors
 
 def packagesSrc():
     with open('json/install.json') as install:

@@ -1,5 +1,5 @@
 import argparse, os, sys
-from ctrl import config, utils, colors, auth, api, network
+from core.ctrl import config, utils, colors, auth, api, network
 
 conf = config.configure()
 

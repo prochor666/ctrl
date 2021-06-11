@@ -1,6 +1,6 @@
 from flask import render_template
 import json, os
-from ctrl import device, network as net, auth, secret, utils
+from core.ctrl import device, network as net, auth, secret, utils
 
 
 def about(data_pass=None):

@@ -1,5 +1,5 @@
 import psutil, platform, socket
-from ctrl import utils
+from core.ctrl import utils
 
 
 def sys_info():
