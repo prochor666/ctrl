@@ -1,6 +1,6 @@
 import os, json
 from core import compat
-from core.ctrl import colors, utils
+from core.ctrl import config, colors, utils
 
 compat.check_version()
 
@@ -9,13 +9,6 @@ def packages_source():
     with open('json/packages.json') as packages:
         return json.load(packages)
     return {}
-
-
-def app_config():
-    with open('json/app.json') as config:
-        return json.load(config)
-    return {}
-
 
 
 def shell_output(stream):
@@ -27,15 +20,15 @@ def packages_install():
     packages =packages_source()
 
     for package, conf in packages.items():
-        packagePath = 'vendor/' + str(package)
+        package_path = 'vendor/' + str(package)
         deploy_commamd = str(conf['cmd'])
 
         if deploy_commamd.startswith('git clone'):
-            deploy_commamd = deploy_commamd + ' ' + str(packagePath)
+            deploy_commamd = deploy_commamd + ' ' + str(package_path)
 
         print(colors.blue('::deploy command: ' + deploy_commamd))
 
-        if not os.path.isdir(str(packagePath)):
+        if not os.path.isdir(str(package_path)):
 
             stream = os.popen(deploy_commamd)
             print(shell_output(stream))
@@ -44,13 +37,13 @@ def packages_install():
 
             # Run  post commands in package dir
             if deploy_commamd.startswith('git clone'):
-                os.chdir(str(packagePath))
+                os.chdir(str(package_path))
 
             if 'postCmd' in conf.keys():
-                for postCommand in conf['postCmd']:
-                    print(colors.blue('   -post command: ' + str(postCommand)))
+                for post_command in conf['postCmd']:
+                    print(colors.blue('   -post command: ' + str(post_command)))
 
-                    stream = os.popen(postCommand)
+                    stream = os.popen(post_command)
                     print(shell_output(stream))
                     print(colors.green('Done'))
             # Return to root dir
@@ -61,23 +54,33 @@ def packages_install():
             print(colors.yellow('    !WARNING: package ' + package + ' is already installed.'))
 
 def directories_install():
-    config = app_config()
+    conf = config.configure()
 
-    for directory, path in config['filesystem'].items():
-        if not os.path.isdir(os.path.join(utils.app_root(), path)):
-            print('Make directory: ' + os.path.join(utils.app_root(), path) )
+    for directory, path in conf['filesystem'].items():
+
+        dir_abs_path = os.path.join(utils.app_root(), path)
+
+        if not os.path.isdir(dir_abs_path):
+            try:
+                os.mkdir(dir_abs_path)
+                print(colors.green('Directory created') + ': ' + dir_abs_path)
+            except OSError as error:
+                print(error)
+                print(colors.red('Directory error') + ': ' + error)
         else:
-            print('Directory exists: ' + os.path.join(utils.app_root(), path) )
+            print(colors.blue('Directory already exists') + ': ' + dir_abs_path)
+
 
 def database_install():
+    conf = config.configure()
+
     return True
 
 
 def run():
-
     #packages_install()
     directories_install()
-    #database_install(database)
+    #database_install()
 
 
 
