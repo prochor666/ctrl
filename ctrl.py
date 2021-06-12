@@ -21,7 +21,7 @@ data_pass = dict(vars(args))
 
 method = data_pass.pop('method', None)
 
-if method in app.config['api']['cli']:
+if method != None and method in dir(api) and method in app.config['api']['cli']:
 
     data_pass['config'] = app.config
     result = getattr(api, str(method))(app, data_pass)

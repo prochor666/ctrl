@@ -24,7 +24,8 @@
             "cpu": {},
             "system": {},
             "network": {},
-            "scan_ip": {}
+            "scan_ip": {},
+            "device_ip": {}
         }
     }
 }

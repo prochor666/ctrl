@@ -8,6 +8,7 @@ webapp = Flask(__name__)
 
 @webapp.route('/')
 
+
 def index():
     global app
     app.config['headers'] = dict(request.headers)
@@ -50,7 +51,7 @@ def respond(key=None):
         result = getattr(api, key)(app, data_pass)
         status = True
 
-    res  = json.dumps({'api': 'CTRL REST api 1.0', 'module_status': status, 'reason': reason, 'result': result})
+    res  = json.dumps({'api': app.config['full_name'] + ' REST api 1.0', 'module_status': status, 'reason': reason, 'result': result})
     return Response(res, mimetype='application/json')
 
 
