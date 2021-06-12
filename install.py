@@ -83,7 +83,7 @@ def run():
 
     print("\n")
     print(colors.magenta('SECTION') + ': packages')
-    #packages_install()
+    packages_install()
 
     print("\n")
     print(colors.magenta('SECTION') + ': directories')
@@ -92,7 +92,6 @@ def run():
     print("\n")
     print(colors.magenta('SECTION') + ': database')
     database_install()
-
 
 
 # Here we come
