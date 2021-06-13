@@ -62,6 +62,15 @@ def format_response(status, text):
     return colors.green('DONE') + ': ' + text if status == True else colors.red('ERROR') + ': ' + text
 
 
+def validate_data_pass(d):
+    result = {}
+    for k, v in d.items():
+        if v != None: 
+            result[k] = v
+    
+    return result
+
+
 def file_save(file, content):
     f = file
     fh = open(f, 'w')

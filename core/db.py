@@ -1,8 +1,8 @@
 import pymongo
 
 
-def connect(db):
-    client = pymongo.MongoClient(db['host'], db['port'], serverSelectionTimeoutMS=1000)
+def connect(db_config):
+    client = pymongo.MongoClient(db_config['host'], db_config['port'], serverSelectionTimeoutMS=1000)
     return client
 
 

@@ -17,7 +17,7 @@ parser.add_argument('-ip', type=str)
 
 args, unknown = parser.parse_known_args()
 
-data_pass = dict(vars(args))
+data_pass = utils.validate_data_pass(dict(vars(args)))
 
 method = data_pass.pop('method', None)
 

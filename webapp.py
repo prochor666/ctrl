@@ -12,8 +12,7 @@ webapp = Flask(__name__)
 def index():
     global app
     app.config['headers'] = dict(request.headers)
-    utils.database_check(app)
-
+    
     if request.headers.getlist("X-Forwarded-For"):
         app.config['client_ip'] = request.headers.getlist("X-Forwarded-For")[0]
     else:

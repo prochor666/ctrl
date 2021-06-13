@@ -68,13 +68,12 @@ def scan_ip(data_pass=None):
         'message': 'Data error'
     }
 
-    if 'ip' in data_pass:
+    if 'ip' in data_pass.keys():
         scan = net.scan_ip(data_pass['ip'])
         result['status'] = scan['scan_status']
         result['message'] = scan['scan_result']
         result['ports'] = scan['ports']
         result['time'] = scan['time']
-
     return result
 
 
