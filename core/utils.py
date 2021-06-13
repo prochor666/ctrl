@@ -2,6 +2,15 @@ import os
 from validate_email import validate_email
 from core import colors
 
+
+def database_check(app):
+    try:
+        db_info = app.db.server_info()
+        print(colors.green('DB OK') + ': MongoDB version ' + db_info['version'] + ' at ' + app.config['mongodb']['host'] + ':' + str(app.config['mongodb']['port']))
+    except Exception as error:
+        print(colors.red('ERROR') + ': ' + str(error))
+
+
 def byte_size(bytes, suffix="B"):
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
@@ -18,7 +27,7 @@ def decimal_size(num, suffix="Hz"):
         num /= factor
 
 
-def replace_all(text, r):
+def replace_all(text, r={}):
     for i, j in r.items():
         text = text.replace(i, j)
     return text

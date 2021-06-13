@@ -24,7 +24,7 @@ method = data_pass.pop('method', None)
 if method != None and method in dir(api) and method in app.config['api']['cli']:
 
     data_pass['config'] = app.config
-    result = getattr(api, str(method))(app, data_pass)
+    result = getattr(api, str(method))(data_pass)
 
     if type(result) == dict:
         status = True

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, Response, request
 import json
-from core import compat, initialize as app
+from core import compat, initialize as app, utils
 from core.ctrl import api
 
 compat.check_version()
@@ -12,6 +12,7 @@ webapp = Flask(__name__)
 def index():
     global app
     app.config['headers'] = dict(request.headers)
+    utils.database_check(app)
 
     if request.headers.getlist("X-Forwarded-For"):
         app.config['client_ip'] = request.headers.getlist("X-Forwarded-For")[0]
@@ -48,7 +49,7 @@ def respond(key=None):
 
         data_pass = dict(data_pass)
         data_pass['config'] = app.config
-        result = getattr(api, key)(app, data_pass)
+        result = getattr(api, key)(data_pass)
         status = True
 
     res  = json.dumps({'api': app.config['full_name'] + ' REST api 1.0', 'module_status': status, 'reason': reason, 'result': result})

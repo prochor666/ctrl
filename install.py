@@ -1,5 +1,5 @@
 import os, json
-from core import compat, initialize as app, utils, colors
+from core import compat, config, utils, colors
 
 compat.check_version()
 
@@ -51,9 +51,9 @@ def packages_install():
         else:
             print(colors.blue('INFO') + ': package ' + package_name + ' is already installed from gihub repository.')
 
-def directories_install():
 
-    for directory, path in app.config['filesystem'].items():
+def directories_install():
+    for directory, path in config['filesystem'].items():
         dir_abs_path = os.path.join(utils.app_root(), path)
 
         if not os.path.isdir(dir_abs_path):
@@ -66,20 +66,9 @@ def directories_install():
             print(colors.blue('INFO') + ': directory ' + path + ' already exists')
 
 
-def database_install():
-
-    try:
-        db_info = app.db.server_info()
-        print(colors.green('DONE') + ': MongoDB version ' + db_info['version'] + ' at ' + app.config['mongodb']['host'] + ':' + str(app.config['mongodb']['port']))
-    except Exception as error:
-        print(colors.red('ERROR') + ': ' + str(error))
-
-
-
 def run():
-
     print("\n")
-    print(colors.blue(app.config['full_name'] + ' v'+ app.config['version'] +' installer'))
+    print(colors.blue(config['full_name'] + ' v'+ config['version'] +' installer'))
 
     print("\n")
     print(colors.magenta('SECTION') + ': packages')
@@ -88,10 +77,6 @@ def run():
     print("\n")
     print(colors.magenta('SECTION') + ': directories')
     directories_install()
-
-    print("\n")
-    print(colors.magenta('SECTION') + ': database')
-    database_install()
 
 
 # Here we come
