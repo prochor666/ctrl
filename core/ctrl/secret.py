@@ -1,12 +1,12 @@
 import secrets, random, string, hashlib, json
 
 
-def token_urlsafe(length=64):
-    return secrets.token_urlsafe(length)
+def token_urlsafe(nbytes=64):
+    return secrets.token_urlsafe(nbytes)
 
 
-def token_bytes(length=64):
-    return str(secrets.token_bytes(length))
+def token_bytes(nbytes=64):
+    return str(secrets.token_bytes(nbytes))
 
 
 def token_rand(length=64):

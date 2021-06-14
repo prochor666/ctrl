@@ -18,14 +18,15 @@
         "cli": {
             "system": {},
             "network": {},
-            "cou": {},
+            "cpu": {},
             "memory": {},
             "disk": {},
             "login": {},
             "register": {},
             "countries": {},
             "ip": {},
-            "test": {}
+            "test": {},
+            "scan_ip": {}
         },
         "rest_free": {
             "recover": {},
@@ -35,14 +36,15 @@
         "rest_authorized": {
             "system": {},
             "network": {},
-            "cou": {},
+            "cpu": {},
             "memory": {},
             "disk": {},
             "login": {},
             "register": {},
             "countries": {},
             "client_ip": {},
-            "ip": {}
+            "ip": {},
+            "scan_ip": {}
         }
     }
 }

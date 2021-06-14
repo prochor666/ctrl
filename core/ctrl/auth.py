@@ -3,15 +3,44 @@ from core import utils, initialize as app
 from core.ctrl import secret
 
 
-def authorization_level(headers):
-    result = False
+def authorization_process(api_method):
+
+    result = {
+        'message': 'Auth failed',
+        'username': '',
+        'status': False
+    }
+
+    if 'headers' in app.config.keys() and api_method in app.config['api']['rest_authorized'].keys():
+
+        if 'Authorization' in app.config['headers'].keys():
+            auth_token = extract_auth_token(app.config['headers']['Authorization'])
+
+            if len(auth_token) > 63:
+                login_obj = login({'auth_token': auth_token})
+                return login_obj
+
+    if api_method in app.config['api']['rest_free'].keys():
+        result['message'] = 'Auth ok, no login required'
+        result['status'] = True
 
     return result
 
 
+
+def extract_auth_token(header):
+    auth_token = ''
+
+    if header.startswith('Token ', 0, 6):
+        auth_token = header[6:]
+
+    return auth_token
+
+
+
 def login(data_pass=None):
     result = {
-        'message': 'Auth failed',
+        'message': 'Token auth failed',
         'username': '',
         'status': False
     }
@@ -112,12 +141,12 @@ def register_user(data_pass=None):
         user_data = {
             'username': data_pass['username'],
             'email': data_pass['email'],
-            'pwd': secret.token_urlsafe()
+            'pwd': secret.token_urlsafe(64)
         }
 
         secret_key = hash_user(user_data)
         secret_file_name = get_secret_file_name(user_data['username'])
-        token_file_name = get_token_file_name(pwd)
+        token_file_name = get_token_file_name(user_data['pwd'])
 
         result['message'] = 'Data ok, unknown state'
         result['secret_file'] = secret_file_name

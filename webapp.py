@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, request
 import json
 from core import compat, initialize as app, utils
-from core.ctrl import api
+from core.ctrl import api, auth
 
 compat.check_version()
 webapp = Flask(__name__)
@@ -17,13 +17,13 @@ def index():
         aapp.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
-    return render_template('index.html', config=app.config)
+    return render_template('main.html', config=app.config)
 
 
 @webapp.route('/api/')
-@webapp.route('/api/<path:key>', methods = ['POST', 'GET'])
+@webapp.route('/api/<path:api_method>', methods = ['POST', 'GET'])
 
-def respond(key=None):
+def respond(api_method=None):
     global app
     app.config['headers'] = dict(request.headers)
 
@@ -32,15 +32,15 @@ def respond(key=None):
     else:
         app.config['client_ip'] = request.remote_addr
 
-    key = str(key).replace('/', '')
-    reason = 'API route "'+ key +'" is not supported'
-    status = False
+    api_method = str(api_method).replace('/', '')
+    reason = 'API route "'+ api_method +'" is not supported'
+    module_status = False
     result = None
     request_method = 'Unknown'
 
-    if key != None and key in dir(api):
+    if api_method != None and api_method in dir(api):
 
-        reason = 'API route: ' + key
+        reason = 'API route: ' + api_method
         data_pass = {}
 
         if request.method == 'POST':
@@ -53,14 +53,24 @@ def respond(key=None):
         data_pass = dict(data_pass)
         data_pass['config'] = app.config
 
-        if 'Authorization' in app.config['headers'].keys():
-            auth.authorization_level(app.config)
+        logged = auth.authorization_process(api_method)
+        result = logged
 
-        # Start api request passing
-        result = getattr(api, key)(data_pass)
-        status = True
+        if logged['status'] == True:
+            # Start api request passing
+            module_status = True
 
-    res  = json.dumps({'api': app.config['full_name'] + ' REST api 1.0', 'module_status': status, 'request_method': request_method, 'reason': reason, 'result': result})
+            if api_method != 'login':
+                result = getattr(api, api_method)(data_pass)
+
+    res  = json.dumps({
+        'api': app.config['full_name'] + ' REST api 1.0',
+        'module_status': module_status,
+        'request_method': request_method,
+        'reason': reason,
+        'result': result
+    })
+
     return Response(res, mimetype='application/json')
 
 

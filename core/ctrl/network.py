@@ -27,7 +27,7 @@ def scan():
     return result
 
 
-def scan_ip(ip):
+def scan_ip(ip, ports=[21, 22, 80, 443, 3306]):
     start_time = time.time()
     ip_target = str(ip)
     ttl = 5
@@ -40,7 +40,7 @@ def scan_ip(ip):
 
     try:
 
-        for port in [21, 22, 80, 443, 990, 3306, 8080, 8081]:
+        for port in ports:
 
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
