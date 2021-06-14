@@ -15,25 +15,15 @@ def token_rand(length=64):
     return t
 
 
-def token_core(data_pass={}):
-    secret = create_secret(data_pass)
-    return secret
-
-
-def create_secret(data_pass={}):
-
-    if type(data_pass) is dict and 'email' in data_pass.keys() and 'username' in data_pass.keys():
+def create_secret(blck_items={}):
+    if type(blck_items) is dict and 'email' in blck_items.keys() and 'username' in blck_items.keys():
         gen = hashlib.blake2b()
-        blck_items = data_pass
-        blck_items['pwd'] = token_rand()
 
         for key, blck in blck_items.items():
             gen.update(blck.encode('utf-8'))
 
         secret_blck = gen.hexdigest()
-        blck_items['secret'] = secret_blck
-        secret_content = json.dumps(blck_items)
 
-        return secret_content
+        return secret_blck
 
     return False

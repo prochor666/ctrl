@@ -14,6 +14,7 @@ parser.add_argument('-email', type=str)
 parser.add_argument('-username', type=str)
 parser.add_argument('-vhost', type=str)
 parser.add_argument('-ip', type=str)
+parser.add_argument('-auth_token', type=str)
 
 args, unknown = parser.parse_known_args()
 
@@ -48,7 +49,5 @@ if method != None and method in dir(api) and method in app.config['api']['cli']:
         for value in result:
             print(str(value))
 
-
 else:
-
     print(utils.format_response(False, 'Method "' + method + '" is not allowed'))

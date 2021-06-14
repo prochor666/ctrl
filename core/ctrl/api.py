@@ -40,11 +40,7 @@ def login(data_pass=None):
 
 
 def register(data_pass=None):
-    return auth.register(data_pass)
-
-
-def token(data_pass=None):
-    return secret.token_core()
+    return auth.register_user(data_pass)
 
 
 def countries(data_pass=None):

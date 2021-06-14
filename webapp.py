@@ -12,9 +12,9 @@ webapp = Flask(__name__)
 def index():
     global app
     app.config['headers'] = dict(request.headers)
-    
-    if request.headers.getlist("X-Forwarded-For"):
-        app.config['client_ip'] = request.headers.getlist("X-Forwarded-For")[0]
+
+    if 'X-Forwarded-For' in app.config['headers'].keys():
+        aapp.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
     return render_template('index.html', config=app.config)
@@ -26,8 +26,9 @@ def index():
 def respond(key=None):
     global app
     app.config['headers'] = dict(request.headers)
-    if request.headers.getlist("X-Forwarded-For"):
-        app.config['client_ip'] = request.headers.getlist("X-Forwarded-For")[0]
+
+    if 'X-Forwarded-For' in app.config['headers'].keys():
+        app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
 
@@ -35,6 +36,7 @@ def respond(key=None):
     reason = 'API route "'+ key +'" is not supported'
     status = False
     result = None
+    request_method = 'Unknown'
 
     if key != None and key in dir(api):
 
@@ -42,16 +44,23 @@ def respond(key=None):
         data_pass = {}
 
         if request.method == 'POST':
+            request_method = 'POST'
             data_pass = request.form
         else:
+            request_method = 'GET'
             data_pass = request.args
 
         data_pass = dict(data_pass)
         data_pass['config'] = app.config
+
+        if 'Authorization' in app.config['headers'].keys():
+            auth.authorization_level(app.config)
+
+        # Start api request passing
         result = getattr(api, key)(data_pass)
         status = True
 
-    res  = json.dumps({'api': app.config['full_name'] + ' REST api 1.0', 'module_status': status, 'reason': reason, 'result': result})
+    res  = json.dumps({'api': app.config['full_name'] + ' REST api 1.0', 'module_status': status, 'request_method': request_method, 'reason': reason, 'result': result})
     return Response(res, mimetype='application/json')
 
 

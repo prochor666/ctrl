@@ -3,10 +3,12 @@
     "full_name": "Virtual control",
     "version": "1.0",
     "filesystem": {
-        "secure": "storage/secure",
+        "seccets": "storage/secure/secrets",
+        "auth": "storage/secure/auth",
         "recipes": "storage/recipes",
         "templates": "storage/templates"
     },
+    "timezone": "UTC",
     "mongodb": {
         "host": "localhost",
         "port": 27017,
@@ -14,18 +16,33 @@
     },
     "api": {
         "cli": {
-            "register": {},
-            "ip": {},
-            "test": {},
-            "countries": {},
-            "token": {},
-            "disk": {},
-            "memory": {},
-            "cpu": {},
             "system": {},
             "network": {},
-            "scan_ip": {},
-            "device_ip": {}
+            "cou": {},
+            "memory": {},
+            "disk": {},
+            "login": {},
+            "register": {},
+            "countries": {},
+            "ip": {},
+            "test": {}
+        },
+        "rest_free": {
+            "recover": {},
+            "headers": {},
+            "test": {}
+        },
+        "rest_authorized": {
+            "system": {},
+            "network": {},
+            "cou": {},
+            "memory": {},
+            "disk": {},
+            "login": {},
+            "register": {},
+            "countries": {},
+            "client_ip": {},
+            "ip": {}
         }
     }
 }

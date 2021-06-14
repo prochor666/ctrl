@@ -1,4 +1,4 @@
-import os
+import os, datetime
 from validate_email import validate_email
 from core import colors
 
@@ -47,6 +47,10 @@ def is_username(username=None):
     return all(ch.isalnum() or ch.isspace() for ch in str(username))
 
 
+def now():
+    return datetime.datetime.utcnow()
+
+
 def app_root():
     p = os.path.dirname(os.path.abspath(__file__))
     return strip_end(p, os.path.sep+'core')
@@ -65,15 +69,13 @@ def format_response(status, text):
 def validate_data_pass(d):
     result = {}
     for k, v in d.items():
-        if v != None: 
+        if v != None:
             result[k] = v
-    
     return result
 
 
-def file_save(file, content):
-    f = file
-    fh = open(f, 'w')
+def file_save(file, content=' '):
+    fh = open(file, 'w')
     fh.write(content)
     fh.close()
     return True
