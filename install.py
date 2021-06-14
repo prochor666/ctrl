@@ -1,8 +1,8 @@
 import os, json
-from core import compat, config, utils, colors
+from core import compat, config as conf, utils, colors
 
 compat.check_version()
-
+config = conf.configure()
 
 def packages_source():
     with open('json/packages.json') as packages:
