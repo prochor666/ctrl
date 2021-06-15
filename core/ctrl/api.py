@@ -66,7 +66,7 @@ def scan_ip(data_pass=None):
 
     if 'ip' in data_pass.keys():
         if 'ports' in data_pass.keys():
-            scan = net.scan_ip(data_pass['ip'], ','.split(data_pass['ports']))
+            scan = net.scan_ip(data_pass['ip'], data_pass['ports'].split(','))
         else:
             scan = net.scan_ip(data_pass['ip'])
 

@@ -41,7 +41,7 @@ def scan_ip(ip, ports=[21, 22, 80, 443, 3306]):
     try:
 
         for port in ports:
-
+            port = int(port)
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.settimeout(ttl)
@@ -69,4 +69,3 @@ def scan_ip(ip, ports=[21, 22, 80, 443, 3306]):
     delta = time.time() - start_time
     result['time'] = str(datetime.timedelta(seconds=delta))
     return result
-

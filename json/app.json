@@ -1,6 +1,6 @@
 {
-    "name": "CTRL",
-    "full_name": "Virtual control",
+    "name": "CTRL server",
+    "full_name": "Virtual control server",
     "version": "1.0",
     "filesystem": {
         "seccets": "storage/secure/secrets",

@@ -26,14 +26,20 @@
         body {
             background-color: #000;
             color: #ddd;
-            font-family: ;
+            font-family: sans-serif;
         }
     </style>
 </head>
 <body>
     <div id="app">
         <h1>{{ config.name }} {{ config.version }}</h1>
-        <p>{{ config.cl }}</p>
+        <p>{{ config.full_name }}</p>
+        <p>Client IP: {{ config.client_ip }}</p>
+        <ul>
+        {% for header, value in config.headers.items() %}
+            <li>{{ header }}: {{ value }}</li>
+        {% endfor %}
+        </ul>
     </div>
 </body>
 </html>
