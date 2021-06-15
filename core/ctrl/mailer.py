@@ -5,11 +5,11 @@ from email.mime.text import MIMEText
 from core import config, utils
 
 
-def send(from, to, subject, body):
+def send(to, subject, body):
     conf = config.smtp_config()
     if type(conf) is dict:
-        via(conf, email_compose({
-            'from': from,
+        return via(conf, email_compose({
+            'from': conf['from'],
             'to': to,
             'subject': subject,
             'alt_body': utils.br2nl(utils.strip_tags(subject, '<br>')),
@@ -19,7 +19,7 @@ def send(from, to, subject, body):
     return False
 
 
-def via(conf):
+def via(conf, msg):
 
     if conf['cs'] in ['TLS', 'SSL']:
         context = ssl.create_default_context()
@@ -28,10 +28,11 @@ def via(conf):
             try:
                 with smtplib.SMTP_SSL(conf['host'], conf['port'], context=context) as server:
                     server.login(conf['username'], conf['password'])
-                    return server
+                    server.sendmail(msg['From'], msg['To'], msg.as_string())
+                    return True
 
             except Exception as e:
-                return str(e)
+                return 'SSL-error: ' +str(e)
 
         if conf['cs'] == 'TLS':
             # Try to log in to server and send email
@@ -41,12 +42,13 @@ def via(conf):
                 server.starttls(context=context)  # Secure the connection
                 server.ehlo()
                 server.login(conf['username'], conf['password'])
-
-                return server
+                server.sendmail(msg['From'], msg['To'], msg.as_string())
+                return True
 
             except Exception as e:
+                print(e)
                 # Print any error messages to stdout
-                return str(e)
+                return 'TLS-error: ' +str(e)
 
             finally:
                 server.quit()
@@ -61,17 +63,17 @@ def email_compose(email):
     msg['From'] = email['from']
     msg['To'] = email['to']
 
-    # Create the body of the message (a plain-text and an HTML version).
+    # Body of the  message (plain-text + HTML version)
     text = email['alt_body']
     html = email['body']
 
-    # Record the MIME types of both parts - text/plain and text/html.
+    # Convert the right MIME types (text/plain + text/html)
     part1 = MIMEText(text, 'plain')
     part2 = MIMEText(html, 'html')
 
-    # Attach parts into message container.
-    # According to RFC 2046, the last part of a multipart message, in this case
-    # the HTML message, is best and preferred.
+    # Attach parts into message
+    # RFC2046 - the last part of a multipart message is the best and preferred
+    # We choose HTML version
     msg.attach(part1)
     msg.attach(part2)
 

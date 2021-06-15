@@ -3,5 +3,6 @@
     "port": 587,
     "username": "smtp.server.username",
     "password": "smtp.server.password",
-    "cs": "TLS"
+    "cs": "TLS",
+    "from": "noreply@email.address"
 }

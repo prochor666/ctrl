@@ -43,6 +43,9 @@ def register(data_pass=None):
     return auth.register_user(data_pass)
 
 
+def recover(data_pass):
+    return auth.recover_user(data_pass)
+
 def countries(data_pass=None):
     with open('json/iso-3166-1.json') as countries:
         return json.load(countries)

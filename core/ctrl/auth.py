@@ -1,7 +1,7 @@
 import os
 import json
 from core import utils, initialize as app
-from core.ctrl import secret
+from core.ctrl import secret, mailer
 
 
 def authorization_process(api_method):
@@ -113,6 +113,45 @@ def hash_user(user_data):
         {'email': user_data['email'], 'username': user_data['username'], 'pwd': user_data['pwd']})
     return secret_key
 
+
+def recover_user(data_pass=None):
+    if type(data_pass) is dict and 'username' in data_pass.keys():
+        
+        secret_file_name = get_secret_file_name(data_pass['username'])
+        
+        if os.path.isfile(secret_file_name):
+            user_data = get_user_from_secret_file(data_pass['username'])
+            token_file_name = get_token_file_name(user_data['pwd'])
+
+            if os.path.isfile(token_file_name):
+                
+                html_message = f"""<div style="background: #023047; padding: 20px; text-align: center;">
+                <div style="max-width: 800px; text-align: left; margin-left: auto; margin-right: auto; padding: 5px; background: #FEFEFE; color: #323232; border-radius: 10px; border: 6px solid #0db39e;">
+                <p style="padding: 5px 15px; font-family: sans-serif; font-size: 22px; font-weight: bold; color: #023047;">
+                    {app.config['full_name']} v{app.config['version']}
+                </p>
+                <p style="padding: 5px 15px; font-family: sans-serif; font-size: 16px;">
+                    Account {user_data['username']} security token recovery
+                </p>
+                <p style="padding: 5px 15px; font-family: sans-serif; font-size: 16px;">
+                    Your security token: 
+                </p>
+                <p style="padding: 5px 15px; font-family: monospace, monospace; color: #0db39e; font-size: 14px;">{user_data['pwd']}</p>
+                </div></div>
+                """
+
+                es = mailer.send(user_data['email'], f"{app.config['name']} account recovery", html_message)
+
+                return {
+                    'status': True,
+                    'message': 'Recovery succeeded',
+                    'email_status': es
+                }
+
+    return {
+        'status': False,
+        'message': 'Recovery failed, account not found'
+    }
 
 def register_user(data_pass=None):
 
