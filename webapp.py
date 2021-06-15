@@ -6,18 +6,18 @@ from core.ctrl import api, auth
 compat.check_version()
 webapp = Flask(__name__)
 
-@webapp.route('/')
 
+@webapp.route('/')
 
 def index():
     global app
     app.config['headers'] = dict(request.headers)
 
     if 'X-Forwarded-For' in app.config['headers'].keys():
-        aapp.config['client_ip'] = app.config['headers']['X-Forwarded-For']
+        app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
-    return render_template('main.html', config=app.config)
+    return render_template('index.html', config=app.config)
 
 
 @webapp.route('/api/')

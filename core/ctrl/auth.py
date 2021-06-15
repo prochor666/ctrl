@@ -27,7 +27,6 @@ def authorization_process(api_method):
     return result
 
 
-
 def extract_auth_token(header):
     auth_token = ''
 
@@ -35,7 +34,6 @@ def extract_auth_token(header):
         auth_token = header[6:]
 
     return auth_token
-
 
 
 def login(data_pass=None):
