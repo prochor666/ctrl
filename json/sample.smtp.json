@@ -1,0 +1,7 @@
+{
+    "host": "smtp.server.host",
+    "port": 587,
+    "username": "smtp.server.username",
+    "password": "smtp.server.password",
+    "cs": "TLS"
+}

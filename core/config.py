@@ -23,3 +23,12 @@ def app_config():
 
 def configure():
     return app_config()
+
+
+def smtp_config():
+    app_dirs = locate_dirs()
+    with open(app_dirs['json']+'/smtp.json') as smtp:
+        data = json.load(config)
+        return data
+
+    return False

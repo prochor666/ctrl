@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta name="google" content="notranslate">
 
     <link rel="apple-touch-icon" sizes="180x180"       href="/{{ config.dirs.static }}/img/brand/logo-180x180.png" />
@@ -28,6 +27,12 @@
             color: #ddd;
             font-family: sans-serif;
         }
+
+        #app {
+            margin: 0;
+            padding: 1em;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
@@ -35,8 +40,26 @@
         <h1>{{ config.name }} {{ config.version }}</h1>
         <p>{{ config.full_name }}</p>
         <p>Client IP: {{ config.client_ip }}</p>
+
+        <h2>API endpoits</h2>
+
+        <h3>Auth free</h3>
         <ul>
-        {% for header, value in config.headers.items() %}
+        {% for header, value in config.api.rest_free.items() %}
+            <li>{{ header }}: {{ value }}</li>
+        {% endfor %}
+        </ul>
+
+        <h3>Authorized</h3>
+        <ul>
+        {% for header, value in config.api.rest_authorized.items() %}
+            <li>{{ header }}: {{ value }}</li>
+        {% endfor %}
+        </ul>
+
+        <h3>CLI interface</h3>
+        <ul>
+        {% for header, value in config.api.cli.items() %}
             <li>{{ header }}: {{ value }}</li>
         {% endfor %}
         </ul>

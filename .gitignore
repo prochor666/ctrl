@@ -2,3 +2,4 @@ vendor
 storage
 __pycache__
 .DS_Store
+smtp.json
