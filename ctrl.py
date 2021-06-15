@@ -1,4 +1,4 @@
-import argparse, os, sys
+import argparse
 from core import compat, initialize as app, utils, colors
 from core.ctrl import api
 

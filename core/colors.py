@@ -13,14 +13,15 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 import re
-
 from functools import partial
 
 
 __version__ = '1.0.2'
 
-COLORS = ('black', 'red', 'green', 'yellow', 'blue', 'orange', 'magenta', 'white')
-STYLES = ('bold', 'faint', 'italic', 'underline', 'blink', 'blink2', 'negative', 'concealed', 'crossed')
+COLORS = ('black', 'red', 'green', 'yellow',
+          'blue', 'orange', 'magenta', 'white')
+STYLES = ('bold', 'faint', 'italic', 'underline', 'blink',
+          'blink2', 'negative', 'concealed', 'crossed')
 
 
 def color(s, fg=None, bg=None, style=None):

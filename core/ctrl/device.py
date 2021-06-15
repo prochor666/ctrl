@@ -1,4 +1,6 @@
-import psutil, platform, socket
+import psutil
+import platform
+import socket
 from core import utils
 
 
@@ -75,9 +77,9 @@ def network_info():
     result = {}
     for name, addrs in interfaces.items():
         status = {
-            "ipv4" : "-",
-            "ipv6" : "-",
-            "mac" : "-"
+            "ipv4": "-",
+            "ipv6": "-",
+            "mac": "-"
         }
 
         if name != 'lo':

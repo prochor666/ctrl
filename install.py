@@ -1,8 +1,10 @@
-import os, json
+import os
+import json
 from core import compat, config as conf, utils, colors
 
 compat.check_version()
 config = conf.configure()
+
 
 def packages_source():
     with open('json/packages.json') as packages:
@@ -24,7 +26,8 @@ def packages_install():
         if deploy_commamd.startswith('git clone'):
             deploy_commamd = deploy_commamd + ' ' + str(package_path)
 
-        print(colors.blue('INFO') + ': deploy package ' + package_name + ' [' + deploy_commamd + ']')
+        print(colors.blue('INFO') + ': deploy package ' +
+              package_name + ' [' + deploy_commamd + ']')
 
         if not os.path.isdir(str(package_path)):
 
@@ -39,17 +42,20 @@ def packages_install():
 
             if 'post_command' in package_config.keys():
                 for post_command in package_config['post_command']:
-                    print(colors.blue('INFO') +  ': post command ' + str(post_command))
+                    print(colors.blue('INFO') +
+                          ': post command ' + str(post_command))
 
                     stream = os.popen(post_command)
                     print(shell_output(stream))
                     print(colors.green('Done'))
+
             # Return to root dir
             if deploy_commamd.startswith('git clone'):
                 os.chdir('../../')
 
         else:
-            print(colors.blue('INFO') + ': package ' + package_name + ' is already installed from gihub repository.')
+            print(colors.blue('INFO') + ': package ' + package_name +
+                  ' is already installed from gihub repository.')
 
 
 def directories_install():
@@ -59,16 +65,17 @@ def directories_install():
         if not os.path.isdir(dir_abs_path):
             try:
                 os.makedirs(dir_abs_path)
-                print(colors.green('DONE') + ': directory ' + path +' created')
+                print(colors.green('DONE') + ': directory ' + path + ' created')
             except OSError as error:
-                print(colors.red('ERROR') + ': ' + path  + str(error))
+                print(colors.red('ERROR') + ': ' + path + str(error))
         else:
             print(colors.blue('INFO') + ': directory ' + path + ' already exists')
 
 
 def run():
     print("\n")
-    print(colors.blue(config['full_name'] + ' v'+ config['version'] +' installer'))
+    print(colors.blue(config['full_name'] +
+          ' v' + config['version'] + ' installer'))
 
     print("\n")
     print(colors.magenta('SECTION') + ': packages')

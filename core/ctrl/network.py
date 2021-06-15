@@ -1,4 +1,6 @@
-import time, datetime, socket
+import time
+import datetime
+import socket
 from core.ctrl import device
 
 
@@ -7,7 +9,7 @@ def device_ip():
     netifs = device.network_info()
     ips = []
     for netif in netifs:
-        #if netifs[netif]['ipv4'] != '-':
+        # if netifs[netif]['ipv4'] != '-':
         #    ips.append(netifs[netif]['ipv4'])
         ips.append(netifs[netif]['ipv4'])
         ips.append(netifs[netif]['ipv6'])
@@ -39,13 +41,14 @@ def scan_ip(ip, ports=[21, 22, 80, 443, 3306]):
     }
 
     try:
-
         for port in ports:
+
             port = int(port)
             try:
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 sock.settimeout(ttl)
                 scan_result = sock.connect_ex((ip_target, port))
+
                 if scan_result == 0:
                     result['ports'][port] = True
                 else:

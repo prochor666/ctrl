@@ -1,5 +1,5 @@
-from flask import Flask, render_template, Response, request
 import json
+from flask import Flask, render_template, Response, request
 from core import compat, initialize as app, utils
 from core.ctrl import api, auth
 
@@ -8,8 +8,8 @@ webapp = Flask(__name__)
 
 
 @webapp.route('/')
-
 def index():
+
     global app
     app.config['headers'] = dict(request.headers)
 
@@ -17,13 +17,14 @@ def index():
         app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
+
     return render_template('index.html', config=app.config)
 
 
 @webapp.route('/api/')
-@webapp.route('/api/<path:api_method>', methods = ['POST', 'GET'])
-
+@webapp.route('/api/<path:api_method>', methods=['POST', 'GET'])
 def respond(api_method=None):
+
     global app
     app.config['headers'] = dict(request.headers)
 
@@ -33,7 +34,7 @@ def respond(api_method=None):
         app.config['client_ip'] = request.remote_addr
 
     api_method = str(api_method).replace('/', '')
-    reason = 'API route "'+ api_method +'" is not supported'
+    reason = 'API route "' + api_method + '" is not supported'
     module_status = False
     result = None
     request_method = 'Unknown'
@@ -63,7 +64,7 @@ def respond(api_method=None):
             if api_method != 'login':
                 result = getattr(api, api_method)(data_pass)
 
-    res  = json.dumps({
+    res = json.dumps({
         'api': app.config['full_name'] + ' REST api 1.0',
         'module_status': module_status,
         'request_method': request_method,

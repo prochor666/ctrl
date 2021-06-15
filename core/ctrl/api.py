@@ -1,5 +1,5 @@
+import json
 from flask import render_template
-import json, os
 from core import initialize as app, utils
 from core.ctrl import device, network as net, auth, secret
 
@@ -82,4 +82,4 @@ def headers(data_pass=None):
 
 
 def test(data_pass=None):
-    return {'test':'Ok'}
+    return {'test': 'Ok'}

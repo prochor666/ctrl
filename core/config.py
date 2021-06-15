@@ -1,4 +1,5 @@
-import json, os
+import json
+import os
 
 
 def locate_dirs():
@@ -11,9 +12,8 @@ def app_config():
         data = json.load(config)
         data['dirs'] = app_dirs
 
-        #with open(app_dirs['json']+'/iso-3166-1.json') as countries:
+        # with open(app_dirs['json']+'/iso-3166-1.json') as countries:
         #    data['countries'] = json.load(countries)
-
         for key, value in data['filesystem'].items():
             data['filesystem'][key] = value.replace('/', os.path.sep)
         return data
