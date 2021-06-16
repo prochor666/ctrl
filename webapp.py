@@ -1,10 +1,11 @@
 import json
 from flask import Flask, render_template, Response, request
-from core import compat, utils, app
+from core import compat, app
 from core.ctrl import api, auth
 
 compat.check_version()
 webapp = Flask(__name__)
+app.mode = 'http'
 
 
 @webapp.route('/')

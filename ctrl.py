@@ -3,6 +3,7 @@ from core import compat, app, utils, colors
 from core.ctrl import api
 
 compat.check_version()
+app.mode = 'cli'
 
 parser = argparse.ArgumentParser(
     description='CTRL command line tool',

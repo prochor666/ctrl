@@ -2,7 +2,6 @@ import os
 import datetime
 import re
 from validate_email import validate_email
-from pyisemail import is_email
 from core import colors
 
 
@@ -41,19 +40,6 @@ def in_dict(d, key):
     if type(d) is dict and key in d.keys():
         return True
     return False
-
-
-def check_email(email=None):
-    result = is_email(str(email), check_dns=True, diagnose=True)
-    #print(dir(result))
-    print(result.diagnosis_type)
-    print(result.description)
-    print(result.message)
-    return {
-        'code': result.code,
-        'validator_message': result.message,
-        'description': result.description
-    }
 
 
 def is_username(username=None):

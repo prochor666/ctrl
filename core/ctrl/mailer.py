@@ -2,6 +2,7 @@ import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from pyisemail import is_email
 from core import config, utils, app
 
 
@@ -80,9 +81,18 @@ def email_compose(email):
     return msg
 
 
+def check_email(email=None):
+    result = is_email(str(email), check_dns=True, diagnose=True)
+    #print(dir(result))
+    print(result.diagnosis_type)
+    print(result.description)
+    print(result.message)
+    return {
+        'code': result.code,
+        'validator_message': result.message,
+        'description': result.description
+    }
+
+
 def email_template(template):
     return config.email_template_load(template)
-
-
-def email_element():
-    elements = {}
