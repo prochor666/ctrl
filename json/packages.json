@@ -11,8 +11,8 @@
         "command": "pip install pymongo",
         "type": "stable"
     },
-    "validate_email": {
-        "command": "pip install py3-validate-email",
+    "pyIsEmail": {
+        "command": "pip install pyIsEmail",
         "type": "stable"
     },
     "psutil": {
@@ -29,16 +29,12 @@
     },
     "python-digitalocean": {
         "command": "git clone -b v1.16.0 https://github.com/koalalorenzo/python-digitalocean.git",
-        "post_command": [
-            "python setup.py install"
-        ],
+        "post_command": ["python setup.py install"],
         "type": "stable"
     },
     "pyArubaCloud": {
         "command": "git clone -b 0.7.6 https://github.com/Arubacloud/pyArubaCloud.git",
-        "post_command": [
-            "python setup.py install"
-        ],
+        "post_command": ["python setup.py install"],
         "type": "experimental"
     }
 }

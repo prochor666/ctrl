@@ -1,5 +1,5 @@
 import argparse
-from core import compat, initialize as app, utils, colors
+from core import compat, app, utils, colors
 from core.ctrl import api
 
 compat.check_version()

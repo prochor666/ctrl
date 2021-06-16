@@ -1,6 +1,6 @@
 import os
 import json
-from core import utils, initialize as app
+from core import utils, app
 from core.ctrl import secret, mailer
 
 
@@ -116,29 +116,20 @@ def hash_user(user_data):
 
 def recover_user(data_pass=None):
     if type(data_pass) is dict and 'username' in data_pass.keys():
-        
+
         secret_file_name = get_secret_file_name(data_pass['username'])
-        
+
         if os.path.isfile(secret_file_name):
             user_data = get_user_from_secret_file(data_pass['username'])
             token_file_name = get_token_file_name(user_data['pwd'])
 
             if os.path.isfile(token_file_name):
-                
-                html_message = f"""<div style="background: #023047; padding: 20px; text-align: center;">
-                <div style="max-width: 800px; text-align: left; margin-left: auto; margin-right: auto; padding: 5px; background: #FEFEFE; color: #323232; border-radius: 10px; border: 6px solid #0db39e;">
-                <p style="padding: 5px 15px; font-family: sans-serif; font-size: 22px; font-weight: bold; color: #023047;">
-                    {app.config['full_name']} v{app.config['version']}
-                </p>
-                <p style="padding: 5px 15px; font-family: sans-serif; font-size: 16px;">
-                    Account {user_data['username']} security token recovery
-                </p>
-                <p style="padding: 5px 15px; font-family: sans-serif; font-size: 16px;">
-                    Your security token: 
-                </p>
-                <p style="padding: 5px 15px; font-family: monospace, monospace; color: #0db39e; font-size: 14px;">{user_data['pwd']}</p>
-                </div></div>
-                """
+
+                html_message = mailer.email_template('recover').format(**{
+                    'app_full_name': app.config['full_name'],
+                    'username': user_data['username'],
+                    'pwd': user_data['pwd']
+                })
 
                 es = mailer.send(user_data['email'], f"{app.config['name']} account recovery", html_message)
 
@@ -167,7 +158,9 @@ def register_user(data_pass=None):
             result['message'] = 'Enter valid email address'
             return result
 
-        elif not utils.is_email(data_pass['email']):
+        valid_email = utils.is_email(data_pass['email'])
+
+        if not valid_email['valid']:
             result['message'] = '"' + \
                 str(data_pass['email']) + '" is not a valid email address'
             return result
@@ -210,10 +203,19 @@ def register_user(data_pass=None):
             'secret': secret_key
         }
 
+        html_message = mailer.email_template('register').format(**{
+            'app_full_name': app.config['full_name'],
+            'username': user_data['username'],
+            'pwd': user_data['pwd']
+        })
+
+        es = mailer.send(user_data['email'], f"{app.config['name']} new account", html_message)
+
         utils.file_save(secret_file_name, json.dumps(secret_file_content))
-        utils.file_save(token_file_name, data_pass['username'])
+        utils.file_save(token_file_name, user_data['username'])
         result['message'] = 'User created successfully'
         result['status'] = True
         result['secret_file_content'] = secret_file_content
+        result['email_status'] = es
 
         return result

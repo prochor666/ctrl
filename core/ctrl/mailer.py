@@ -2,7 +2,7 @@ import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from core import config, utils
+from core import config, utils, app
 
 
 def send(to, subject, body):
@@ -32,7 +32,7 @@ def via(conf, msg):
                     return True
 
             except Exception as e:
-                return 'SSL-error: ' +str(e)
+                return 'SSL-error: ' + str(e)
 
         if conf['cs'] == 'TLS':
             # Try to log in to server and send email
@@ -48,7 +48,7 @@ def via(conf, msg):
             except Exception as e:
                 print(e)
                 # Print any error messages to stdout
-                return 'TLS-error: ' +str(e)
+                return 'TLS-error: ' + str(e)
 
             finally:
                 server.quit()
@@ -78,3 +78,11 @@ def email_compose(email):
     msg.attach(part2)
 
     return msg
+
+
+def email_template(template):
+    return config.email_template_load(template)
+
+
+def email_element():
+    elements = {}

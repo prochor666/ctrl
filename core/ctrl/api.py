@@ -1,6 +1,6 @@
 import json
 from flask import render_template
-from core import initialize as app, utils
+from core import app, utils
 from core.ctrl import device, network as net, auth, secret
 
 
@@ -45,6 +45,13 @@ def register(data_pass=None):
 
 def recover(data_pass):
     return auth.recover_user(data_pass)
+
+
+def is_email(data_pass):
+    if 'email' in data_pass.keys():
+        return utils.check_email(data_pass['email'])
+    return False
+
 
 def countries(data_pass=None):
     with open('json/iso-3166-1.json') as countries:

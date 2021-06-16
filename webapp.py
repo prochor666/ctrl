@@ -1,6 +1,6 @@
 import json
 from flask import Flask, render_template, Response, request
-from core import compat, initialize as app, utils
+from core import compat, utils, app
 from core.ctrl import api, auth
 
 compat.check_version()
@@ -10,7 +10,6 @@ webapp = Flask(__name__)
 @webapp.route('/')
 def index():
 
-    global app
     app.config['headers'] = dict(request.headers)
 
     if 'X-Forwarded-For' in app.config['headers'].keys():
@@ -25,7 +24,6 @@ def index():
 @webapp.route('/api/<path:api_method>', methods=['POST', 'GET'])
 def respond(api_method=None):
 
-    global app
     app.config['headers'] = dict(request.headers)
 
     if 'X-Forwarded-For' in app.config['headers'].keys():

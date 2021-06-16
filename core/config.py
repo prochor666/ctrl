@@ -16,7 +16,7 @@ def app_config():
         #    data['countries'] = json.load(countries)
         for key, value in data['filesystem'].items():
             data['filesystem'][key] = value.replace('/', os.path.sep)
-        
+
         return data
 
     return {}
@@ -31,5 +31,13 @@ def smtp_config():
     with open(app_dirs['json']+'/smtp.json') as smtp:
         data = json.load(smtp)
         return data
+
+    return False
+
+
+def email_template_load(template):
+    app_dirs = locate_dirs()
+    with open(app_dirs['templates']+'/email/'+str(template)+'.html') as template:
+        return str(template.read())
 
     return False

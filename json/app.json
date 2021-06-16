@@ -24,6 +24,7 @@
             "login": {},
             "register": {},
             "recover": {},
+            "is_email": {},
             "countries": {},
             "ip": {},
             "test": {},
