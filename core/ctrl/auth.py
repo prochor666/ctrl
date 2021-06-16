@@ -7,7 +7,7 @@ from core.ctrl import secret, mailer
 def authorization_process(api_method):
 
     result = {
-        'message': 'Auth failed',
+        'message': "Authorization failed",
         'username': '',
         'status': False
     }
@@ -23,7 +23,7 @@ def authorization_process(api_method):
                 return login_obj
 
     if api_method in app.config['api']['rest_free'].keys():
-        result['message'] = 'Auth ok, no login required'
+        result['message'] = "No authorization required"
         result['status'] = True
 
     return result
@@ -40,7 +40,7 @@ def extract_auth_token(header):
 
 def login(data_pass=None):
     result = {
-        'message': 'Token auth failed',
+        'message': "Token authorization failed",
         'username': '',
         'status': False
     }
@@ -53,7 +53,7 @@ def login(data_pass=None):
             secret_key_check = hash_user(user_data)
 
             if 'username' in user_data.keys() and 'pwd' in user_data.keys() and data_pass['auth_token'] == user_data['pwd'] and secret_key_check == user_data['secret']:
-                result['message'] = 'Auth ok'
+                result['message'] = "Authorization succeeded"
                 result['username'] = username
                 result['status'] = True
 
@@ -75,7 +75,7 @@ def disable_user(username):
 def get_secret_file_name(username):
     storage = os.path.join(
         utils.app_root(), app.config['filesystem']['seccets'])
-    secret_file_name = os.path.join(storage, username+'.secret')
+    secret_file_name = os.path.join(storage, f"{username}.secret")
     return secret_file_name
 
 
@@ -87,7 +87,7 @@ def get_token_file_name(token):
 
 def get_user_from_token(token):
     token_file = get_token_file_name(token)
-    result = ''
+    result = ""
 
     if os.path.isfile(token_file):
         fh = open(token_file, "r")
@@ -109,8 +109,10 @@ def get_user_from_secret_file(username):
 
 
 def hash_user(user_data):
-    secret_key = secret.create_secret(
-        {'email': user_data['email'], 'username': user_data['username'], 'pwd': user_data['pwd']})
+    secret_key = secret.create_secret({
+        'email': user_data['email'],
+        'username': user_data['username'],
+        'pwd': user_data['pwd']})
     return secret_key
 
 
@@ -135,43 +137,40 @@ def recover_user(data_pass=None):
 
                 return {
                     'status': True,
-                    'message': 'Recovery succeeded',
+                    'message': "Recovery succeeded, email sent",
                     'email_status': es
                 }
 
     return {
         'status': False,
-        'message': 'Recovery failed, account not found'
+        'message': "Recovery failed, account not found"
     }
 
 def register_user(data_pass=None):
 
     result = {
         'status': False,
-        'message': 'Data error',
+        'message': "Data error",
         'secret_file': None
     }
 
     if type(data_pass) is dict and 'email' in data_pass.keys() and 'username' in data_pass.keys():
 
         if type(data_pass['email']) != str:
-            result['message'] = 'Enter valid email address'
+            result['message'] = "Enter valid email address"
             return result
 
-        valid_email = utils.is_email(data_pass['email'])
-
-        if not valid_email['valid']:
-            result['message'] = '"' + \
-                str(data_pass['email']) + '" is not a valid email address'
+        email_validation = mailer.check_email(data_pass['email'])
+        if not email_validation['valid']:
+            result['message'] = f"{data_pass['email']}: {email_validation['description']}"
             return result
 
         if type(data_pass['username']) != str:
-            result['message'] = 'Enter valid username'
+            result['message'] = "Enter valid username"
             return result
 
         elif not utils.is_username(data_pass['username']):
-            result['message'] = '"' + str(data_pass['username']) + \
-                '" is not a valid username. Only aplhanumeric and spaces are allowed'
+            result['message'] = f"{data_pass['username']} is not a valid username. Only aplhanumeric and spaces are allowed"
             return result
 
         user_data = {
@@ -184,15 +183,15 @@ def register_user(data_pass=None):
         secret_file_name = get_secret_file_name(user_data['username'])
         token_file_name = get_token_file_name(user_data['pwd'])
 
-        result['message'] = 'Data ok, unknown state'
+        result['message'] = "Data ok, unknown state"
         result['secret_file'] = secret_file_name
 
         if os.path.isfile(secret_file_name):
-            result['message'] = 'User file already exists'
+            result['message'] = f"Secret for {user_data['username']} already exists"
             return result
 
         if secret_key == False:
-            result['message'] = 'User registration failed while hashing user data'
+            result['message'] = "User registration failed while hashing user data"
             return result
 
         secret_file_content = {
@@ -213,7 +212,7 @@ def register_user(data_pass=None):
 
         utils.file_save(secret_file_name, json.dumps(secret_file_content))
         utils.file_save(token_file_name, user_data['username'])
-        result['message'] = 'User created successfully'
+        result['message'] = "User created successfully"
         result['status'] = True
         result['secret_file_content'] = secret_file_content
         result['email_status'] = es

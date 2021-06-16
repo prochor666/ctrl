@@ -6,11 +6,11 @@ compat.check_version()
 app.mode = 'cli'
 
 parser = argparse.ArgumentParser(
-    description='CTRL command line tool',
-    epilog='All accessible arguments listed above'
+    description="CTRL command line tool",
+    epilog="All accessible arguments listed above"
 )
 
-parser.add_argument('method', help='Specify API method')
+parser.add_argument('method', help="Specify API method")
 parser.add_argument('-email', type=str)
 parser.add_argument('-username', type=str)
 parser.add_argument('-vhost', type=str)
@@ -43,7 +43,7 @@ if method != None and method in dir(api) and method in app.config['api']['cli']:
         print(utils.format_response(status, message))
 
         for key, value in result.items():
-            print(colors.blue(key) + ': ' + str(value))
+            print(f"{colors.blue(key)} : {str(value)}")
 
     if type(result) == list or type(result) == tuple or type(result) == set:
 
@@ -51,4 +51,4 @@ if method != None and method in dir(api) and method in app.config['api']['cli']:
             print(str(value))
 
 else:
-    print(utils.format_response(False, 'Method "' + method + '" is not allowed'))
+    print(utils.format_response(False, f"Method {method} is not allowed"))

@@ -35,7 +35,7 @@ def scan_ip(ip, ports=[21, 22, 80, 443, 3306]):
     ttl = 5
     result = {
         'ports': {},
-        'scan_result': 'Failed, no init',
+        'scan_result': "Failed, no init",
         'scan_status': False,
         'time': 0
     }
@@ -58,13 +58,13 @@ def scan_ip(ip, ports=[21, 22, 80, 443, 3306]):
             except Exception as e:
                 result['ports'][port] = "Exception type %s" % (e)
 
-        result['scan_result'] = 'Scanned'
+        result['scan_result'] = "Scanned"
         result['scan_status'] = True
 
     except KeyboardInterrupt:
         result = {
             'ports': {},
-            'scan_result': 'You pressed Ctrl+C',
+            'scan_result': "You pressed Ctrl+C",
             'scan_status': False,
             'time': 0
         }

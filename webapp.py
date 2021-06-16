@@ -33,14 +33,14 @@ def respond(api_method=None):
         app.config['client_ip'] = request.remote_addr
 
     api_method = str(api_method).replace('/', '')
-    reason = 'API route "' + api_method + '" is not supported'
+    reason = f"API route {api_method} is not supported"
     module_status = False
     result = None
-    request_method = 'Unknown'
+    request_method = "Unknown"
 
     if api_method != None and api_method in dir(api):
 
-        reason = 'API route: ' + api_method
+        reason = f"API route: {api_method}"
         data_pass = {}
 
         if request.method == 'POST':
@@ -64,7 +64,7 @@ def respond(api_method=None):
                 result = getattr(api, api_method)(data_pass)
 
     res = json.dumps({
-        'api': app.config['full_name'] + ' REST api 1.0',
+        'api': f"{app.config['full_name']} REST api 1.0",
         'module_status': module_status,
         'request_method': request_method,
         'reason': reason,

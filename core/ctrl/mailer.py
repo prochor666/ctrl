@@ -83,11 +83,8 @@ def email_compose(email):
 
 def check_email(email=None):
     result = is_email(str(email), check_dns=True, diagnose=True)
-    #print(dir(result))
-    print(result.diagnosis_type)
-    print(result.description)
-    print(result.message)
     return {
+        'valid': result.code == 0,
         'code': result.code,
         'validator_message': result.message,
         'description': result.description

@@ -2,16 +2,15 @@ import os
 import datetime
 import re
 from validate_email import validate_email
-from core import colors
+from core import colors, app
 
 
-def database_check(app):
+def database_check():
     try:
         db_info = app.db.server_info()
-        print(colors.green('DB OK') + ': MongoDB version ' +
-              db_info['version'] + ' at ' + app.config['mongodb']['host'] + ':' + str(app.config['mongodb']['port']))
+        print(f"{colors.green('DB OK')}: MongoDB version {db_info['version']} at {app.config['mongodb']['host']}:{str(app.config['mongodb']['port'])}")
     except Exception as error:
-        print(colors.red('ERROR') + ': ' + str(error))
+        print(f"{colors.red('ERROR')}: {str(error)}")
 
 
 def byte_size(bytes, suffix="B"):
@@ -52,7 +51,7 @@ def now():
 
 def app_root():
     p = os.path.dirname(os.path.abspath(__file__))
-    return strip_end(p, os.path.sep+'core')
+    return strip_end(p, f"{os.path.sep}core")
 
 
 def strip_end(text, suffix):
@@ -62,7 +61,7 @@ def strip_end(text, suffix):
 
 
 def format_response(status, text):
-    return colors.green('DONE') + ': ' + text if status == True else colors.red('ERROR') + ': ' + text
+    return f"{colors.green('DONE')}: {text}" if status == True else f"{colors.red('ERROR')}: {text}"
 
 
 def validate_data_pass(d):

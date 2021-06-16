@@ -71,7 +71,7 @@ def scan_ip(data_pass=None):
 
     result = {
         'status': False,
-        'message': 'Data error'
+        'message': "Data error"
     }
 
     if 'ip' in data_pass.keys():
@@ -93,6 +93,6 @@ def headers(data_pass=None):
 
 def test(data_pass=None):
     return {
-        'test': 'Ok',
+        'test': "Ok",
         'mode': app.mode
     }
