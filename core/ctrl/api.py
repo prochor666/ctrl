@@ -1,7 +1,7 @@
 import json
 from flask import render_template
-from core import app
-from core.ctrl import device, network as net, auth, mailer
+from core import app, utils
+from core.ctrl import device, network as net, auth, mailer, users as usr
 
 
 def about(data_pass=None):
@@ -96,3 +96,21 @@ def test(data_pass=None):
         'test': "Ok",
         'mode': app.mode
     }
+
+
+def db_check(data_pass=None):
+    return utils.database_check()
+
+
+def users(data_pass=None):
+    u = usr.list_users()
+    result = {
+        'status': False,
+        'message': "No users"
+    }
+    if type(u) is dict:
+        result['status'] = True
+        result['message'] = f"Found users: {len(u.keys())}"
+        result['users'] = u
+
+    return result

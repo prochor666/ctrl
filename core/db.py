@@ -7,5 +7,6 @@ def connect(db_config):
     return client
 
 
-def init(db):
-    return True
+def init(dbclient):
+    db = dbclient['ctrl']
+    return db

@@ -1,5 +1,6 @@
 from core import config as configurator, db
 
 config = configurator.configure()
-db = db
+dbclient = db.connect(config['mongodb'])
+db = db.init(dbclient)
 mode = 'initial'

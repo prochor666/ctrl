@@ -7,8 +7,10 @@ from core import colors, app
 
 def database_check():
     try:
-        db_info = app.db.server_info()
-        print(f"{colors.green('DB OK')}: MongoDB version {db_info['version']} at {app.config['mongodb']['host']}:{str(app.config['mongodb']['port'])}")
+        db_info = app.dbclient.server_info()
+        db_db = app.dbclient.list_database_names()
+        print(f"{colors.green('DB INSTANCE')}: MongoDB version {db_info['version']} at {app.config['mongodb']['host']}:{str(app.config['mongodb']['port'])}")
+        print(f"{colors.blue('DATABASES')}: {db_db}")
     except Exception as error:
         print(f"{colors.red('ERROR')}: {str(error)}")
 

@@ -28,7 +28,9 @@
             "countries": {},
             "ip": {},
             "test": {},
-            "scan_ip": {}
+            "scan_ip": {},
+            "db_check": {},
+            "users": {}
         },
         "rest_free": {
             "recover": {},
@@ -46,7 +48,8 @@
             "countries": {},
             "client_ip": {},
             "ip": {},
-            "scan_ip": {}
+            "scan_ip": {},
+            "users": {}
         }
     }
 }
