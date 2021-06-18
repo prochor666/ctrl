@@ -1,6 +1,6 @@
 vendor
 storage
 __pycache__
-.DS_Store
 app.json
 smtp.json
+.DS_Store
