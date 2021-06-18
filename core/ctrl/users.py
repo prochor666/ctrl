@@ -175,7 +175,16 @@ def activate(user_data):
 def activation_link(user_data):
     link = ""
     if int(user_data['pin']) > 99999:
-        link = f"?ulc={str(user_data['ulc'])}&pin={user_data['pin']}"
+
+        protocol = "http"
+        if app.config['https'] == True:
+            protocol = "https"
+
+        port = f":{app.config['mask_http_port']}"
+        if port in [":80", ":443"]:
+            port = ""
+
+        link = f"{protocol}://{app.config['mask_http_origin']}{port}/?ulc={str(user_data['ulc'])}&pin={user_data['pin']}"
 
     return link
 
