@@ -68,7 +68,8 @@ def insert(user_data):
             html_message = mailer.email_template('register').format(**{
                 'app_full_name': app.config['full_name'],
                 'username': user['username'],
-                'pin': user['pin']
+                'pin': user['pin'],
+                'activation_link': activation_link(user)
             })
 
             es = mailer.send(user['email'], f"{app.config['name']} new account", html_message)
@@ -135,7 +136,8 @@ def modify(user_data):
             html_message = mailer.email_template(html_template).format(**{
                 'app_full_name': app.config['full_name'],
                 'username': user['username'],
-                'pin': user['pin']
+                'pin': user['pin'],
+                'activation_link': activation_link(user)
             })
 
             es = mailer.send(user['email'], f"{app.config['name']} account updated", html_message)
