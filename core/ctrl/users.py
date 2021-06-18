@@ -56,7 +56,10 @@ def insert(user_data):
 
             users = app.db['users']
             user['pwd'] = secret.token_urlsafe(64)
+            user['salt'] = secret.token_rand(64)
             user['secret'] = hash_user(user)
+            user['pin'] = secret.pin(6)
+
             users.insert_one(user)
 
             html_message = mailer.email_template('register').format(**{
