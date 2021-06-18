@@ -4,3 +4,4 @@ __pycache__
 app.json
 smtp.json
 .DS_Store
+package-lock.json
