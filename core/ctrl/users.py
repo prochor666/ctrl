@@ -77,6 +77,7 @@ def insert(user_data):
             result['message'] = f"User {user['username']} created"
             result['email_status'] = es
         else:
+            result['status'] = False
             result['message'] = "Username or email already exists"
 
     return result
