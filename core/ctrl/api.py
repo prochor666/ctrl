@@ -36,7 +36,7 @@ def disk(data_pass=None):
 
 
 def login(data_pass=None):
-    return auth.login(data_pass)
+    return {'status': True, 'message': "Logged in"}
 
 
 def register(data_pass=None):

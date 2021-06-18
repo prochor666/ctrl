@@ -34,7 +34,7 @@ def one(finder, no_filter_pattern=False):
 
 
 def filter_user_pattern():
-    return {'secret': 0, 'pwd': 0}
+    return {'secret': 0, 'pwd': 0, 'salt': 0}
 
 
 def insert(user_data):
@@ -62,7 +62,7 @@ def insert(user_data):
             html_message = mailer.email_template('register').format(**{
                 'app_full_name': app.config['full_name'],
                 'username': user['username'],
-                'pwd': user['pwd']
+                'pin': user['pin']
             })
 
             es = mailer.send(user['email'], f"{app.config['name']} new account", html_message)
@@ -79,16 +79,18 @@ def modify(user_data):
 
     result = validator(user_data)
 
-    if result['status'] == True:
+    if 'id' not in user_data.keys():
+        result['message'] = 'Need id for modify user'
+        result['status'] = False
 
-        user = user_model(user_data)
+    if result['status'] == True:
 
         finder = one({
         '$and': [
             {
                 '$or': [
-                    {'username': user['username']},
-                    {'email': user['email']}
+                    {'username': user_data['username']},
+                    {'email': user_data['email']}
                 ],
             },
             {
@@ -105,23 +107,28 @@ def modify(user_data):
 
         if type(finder) is not dict and type(modify_user) is dict:
 
+            user = {**modify_user, **user_data}
             users = app.db['users']
 
             # Email changed, need authorize new auth token
             if user['email'] != modify_user['email']:
                 user['pwd'] = secret.token_urlsafe(64)
+                user['salt'] = secret.token_rand(64)
+                user['pin'] = secret.pin(6)
                 html_template = 'modify-pw'
             else:
-                user['pwd'] = modify_user['pwd']
+                #user['pwd'] = modify_user['pwd']
                 html_template = 'modify'
 
             user['secret'] = hash_user(user)
+
+            user = user_model(user)
             users.update_one({'_id': ObjectId(user_data['id']) }, { '$set': user })
 
             html_message = mailer.email_template(html_template).format(**{
                 'app_full_name': app.config['full_name'],
                 'username': user['username'],
-                'pwd': user['pwd']
+                'pin': user['pin']
             })
 
             es = mailer.send(user['email'], f"{app.config['name']} account updated", html_message)
@@ -130,8 +137,8 @@ def modify(user_data):
             #result['finder'] = finder
             result['email_status'] = es
         else:
-            #result['message'] = "Username or email already exists"
-            result['finder'] = finder
+            result['message'] = "Username or email already exists"
+            #result['finder'] = finder
 
     return result
 
@@ -166,7 +173,6 @@ def validator(user_data):
     return result
 
 
-
 def user_model(user_data):
     if type(user_data) is not dict:
         user_data = {}
@@ -177,7 +183,9 @@ def user_model(user_data):
         'firstname': utils.eval_key('firstname', user_data),
         'lastname': utils.eval_key('lastname', user_data),
         'role': utils.eval_key('role', user_data),
+        'pin': utils.eval_key('pin', user_data, 'int'),
         'pwd': utils.eval_key('pwd', user_data),
+        'salt': utils.eval_key('salt', user_data),
         'secret': utils.eval_key('secret', user_data)
     }
 
@@ -187,5 +195,6 @@ def user_model(user_data):
 def hash_user(user_data):
     secret_key = secret.create_secret({
         'email': user_data['email'],
+        'salt': user_data['salt'],
         'pwd': user_data['pwd']})
     return secret_key

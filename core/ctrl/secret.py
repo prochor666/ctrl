@@ -18,6 +18,12 @@ def token_rand(length=64):
     return t
 
 
+def pin(length=6):
+    chars = string.digits
+    t = ''.join(random.choice(chars) for i in range(length))
+    return t
+
+
 def create_secret(blck_items={}):
     if type(blck_items) is dict and len(blck_items.keys()) > 0:
         gen = hashlib.blake2b()
