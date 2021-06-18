@@ -9,6 +9,7 @@
     "timezone": "UTC",
     "mask_http_origin": "127.0.0.1",
     "mask_origin_port": 5007,
+    "https": false,
     "mongodb": {
         "host": "localhost",
         "port": 27017,
