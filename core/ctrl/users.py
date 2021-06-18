@@ -186,7 +186,7 @@ def activation_link(user_data):
         if port in [":80", ":443"]:
             port = ""
 
-        link = f"{protocol}://{app.config['mask_http_origin']}{port}/?ulc={str(user_data['ulc'])}&pin={user_data['pin']}"
+        link = f"{protocol}://{app.config['mask_http_origin']}{port}/?ulc={str(user_data['ulc'])}"
 
     return link
 
