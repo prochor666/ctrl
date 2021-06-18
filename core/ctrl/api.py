@@ -103,14 +103,35 @@ def db_check(data_pass=None):
 
 
 def users(data_pass=None):
-    u = usr.list_users()
+
+    finder = {}
+
+    if type(data_pass) is dict and 'filter' in data_pass.keys() and type(data_pass['filter']) is dict:
+        finder['filter'] = data_pass['filter']
+
+    if type(data_pass) is dict and 'sort' in data_pass.keys() and type(data_pass['sort']) is list and len(data_pass['sort']) == 2:
+        finder['sort'] = data_pass['sort']
+
+    u = usr.list_users(finder)
     result = {
         'status': False,
-        'message': "No users"
+        'message': "No users",
+        'users': {},
+        'count': u.count()
     }
-    if type(u) is dict:
+    if result['count'] > 0:
         result['status'] = True
-        result['message'] = f"Found users: {len(u.keys())}"
-        result['users'] = u
+        result['message'] = f"Found users: {result['count']}"
+        result['users'] = utils.collect(u)
 
+    return result
+
+
+def create_user(data_pass=None):
+    result = usr.insert(data_pass)
+    return result
+
+
+def modify_user(data_pass=None):
+    result = usr.modify(data_pass)
     return result

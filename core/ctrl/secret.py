@@ -19,7 +19,7 @@ def token_rand(length=64):
 
 
 def create_secret(blck_items={}):
-    if type(blck_items) is dict and 'email' in blck_items.keys() and 'username' in blck_items.keys():
+    if type(blck_items) is dict and len(blck_items.keys()) > 0:
         gen = hashlib.blake2b()
 
         for key, blck in blck_items.items():

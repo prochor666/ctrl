@@ -8,5 +8,5 @@ def connect(db_config):
 
 
 def init(dbclient):
-    db = dbclient['ctrl']
+    db = dbclient.ctrl
     return db

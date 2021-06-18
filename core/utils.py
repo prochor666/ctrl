@@ -1,6 +1,8 @@
 import os
 import datetime
 import re
+import json
+from pymongo import results
 from validate_email import validate_email
 from core import colors, app
 
@@ -79,6 +81,24 @@ def file_save(file, content=' '):
     fh.write(content)
     fh.close()
     return True
+
+
+def eval_key(key, data, data_type='str'):
+    if data_type == 'str':
+        return '' if str(key) not in data.keys() else str(data[key])
+
+    if data_type == 'int':
+        return 0 if str(key) not in data.keys() else int(data[key])
+
+
+def collect(find_result):
+    result = []
+    for document in find_result:
+        result.append(document)
+    return result
+
+def arg_json(arg):
+    return json.loads(arg.replace('"', '').replace('\'', '"'))
 
 
 def br2nl(s):

@@ -1,7 +1,7 @@
 import os
 import json
 from core import utils, app
-from core.ctrl import secret, mailer
+from core.ctrl import secret, mailer, users
 
 
 def authorization_process(api_method):
@@ -111,7 +111,6 @@ def get_user_from_secret_file(username):
 def hash_user(user_data):
     secret_key = secret.create_secret({
         'email': user_data['email'],
-        'username': user_data['username'],
         'pwd': user_data['pwd']})
     return secret_key
 

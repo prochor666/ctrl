@@ -30,7 +30,9 @@
             "test": {},
             "scan_ip": {},
             "db_check": {},
-            "users": {}
+            "users": {},
+            "create_user": {},
+            "modify_user": {}
         },
         "rest_free": {
             "recover": {},
@@ -49,7 +51,9 @@
             "client_ip": {},
             "ip": {},
             "scan_ip": {},
-            "users": {}
+            "users": {},
+            "create_user": {},
+            "modify_user": {}
         }
     }
 }
