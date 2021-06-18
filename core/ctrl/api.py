@@ -127,6 +127,10 @@ def users(data_pass=None):
     return result
 
 
+def activate_user(data_pass=None):
+    return usr.activate(data_pass)
+
+
 def create_user(data_pass=None):
     result = usr.insert(data_pass)
     return result

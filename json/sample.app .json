@@ -7,7 +7,7 @@
         "templates": "storage/templates"
     },
     "timezone": "UTC",
-    "mask_http_origin": "192.168.0.224",
+    "mask_http_origin": "127.0.0.1",
     "mask_origin_port": 5007,
     "mongodb": {
         "host": "localhost",

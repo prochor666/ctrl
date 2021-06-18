@@ -7,6 +7,7 @@ def authorization_process(api_method):
     result = {
         'message': "Authorization failed",
         'username': '',
+        'role': '',
         'status': False
     }
 
@@ -31,6 +32,7 @@ def login(data_pass=None):
     result = {
         'message': "Token authorization failed",
         'username': '',
+        'role': '',
         'status': False
     }
 
@@ -40,6 +42,7 @@ def login(data_pass=None):
         if type(user_data) is dict:
             secret_key_check = users.hash_user({
                 'email': user_data['email'],
+                'salt':  user_data['salt'],
                 'pwd': data_pass['auth_token']
             })
 
@@ -48,6 +51,7 @@ def login(data_pass=None):
             if 'username' in user_data.keys() and 'pwd' in user_data.keys() and data_pass['auth_token'] == user_data['pwd'] and secret_key_check == user_data['secret']:
                 result['message'] = "Authorization succeeded"
                 result['username'] = user_data['username']
+                result['role'] = user_data['role']
                 result['status'] = True
 
     return result

@@ -1,3 +1,4 @@
+from os import link
 from bson.objectid import ObjectId
 from core import app, utils
 from core.ctrl import secret, mailer
@@ -30,6 +31,7 @@ def one(finder, no_filter_pattern=False):
             return app.db['users'].find_one(finder)
 
         return app.db['users'].find_one(finder, filter_user_pattern())
+
     return False
 
 
@@ -58,6 +60,7 @@ def insert(user_data):
             user['pwd'] = secret.token_urlsafe(64)
             user['salt'] = secret.token_rand(64)
             user['secret'] = hash_user(user)
+            user['ulc'] = secret.token_urlsafe(32)
             user['pin'] = secret.pin(6)
 
             users.insert_one(user)
@@ -118,6 +121,7 @@ def modify(user_data):
                 user['pwd'] = secret.token_urlsafe(64)
                 user['salt'] = secret.token_rand(64)
                 user['pin'] = secret.pin(6)
+                user['ulc'] = secret.token_urlsafe(32)
                 html_template = 'modify-pw'
             else:
                 #user['pwd'] = modify_user['pwd']
@@ -144,6 +148,36 @@ def modify(user_data):
             #result['finder'] = finder
 
     return result
+
+
+def activate(user_data):
+    user = one({
+        '$and': [
+            {'ulc': utils.eval_key('ulc', user_data)},
+            {'pin': utils.eval_key('pin', user_data, 'int')}
+        ]
+    }, no_filter_pattern=True)
+
+    result = {
+        'message': "Invalid activation",
+        'status': False
+    }
+
+    if type(user) is dict:
+        result['status'] = True
+        result['message'] = "Valid activation"
+        result['username'] = user['username']
+        result['role'] = user['role']
+        result['pwd'] = user['pwd']
+
+    return result
+
+def activation_link(user_data):
+    link = ""
+    if int(user_data['pin']) > 99999:
+        link = f"?ulc={str(user_data['ulc'])}&pin={user_data['pin']}"
+
+    return link
 
 
 def validator(user_data):
@@ -189,7 +223,8 @@ def user_model(user_data):
         'pin': utils.eval_key('pin', user_data, 'int'),
         'pwd': utils.eval_key('pwd', user_data),
         'salt': utils.eval_key('salt', user_data),
-        'secret': utils.eval_key('secret', user_data)
+        'secret': utils.eval_key('secret', user_data),
+        'ulc': utils.eval_key('ulc', user_data),
     }
 
     return user

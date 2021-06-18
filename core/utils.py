@@ -97,6 +97,7 @@ def collect(find_result):
         result.append(document)
     return result
 
+
 def arg_json(arg):
     return json.loads(arg.replace('"', '').replace('\'', '"'))
 
