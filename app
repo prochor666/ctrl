@@ -1,6 +1,8 @@
 #!/bin/bash
 
 PYTHON="$(which python3)"
+export PATH="$PATH:."
+
 
 if [[ -x "$PYTHON" ]];
 then
