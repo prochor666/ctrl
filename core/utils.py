@@ -2,8 +2,6 @@ import os
 import datetime
 import re
 import json
-from pymongo import results
-from validate_email import validate_email
 from core import colors, app
 
 
