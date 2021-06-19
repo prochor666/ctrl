@@ -1,10 +1,11 @@
 #!/bin/bash
 
-$PYTHON=$(which python3)
-clear
+$PYTHON="$(which python3)"
+$PIP="$(which pip)"
 
-if [ -n "$PYTHON" ]: then
+if [[ -n "$PYTHON" ]] and [[ in "$PIP" ]];
+then
     $PYTHON install.py "$@"
 else
-    print("Python 3 is required, exiting...")
+    echo  "Python 3 is required, exiting..."
 fi

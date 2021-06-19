@@ -18,6 +18,8 @@ parser.add_argument('-firstname', type=str)
 parser.add_argument('-lastname', type=str)
 parser.add_argument('-role', type=str)
 parser.add_argument('-filter', type=str)
+parser.add_argument('-ulc', type=str)
+parser.add_argument('-pin', type=int)
 parser.add_argument('-sort', type=str)
 parser.add_argument('-vhost', type=str)
 parser.add_argument('-ip', type=str)
@@ -37,7 +39,7 @@ for key, value in data_pass.items():
 
 if method != None and method in dir(api) and method in app.config['api']['cli']:
 
-    data_pass['config'] = app.config
+    #data_pass['config'] = app.config
     result = getattr(api, str(method))(data_pass)
 
     if type(result) == dict:

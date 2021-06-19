@@ -1,9 +1,10 @@
 #!/bin/bash
 
-$PYTHON=$(which python3)
+$PYTHON="$(which python3)"
 
-if [ -n "$PYTHON" ]: then
+if [[ -n "$PYTHON" ]];
+then
     $PYTHON ctrl.py "$@"
 else
-    print("Python 3 is required, exiting...")
+    echo  "Python 3 is required, exiting..."
 fi

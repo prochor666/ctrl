@@ -161,6 +161,8 @@ def activate(user_data):
         ]
     }, no_filter_pattern=True)
 
+    print(user_data)
+
     result = {
         'message': "Invalid activation",
         'status': False
