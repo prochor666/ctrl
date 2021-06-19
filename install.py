@@ -4,6 +4,14 @@ from shutil import copyfile
 from core import compat, config as conf, colors
 
 compat.check_version()
+
+print("\n")
+print(f"{colors.magenta('SECTION')} config")
+sample_config = os.path.join(os.path.abspath(__file__), 'json/sample.app.json')
+production_config = os.path.join(os.path.abspath(__file__), 'json/app.json')
+if not os.path.isfile(production_config):
+    copyfile(sample_config, production_config)
+
 config = conf.configure()
 
 
@@ -81,13 +89,6 @@ def run():
     print("\n")
     print(f"{colors.magenta('SECTION')} directories")
     directories_install()
-
-    print("\n")
-    print(f"{colors.magenta('SECTION')} config")
-    sample_config = os.path.join(os.path.abspath(__file__), 'json/sample.app.json')
-    production_config = os.path.join(os.path.abspath(__file__), 'json/app.json')
-    if not os.path.isfile(production_config):
-        copyfile(sample_config, production_config)
 
 
 # Here we come
