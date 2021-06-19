@@ -2,11 +2,66 @@
 
 PYTHON="$(which python3)"
 PIP="$(which pip)"
+APPJSON="json/app.json"
+SAPPJSON="json/sample.app.json"
+SMTPJSON="json/smtp.json"
+SSMTPJSON="json/sample.smtp.json"
+RECIPESDIR="storage/recipes"
+TEMPLATESDIR="storage/templates"
+
+if [[ ! -x "$PYTHON" ]];
+then
+    echo  "Python 3 is required, exiting..."
+    exit 1
+fi
+
+if [[ ! -x "$PIP" ]];
+then
+    echo  "PIP is required, exiting..."
+    exit 1
+fi
 
 if [[ -x "$PYTHON" ]] & [[ -x "$PIP" ]];
 then
-    $PIP install pymongo
-    $PYTHON install.py "$@"
-else
-    echo  "Python 3 is required, exiting..."
+    pip install  pymongo
+    pip install  Flask
+    pip install  pyopenssl
+    pip install  pyIsEmail
+    pip install  psutil
+    pip install  websocket
+    pip install  websocket-client
+    pip install -U python-digitalocean
+    pip install  pyarubacloud
+
+    if [[ ! -d $RECIPESDIR ]];
+    then
+        mkdir -p $RECIPESDIR
+        echo "Created directory $RECIPESDIR"
+    else
+        echo "Directory $RECIPESDIR exists"
+    fi
+
+    if [[ ! -d $TEMPLATESDIR ]];
+    then
+        mkdir -p $TEMPLATESDIR
+        echo "Created directory $TEMPLATESDIR"
+    else
+        echo "Directory $TEMPLATESDIR exists"
+    fi
+
+    if [[ ! -f $APPJSON ]];
+    then
+        cp $SAPPJSON $APPJSON
+        echo "Created file $APPJSON"
+    else
+        echo "File $APPJSON exists"
+    fi
+
+    if [[ ! -f $SMTPJSON ]];
+    then
+        cp $SSMTPJSON $SMTPJSON
+        echo "Created file $SMTPJSON"
+    else
+        echo "File $SMTPJSON exists"
+    fi
 fi

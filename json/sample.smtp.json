@@ -1,4 +1,5 @@
 {
+    "use": false,
     "host": "smtp.server.host",
     "port": 587,
     "username": "smtp.server.username",
