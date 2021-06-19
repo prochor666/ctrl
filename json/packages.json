@@ -25,12 +25,12 @@
     },
     "python-digitalocean": {
         "command": "git clone -b v1.16.0 https://github.com/koalalorenzo/python-digitalocean.git",
-        "post_command": ["python setup.py install"],
+        "post_command": ["cd vendor/python-digitalocean && python setup.py install"],
         "type": "stable"
     },
     "pyArubaCloud": {
         "command": "git clone -b 0.7.6 https://github.com/Arubacloud/pyArubaCloud.git",
-        "post_command": ["python setup.py install"],
+        "post_command": ["cd vendor/pyArubaCloud && python setup.py install"],
         "type": "experimental"
     }
 }
