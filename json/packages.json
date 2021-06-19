@@ -7,10 +7,6 @@
         "command": "pip install pyopenssl",
         "type": "stable"
     },
-    "pymongo": {
-        "command": "pip install pymongo",
-        "type": "stable"
-    },
     "pyIsEmail": {
         "command": "pip install pyIsEmail",
         "type": "stable"

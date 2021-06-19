@@ -1,8 +1,8 @@
 #!/bin/bash
 
-$PYTHON="$(which python3)"
+PYTHON="$(which python3)"
 
-if [[ -n "$PYTHON" ]];
+if [[ -x "$PYTHON" ]];
 then
     $PYTHON webapp.py "$@"
 else

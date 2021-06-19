@@ -1,10 +1,11 @@
 #!/bin/bash
 
-$PYTHON="$(which python3)"
-$PIP="$(which pip)"
+PYTHON="$(which python3)"
+PIP="$(which pip)"
 
-if [[ -n "$PYTHON" ]] and [[ in "$PIP" ]];
+if [[ -x "$PYTHON" ]] & [[ -x "$PIP" ]];
 then
+    $PIP install pymongo
     $PYTHON install.py "$@"
 else
     echo  "Python 3 is required, exiting..."

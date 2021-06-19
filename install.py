@@ -1,6 +1,6 @@
 import os
 import json
-from core import compat, config as conf, utils, colors
+from core import compat, config as conf, colors
 
 compat.check_version()
 config = conf.configure()
@@ -57,7 +57,7 @@ def packages_install():
 
 def directories_install():
     for directory, path in config['filesystem'].items():
-        dir_abs_path = os.path.join(utils.app_root(), path)
+        dir_abs_path = os.path.join(os.path.abspath(__file__), path)
 
         if not os.path.isdir(dir_abs_path):
             try:

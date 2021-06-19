@@ -4,5 +4,6 @@
 @ECHO Python 3 is required
 @EXIT /B 0
 ) ELSE (
+pip install pymongo
 @python install.py %*
 )
