@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "CTRL installer"
+
 PYTHON="$(which python3)"
 PIP="$(which pip)"
 APPJSON="json/app.json"

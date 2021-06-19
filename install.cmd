@@ -1,6 +1,8 @@
 @cls
 @WHERE /Q python
 
+#ECHO CTRL installer
+
 @IF %ERRORLEVEL% NEQ 0 (
     @ECHO Python 3 is required
     @EXIT /B 0
