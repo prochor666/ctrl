@@ -73,7 +73,7 @@ def packages_install():
                 for post_command in package_config['post_command']:
                     print(f"INFO: post command {str(post_command)}")
 
-                    stream = os.popen(f"{str(package_path)} {post_command}")
+                    stream = os.popen(post_command)
                     print(shell_output(stream))
                     print("Done")
 
