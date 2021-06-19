@@ -36,6 +36,12 @@
         mkdir storage\templates && echo storage\templates created
     )
 
+    @IF exist storage\logs (
+        echo storage\logs exists
+    ) ELSE (
+        mkdir storage\logs && echo storage\logs created
+    )
+
     @IF exist json\app.json (
         echo json\app.json exists
     ) ELSE (

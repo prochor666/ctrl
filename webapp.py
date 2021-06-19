@@ -1,4 +1,6 @@
 import json
+import datetime
+import logging
 from flask import Flask, render_template, Response, request
 from core import compat, app
 from core.ctrl import api, auth
@@ -75,6 +77,10 @@ def respond(api_method=None):
 
 
 if __name__ == '__main__':
+
+    today = datetime.date.today()
+    logging.basicConfig(filename=f"storage/logs/ctrl-server-{today.strftime('%Y-%m')}.log",level=logging.INFO)
+
     # Open, any host allowed
     webapp.run(debug=True, host='0.0.0.0', port='5007')
 

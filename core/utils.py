@@ -12,7 +12,7 @@ def database_check():
         print(f"{colors.green('DB INSTANCE')}: MongoDB version {db_info['version']} at {app.config['mongodb']['host']}:{str(app.config['mongodb']['port'])}")
         print(f"{colors.blue('DATABASES')}: {db_db}")
     except Exception as error:
-        print(f"{colors.red('ERROR')}: {str(error)}")
+        print(f"{colors.red('DATABASE ERROR')}: {str(error)}")
 
 
 def byte_size(bytes, suffix="B"):

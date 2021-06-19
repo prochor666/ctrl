@@ -10,6 +10,7 @@ SMTPJSON="json/smtp.json"
 SSMTPJSON="json/sample.smtp.json"
 RECIPESDIR="storage/recipes"
 TEMPLATESDIR="storage/templates"
+LOGSDIR="storage/logs"
 
 if [[ ! -x "$PYTHON" ]];
 then
@@ -49,6 +50,14 @@ then
         echo "Created directory $TEMPLATESDIR"
     else
         echo "Directory $TEMPLATESDIR exists"
+    fi
+
+    if [[ ! -d $LOGSDIR ]];
+    then
+        mkdir -p $LOGSDIR
+        echo "Created directory $LOGSDIR"
+    else
+        echo "Directory $LOGSDIR exists"
     fi
 
     if [[ ! -f $APPJSON ]];
