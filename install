@@ -75,4 +75,6 @@ then
     else
         echo "File $SMTPJSON exists"
     fi
+
+    chmod +x app ctrl
 fi
