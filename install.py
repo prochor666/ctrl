@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import subprocess
 from shutil import copyfile
 
 def check_version():
@@ -65,20 +66,20 @@ def packages_install():
             print("\n")
 
             # Run  post commands in package dir
-            if deploy_commamd.startswith('git clone'):
-                os.chdir(str(package_path))
+            #if deploy_commamd.startswith('git clone'):
+            #    os.chdir(str(package_path))
 
             if 'post_command' in package_config.keys():
                 for post_command in package_config['post_command']:
                     print(f"INFO: post command {str(post_command)}")
 
-                    stream = os.popen(post_command)
+                    stream = os.popen(f"{str(package_path)} {post_command}")
                     print(shell_output(stream))
                     print("Done")
 
             # Return to root dir
-            if deploy_commamd.startswith('git clone'):
-                os.chdir('../../')
+            #if deploy_commamd.startswith('git clone'):
+            #    os.chdir('../../')
 
         else:
             print(f"INFO: package {package_name} is already installed from gihub repository")
