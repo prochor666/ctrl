@@ -115,9 +115,9 @@ def users(data_pass=None):
     u = usr.list_users(finder)
     result = {
         'status': False,
-        'message': "No users",
+        'message': str(u) if type(u) is str else "No users",
         'users': {},
-        'count': u.count()
+        'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
         result['status'] = True
