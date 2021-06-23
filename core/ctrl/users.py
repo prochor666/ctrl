@@ -44,6 +44,7 @@ def one(finder, no_filter_pattern=False):
     except Exception as e:
         return f"Database server error {str(e)}"
 
+
 def filter_user_pattern():
     return {'secret': 0, 'pwd': 0, 'salt': 0}
 
@@ -72,13 +73,17 @@ def insert(user_data):
             user['ulc'] = secret.token_urlsafe(32)
             user['pin'] = int(secret.pin(6))
 
+            http_origin = ''
+            if 'http_origin' in user_data.keys():
+                http_origin = user_data.pop('http_origin', None)
+
             users.insert_one(user)
 
             html_message = mailer.email_template('register').format(**{
                 'app_full_name': app.config['full_name'],
                 'username': user['username'],
                 'pin': user['pin'],
-                'activation_link': activation_link(user)
+                'activation_link': activation_link(user, http_origin)
             })
 
             es = mailer.send(user['email'], f"{app.config['name']} new account", html_message)
@@ -124,6 +129,10 @@ def modify(user_data):
 
         if type(finder) is not dict and type(modify_user) is dict:
 
+            http_origin = ''
+            if 'http_origin' in user_data.keys():
+                http_origin = user_data.pop('http_origin', None)
+
             user = {**modify_user, **user_data}
             users = app.db['users']
 
@@ -147,7 +156,7 @@ def modify(user_data):
                 'app_full_name': app.config['full_name'],
                 'username': user['username'],
                 'pin': user['pin'],
-                'activation_link': activation_link(user)
+                'activation_link': activation_link(user, http_origin)
             })
 
             es = mailer.send(user['email'], f"{app.config['name']} account updated", html_message)
@@ -180,12 +189,17 @@ def recover(user_data, soft=True):
         }, no_filter_pattern=True)
 
         if type(user) is dict:
+
+            http_origin = ''
+            if 'http_origin' in user_data.keys():
+                http_origin = user_data.pop('http_origin', None)
+
             result['message'] = f"Found user {user['username']}"
             result['status'] = True
             html_template = 'soft-recovery'
             new_pin = int(secret.pin(6))
             new_ulc = secret.token_urlsafe(32)
-            new_activation_link = activation_link(user)
+            new_activation_link = activation_link(user, http_origin)
             subject_suffix = "account activation"
 
             if app.mode == 'cli':
@@ -242,19 +256,32 @@ def activate(user_data):
     return result
 
 
-def activation_link(user_data):
+def activation_link(user_data, http_origin=''):
     link = ""
+
     if int(user_data['pin']) > 99999:
+        client_url = compose_client_url(user_data, http_origin)
+        link = f"{client_url}/activate/?ulc={str(user_data['ulc'])}&pin={str(user_data['pin'])}"
 
-        protocol = "http"
-        if app.config['https'] == True:
-            protocol = "https"
+    return link
 
-        port = f":{app.config['mask_http_port']}"
-        if port in [":80", ":443"]:
-            port = ""
 
-        link = f"{protocol}://{app.config['mask_http_origin']}{port}/?ulc={str(user_data['ulc'])}"
+def compose_client_url(user_data, http_origin=''):
+    if len(http_origin) > 0 and http_origin.startswith(('http://', 'https://')):
+        if http_origin.endswith('/'):
+            return http_origin[:-1]
+
+        return http_origin
+
+    protocol = "http"
+    if app.config['https'] == True:
+        protocol = "https"
+
+    port = f":{app.config['mask_http_port']}"
+    if port in [":80", ":443"]:
+        port = ""
+
+    link = f"{protocol}://{app.config['mask_http_origin']}{port}"
 
     return link
 

@@ -23,7 +23,9 @@ parser.add_argument('-pin', type=int)
 parser.add_argument('-sort', type=str)
 parser.add_argument('-vhost', type=str)
 parser.add_argument('-ip', type=str)
-parser.add_argument('-auth_token', type=str)
+#parser.add_argument('-auth_token', type=str)
+parser.add_argument('-http_origin', type=str)
+
 
 args, unknown = parser.parse_known_args()
 
