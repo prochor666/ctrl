@@ -55,7 +55,8 @@
             "scan_ip": {},
             "users": {},
             "create_user": {},
-            "modify_user": {}
+            "modify_user": {},
+            "full_recovery": {}
         }
     }
 }
