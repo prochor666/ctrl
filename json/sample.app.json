@@ -23,8 +23,6 @@
             "memory": {},
             "disk": {},
             "login": {},
-            "register": {},
-            "recover": {},
             "is_email": {},
             "countries": {},
             "ip": {},
@@ -34,13 +32,15 @@
             "users": {},
             "create_user": {},
             "modify_user": {},
-            "activate_user": {}
+            "activate_user": {},
+            "soft_recovery": {},
+            "full_recovery": {}
         },
         "rest_free": {
-            "recover": {},
             "headers": {},
             "test": {},
-            "activate_user": {}
+            "activate_user": {},
+            "soft_recovery": {}
         },
         "rest_authorized": {
             "system": {},
@@ -49,7 +49,6 @@
             "memory": {},
             "disk": {},
             "login": {},
-            "register": {},
             "countries": {},
             "client_ip": {},
             "ip": {},

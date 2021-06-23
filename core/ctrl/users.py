@@ -61,7 +61,7 @@ def insert(user_data):
             user['salt'] = secret.token_rand(64)
             user['secret'] = hash_user(user)
             user['ulc'] = secret.token_urlsafe(32)
-            user['pin'] = secret.pin(6)
+            user['pin'] = int(secret.pin(6))
 
             users.insert_one(user)
 
@@ -122,7 +122,7 @@ def modify(user_data):
             if user['email'] != modify_user['email']:
                 user['pwd'] = secret.token_urlsafe(64)
                 user['salt'] = secret.token_rand(64)
-                user['pin'] = secret.pin(6)
+                user['pin'] = int(secret.pin(6))
                 user['ulc'] = secret.token_urlsafe(32)
                 html_template = 'modify-pw'
             else:
@@ -153,6 +153,63 @@ def modify(user_data):
     return result
 
 
+def recover(user_data, soft=True):
+    result = {
+        'message': "User not found",
+        'status': False,
+        'recovery_type': "soft" if soft == True else "full"
+    }
+
+    if type(user_data) is dict and 'username' in user_data.keys():
+        unifield = user_data['username']
+
+        user = one({
+            '$or': [
+                {'username': unifield},
+                {'email': unifield}
+            ]
+        }, no_filter_pattern=True)
+
+        if type(user) is dict:
+            result['message'] = f"Found user {user['username']}"
+            result['status'] = True
+            html_template = 'soft-recovery'
+            new_pin = int(secret.pin(6))
+            new_ulc = secret.token_urlsafe(32)
+            new_activation_link = activation_link(user)
+            subject_suffix = "account activation"
+
+            if app.mode == 'cli':
+                result['pin'] = new_pin
+                result['ulc'] = new_ulc
+                result['activation_link'] = new_activation_link
+
+            user['pin'] = new_pin
+            user['ulc'] = new_ulc
+
+            if soft == False:
+                user['pwd'] = secret.token_urlsafe(64)
+                user['salt'] = secret.token_rand(64)
+                user['secret'] = hash_user(user)
+                html_template = 'full-recovery'
+                subject_suffix = "account recovery"
+
+            users = app.db['users']
+            users.update_one({'_id': ObjectId(user['_id']) }, { '$set': user })
+
+            html_message = mailer.email_template(html_template).format(**{
+                'app_full_name': app.config['full_name'],
+                'username': user['username'],
+                'pin': user['pin'],
+                'activation_link': new_activation_link
+            })
+
+            es = mailer.send(user['email'], f"{app.config['name']} {subject_suffix}", html_message)
+            result['email_status'] = es
+
+    return result
+
+
 def activate(user_data):
     user = one({
         '$and': [
@@ -160,8 +217,6 @@ def activate(user_data):
             {'pin': utils.eval_key('pin', user_data, 'int')}
         ]
     }, no_filter_pattern=True)
-
-    print(user_data)
 
     result = {
         'message': "Invalid activation",
@@ -176,6 +231,7 @@ def activate(user_data):
         result['pwd'] = user['pwd']
 
     return result
+
 
 def activation_link(user_data):
     link = ""

@@ -39,14 +39,6 @@ def login(data_pass=None):
     return {'status': True, 'message': "Logged in"}
 
 
-def register(data_pass=None):
-    return auth.register_user(data_pass)
-
-
-def recover(data_pass):
-    return auth.recover_user(data_pass)
-
-
 def is_email(data_pass):
     if 'email' in data_pass.keys():
         return mailer.check_email(data_pass['email'])
@@ -139,3 +131,11 @@ def create_user(data_pass=None):
 def modify_user(data_pass=None):
     result = usr.modify(data_pass)
     return result
+
+
+def soft_recovery(data_pass):
+    return usr.recover(data_pass, True)
+
+
+def full_recovery(data_pass):
+    return usr.recover(data_pass, False)
