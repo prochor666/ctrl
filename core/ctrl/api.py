@@ -1,7 +1,7 @@
 import json
 from flask import render_template
 from core import app, utils
-from core.ctrl import device, network as net, auth, mailer, users as usr
+from core.ctrl import device, network as net, mailer, users as usr
 
 
 def about(data_pass=None):

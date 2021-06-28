@@ -1,6 +1,6 @@
 from core import app
 from core.ctrl import users
-
+from flask import request
 
 def authorization_process(api_method):
 
@@ -13,9 +13,10 @@ def authorization_process(api_method):
 
     if 'headers' in app.config.keys() and api_method in app.config['api']['rest_authorized'].keys():
 
-        if 'Authorization' in app.config['headers'].keys():
+
+        if request.headers.get('Authorization') != None:
             auth_token = extract_auth_token(
-                app.config['headers']['Authorization'])
+                request.headers.get('Authorization'))
 
             if len(auth_token) > 63:
                 login_obj = login({'auth_token': auth_token})

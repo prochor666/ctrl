@@ -242,7 +242,7 @@ def activate(user_data):
         'message': "Invalid activation",
         'status': False,
         'ulc': utils.eval_key('ulc', user_data),
-        'pin': utils.eval_key('pin', user_data, 'int')
+        'pin': utils.eval_key('pin', user_data, 'int'),
     }
 
     if type(user) is dict:
@@ -250,8 +250,6 @@ def activate(user_data):
         result['message'] = "Valid activation"
         result['username'] = user['username']
         result['role'] = user['role']
-        result['ulc'] = utils.eval_key('ulc', user_data)
-        result['pin'] = utils.eval_key('pin', user_data, 'int')
         result['pwd'] = user['pwd']
 
     return result

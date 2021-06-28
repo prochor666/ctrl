@@ -1,3 +1,4 @@
+from core.config import app_config
 import json
 import datetime
 import logging
@@ -14,10 +15,13 @@ app.mode = 'http'
 def index():
     app.config['headers'] = dict(request.headers)
 
-    if 'X-Forwarded-For' in app.config['headers'].keys():
+    if app.config['headers'].get('X-Forwarded-For') != None:
         app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
+
+    if app.config['headers'].get('X-Real-Ip') != None:
+        app.config['client_ip'] = app.config['headers'].get('X-Real-Ip')
 
     return render_template('index.html', config=app.config)
 
@@ -27,10 +31,14 @@ def index():
 def respond(api_method=None):
     app.config['headers'] = dict(request.headers)
 
-    if 'X-Forwarded-For' in app.config['headers'].keys():
+    if app.config['headers'].get('X-Forwarded-For') != None:
         app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
     else:
         app.config['client_ip'] = request.remote_addr
+
+    if app.config['headers'].get('X-Real-Ip') != None:
+        app.config['client_ip'] = app.config['headers'].get('X-Real-Ip')
+
 
     api_method = str(api_method).replace('/', '')
     reason = f"API route {api_method} is not supported"
@@ -45,7 +53,8 @@ def respond(api_method=None):
 
         if request.method == 'POST':
             request_method = 'POST'
-            if 'Content-type' in app.config['headers'].keys() and app.config['headers']['Content-type'] == 'application/json':
+
+            if request.headers.get('Content-type') != None and 'application/json' == request.headers.get('Content-type'):
                 data_pass = request.get_json()
             else:
                 data_pass = request.form
@@ -54,7 +63,6 @@ def respond(api_method=None):
             data_pass = request.args
 
         data_pass = dict(data_pass)
-        data_pass['config'] = app.config
 
         logged = auth.authorization_process(api_method)
         result = logged
