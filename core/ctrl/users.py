@@ -240,7 +240,9 @@ def activate(user_data):
 
     result = {
         'message': "Invalid activation",
-        'status': False
+        'status': False,
+        'ulc': utils.eval_key('ulc', user_data),
+        'pin': utils.eval_key('pin', user_data, 'int')
     }
 
     if type(user) is dict:
