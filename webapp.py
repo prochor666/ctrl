@@ -45,7 +45,10 @@ def respond(api_method=None):
 
         if request.method == 'POST':
             request_method = 'POST'
-            data_pass = request.form
+            if 'Content-type' in app.config['headers'].keys() and app.config['headers']['Content-type'] == 'application/json':
+                data_pass = request.get_json()
+            else:
+                data_pass = request.form
         else:
             request_method = 'GET'
             data_pass = request.args
