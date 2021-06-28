@@ -5,7 +5,6 @@ from core.ctrl import secret, mailer
 
 
 def list_users(finder={}):
-
     try:
         if 'users' in app.db.list_collection_names():
             q_filter = {}
@@ -50,7 +49,6 @@ def filter_user_pattern():
 
 
 def insert(user_data):
-
     result = validator(user_data)
 
     if result['status'] == True:
@@ -98,7 +96,6 @@ def insert(user_data):
 
 
 def modify(user_data):
-
     result = validator(user_data)
 
     if 'id' not in user_data.keys():
@@ -251,6 +248,8 @@ def activate(user_data):
         result['message'] = "Valid activation"
         result['username'] = user['username']
         result['role'] = user['role']
+        result['ulc'] = utils.eval_key('ulc', user_data)
+        result['pin'] = utils.eval_key('pin', user_data, 'int')
         result['pwd'] = user['pwd']
 
     return result

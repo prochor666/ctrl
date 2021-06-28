@@ -12,7 +12,6 @@ app.mode = 'http'
 
 @webapp.route('/')
 def index():
-
     app.config['headers'] = dict(request.headers)
 
     if 'X-Forwarded-For' in app.config['headers'].keys():
@@ -26,7 +25,6 @@ def index():
 @webapp.route('/api/')
 @webapp.route('/api/<path:api_method>', methods=['POST', 'GET'])
 def respond(api_method=None):
-
     app.config['headers'] = dict(request.headers)
 
     if 'X-Forwarded-For' in app.config['headers'].keys():
@@ -77,7 +75,6 @@ def respond(api_method=None):
 
 
 if __name__ == '__main__':
-
     today = datetime.date.today()
     logging.basicConfig(filename=f"storage/logs/ctrl-server-{today.strftime('%Y-%m')}.log",level=logging.INFO)
 
