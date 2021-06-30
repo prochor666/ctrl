@@ -194,18 +194,17 @@ def recover(user_data, soft=True):
             result['message'] = f"Found user {user['username']}"
             result['status'] = True
             html_template = 'soft-recovery'
-            new_pin = int(secret.pin(6))
-            new_ulc = secret.token_urlsafe(32)
+
+            user['pin'] = int(secret.pin(6))
+            user['ulc'] = secret.token_urlsafe(32)
+
             new_activation_link = activation_link(user, http_origin)
             subject_suffix = "account activation"
 
             if app.mode == 'cli':
-                result['pin'] = new_pin
-                result['ulc'] = new_ulc
+                result['pin'] = user['pin']
+                result['ulc'] = user['ulc']
                 result['activation_link'] = new_activation_link
-
-            user['pin'] = new_pin
-            user['ulc'] = new_ulc
 
             if soft == False:
                 user['pwd'] = secret.token_urlsafe(64)
