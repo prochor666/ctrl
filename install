@@ -18,6 +18,20 @@ then
     exit 1
 fi
 
+VERSIONRAW="$($PYTHON -V)"
+EMPT=""
+CLEAN="${VERSIONRAW/Python /$EMPT}"
+NUM="${CLEAN//./$EMPT}"
+
+echo $NUM
+
+if [[ "$NUM" -lt "373" ]];
+then
+    echo "Python 3.7.3 or newer is required"
+    exit 1
+fi
+
+
 if [[ ! -x "$PIP" ]];
 then
     echo  "PIP is required, exiting..."

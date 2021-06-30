@@ -13,15 +13,13 @@ app.mode = 'http'
 
 @webapp.route('/')
 def index():
-    app.config['headers'] = dict(request.headers)
-
-    if app.config['headers'].get('X-Forwarded-For') != None:
-        app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
+    if request.headers.get('X-Forwarded-For') != None:
+        app.config['client_ip'] = request.headers.get('X-Forwarded-For')
     else:
         app.config['client_ip'] = request.remote_addr
 
-    if app.config['headers'].get('X-Real-Ip') != None:
-        app.config['client_ip'] = app.config['headers'].get('X-Real-Ip')
+    if request.headers.get('X-Real-Ip') != None:
+        app.config['client_ip'] = request.headers.get('X-Real-Ip')
 
     return render_template('index.html', config=app.config)
 
@@ -29,15 +27,13 @@ def index():
 @webapp.route('/api/')
 @webapp.route('/api/<path:api_method>', methods=['POST', 'GET'])
 def respond(api_method=None):
-    app.config['headers'] = dict(request.headers)
-
-    if app.config['headers'].get('X-Forwarded-For') != None:
-        app.config['client_ip'] = app.config['headers']['X-Forwarded-For']
+    if request.headers.get('X-Forwarded-For') != None:
+        app.config['client_ip'] = request.headers.get('X-Forwarded-For')
     else:
         app.config['client_ip'] = request.remote_addr
 
-    if app.config['headers'].get('X-Real-Ip') != None:
-        app.config['client_ip'] = app.config['headers'].get('X-Real-Ip')
+    if request.headers.get('X-Real-Ip') != None:
+        app.config['client_ip'] = request.headers.get('X-Real-Ip')
 
 
     api_method = str(api_method).replace('/', '')

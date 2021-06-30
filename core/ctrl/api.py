@@ -79,10 +79,6 @@ def scan_ip(data_pass=None):
     return result
 
 
-def headers(data_pass=None):
-    return app.config['headers']
-
-
 def test(data_pass=None):
     return {
         'test': "Ok",

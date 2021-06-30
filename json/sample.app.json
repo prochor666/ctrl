@@ -37,8 +37,8 @@
             "full_recovery": {}
         },
         "rest_free": {
-            "headers": {},
             "test": {},
+            "client_ip": {},
             "activate_user": {},
             "soft_recovery": {}
         },
@@ -50,7 +50,6 @@
             "disk": {},
             "login": {},
             "countries": {},
-            "client_ip": {},
             "ip": {},
             "scan_ip": {},
             "users": {},
