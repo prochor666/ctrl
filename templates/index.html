@@ -45,21 +45,21 @@
 
         <h3>Auth free</h3>
         <ul>
-        {% for header, value in config.api.rest_free.items() %}
+        {% for header, value in config.api.rest_free.items()|sort() %}
             <li>{{ header }}: {{ value }}</li>
         {% endfor %}
         </ul>
 
         <h3>Authorized</h3>
         <ul>
-        {% for header, value in config.api.rest_authorized.items() %}
+        {% for header, value in config.api.rest_authorized.items()|sort() %}
             <li>{{ header }}: {{ value }}</li>
         {% endfor %}
         </ul>
 
         <h3>CLI interface</h3>
         <ul>
-        {% for header, value in config.api.cli.items() %}
+        {% for header, value in config.api.cli.items()|sort() %}
             <li>{{ header }}: {{ value }}</li>
         {% endfor %}
         </ul>
