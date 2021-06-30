@@ -11,8 +11,7 @@ def authorization_process(api_method):
         'status': False
     }
 
-    if 'headers' in app.config.keys() and api_method in app.config['api']['rest_authorized'].keys():
-
+    if api_method in app.config['api']['rest_authorized'].keys():
 
         if request.headers.get('Authorization') != None:
             auth_token = extract_auth_token(
