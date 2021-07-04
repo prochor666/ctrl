@@ -1,47 +1,17 @@
-from os import link
 from bson.objectid import ObjectId
-from core import app, utils
+from core import app, utils, data
 from core.ctrl import secret, mailer
 
 
-def list_users(finder={}):
-    try:
-        if 'users' in app.db.list_collection_names():
-            q_filter = {}
-            q_sort = ['username', 1]
-            users = app.db['users']
-
-            if type(finder) is dict and 'filter' in finder.keys() and type(finder['filter']) is dict:
-                q_filter = finder['filter']
-
-            if type(finder) is dict and 'sort' in finder.keys() and type(finder['sort']) is list and len(finder['sort']) == 2:
-                q_sort = finder['sort']
-                from_str = {
-                    'asc': 1,
-                    'desc': -1
-                }
-                if type(q_sort[1]) is str and q_sort[1].lower() in from_str.keys():
-                    q_sort[1] = from_str[q_sort[1]]
-
-            return users.find(q_filter, filter_user_pattern()).sort(q_sort[0], q_sort[1])
-
-    except Exception as e:
-        return f"Database server error {str(e)}"
+def list_users(finder={'collection': 'users'}):
+    finder['collection'] = 'users'
+    finder['exclude'] = filter_user_pattern()
+    return data.ex(finder)
 
 
 def one(finder, no_filter_pattern=False):
-    try:
-        if 'users' in app.db.list_collection_names():
-
-            if no_filter_pattern == True:
-                return app.db['users'].find_one(finder)
-
-            return app.db['users'].find_one(finder, filter_user_pattern())
-
-        return False
-
-    except Exception as e:
-        return f"Database server error {str(e)}"
+    finder['collection'] = 'users'
+    return data.one(finder, filter_user_pattern() if no_filter_pattern else None )
 
 
 def filter_user_pattern():

@@ -1,6 +1,6 @@
 import json
 from flask import render_template
-from core import app, utils
+from core import app, data, utils
 from core.ctrl import device, network as net, mailer, users as usr
 
 
@@ -91,16 +91,7 @@ def db_check(data_pass=None):
 
 
 def users(data_pass=None):
-
-    finder = {}
-
-    if type(data_pass) is dict and 'filter' in data_pass.keys() and type(data_pass['filter']) is dict:
-        finder['filter'] = data_pass['filter']
-
-    if type(data_pass) is dict and 'sort' in data_pass.keys() and type(data_pass['sort']) is list and len(data_pass['sort']) == 2:
-        finder['sort'] = data_pass['sort']
-
-    u = usr.list_users(finder)
+    u = usr.list_users(data_pass)
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No users",
@@ -110,7 +101,7 @@ def users(data_pass=None):
     if result['count'] > 0:
         result['status'] = True
         result['message'] = f"Found users: {result['count']}"
-        result['users'] = utils.collect(u)
+        result['users'] = data.collect(u)
 
     return result
 

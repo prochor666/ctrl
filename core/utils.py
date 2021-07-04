@@ -89,13 +89,6 @@ def eval_key(key, data, data_type='str'):
         return 0 if str(key) not in data.keys() else int(data[key])
 
 
-def collect(find_result):
-    result = []
-    for document in find_result:
-        result.append(document)
-    return result
-
-
 def arg_json(arg):
     return json.loads(arg.replace('"', '').replace('\'', '"'))
 
