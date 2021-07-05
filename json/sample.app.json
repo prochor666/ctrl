@@ -34,7 +34,10 @@
             "modify_user": {},
             "activate_user": {},
             "soft_recovery": {},
-            "full_recovery": {}
+            "full_recovery": {},
+            "servers": {},
+            "create_server": {},
+            "modify_server": {}
         },
         "rest_free": {
             "test": {},
@@ -55,7 +58,10 @@
             "users": {},
             "create_user": {},
             "modify_user": {},
-            "full_recovery": {}
+            "full_recovery": {},
+            "servers": {},
+            "create_server": {},
+            "modify_server": {}
         }
     }
 }

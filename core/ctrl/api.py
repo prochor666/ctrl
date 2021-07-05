@@ -1,7 +1,7 @@
 import json
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv
 
 
 def about(data_pass=None):
@@ -126,3 +126,29 @@ def soft_recovery(data_pass):
 
 def full_recovery(data_pass):
     return usr.recover(data_pass, False)
+
+
+def servers(data_pass=None):
+    u = srv.list_servers(data_pass)
+    result = {
+        'status': False,
+        'message': str(u) if type(u) is str else "No servers",
+        'servers': {},
+        'count': 0 if type(u) is str or u == None else u.count()
+    }
+    if result['count'] > 0:
+        result['status'] = True
+        result['message'] = f"Found servers: {result['count']}"
+        result['servers'] = data.collect(u)
+
+    return result
+
+
+def create_server(data_pass=None):
+    result = srv.insert(data_pass)
+    return result
+
+
+def modify_server(data_pass=None):
+    result = srv.modify(data_pass)
+    return result

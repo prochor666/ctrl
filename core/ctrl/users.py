@@ -9,7 +9,7 @@ def list_users(finder={'collection': 'users'}):
     return data.ex(finder)
 
 
-def one(finder, no_filter_pattern=False):
+def load_user(finder, no_filter_pattern=False):
     finder['collection'] = 'users'
     return data.one(finder, filter_user_pattern() if no_filter_pattern else None )
 
@@ -25,7 +25,7 @@ def insert(user_data):
 
         user = user_model(user_data)
 
-        finder = one({
+        finder = load_user({
         '$or': [
                 {'username': user['username']},
                 {'email': user['email']}
@@ -74,7 +74,7 @@ def modify(user_data):
 
     if result['status'] == True:
 
-        finder = one({
+        finder = load_user({
         '$and': [
             {
                 '$or': [
@@ -90,7 +90,7 @@ def modify(user_data):
         ]
         })
 
-        modify_user = one({
+        modify_user = load_user({
             '_id': ObjectId(user_data['id'])
         }, no_filter_pattern=True)
 
@@ -148,7 +148,7 @@ def recover(user_data, soft=True):
     if type(user_data) is dict and 'username' in user_data.keys():
         unifield = user_data['username']
 
-        user = one({
+        user = load_user({
             '$or': [
                 {'username': unifield},
                 {'email': unifield}
@@ -200,7 +200,7 @@ def recover(user_data, soft=True):
 
 
 def activate(user_data):
-    user = one({
+    user = load_user({
         '$and': [
             {'ulc': utils.eval_key('ulc', user_data)},
             {'pin': utils.eval_key('pin', user_data, 'int')}
