@@ -10,7 +10,9 @@ def list_servers(finder={}):
 
 def load_server(finder, no_filter_pattern=False):
     finder['collection'] = 'servers'
-    return data.one(finder, filter_server_pattern() if no_filter_pattern else None )
+    if no_filter_pattern:
+        finder['exclude'] = filter_server_pattern()
+    return data.one(finder)
 
 
 def filter_server_pattern():
