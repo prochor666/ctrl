@@ -67,7 +67,7 @@ def extract_auth_token(header):
 
 
 def get_user_from_db(token):
-    user = users.one({
+    user = users.load_user({
         'pwd': token
     }, no_filter_pattern=True)
 
