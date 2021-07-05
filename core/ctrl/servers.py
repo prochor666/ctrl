@@ -2,14 +2,20 @@ from bson.objectid import ObjectId
 from core import app, data, utils
 
 
-def list_servers(finder={}):
-    finder['collection'] = 'servers'
-    finder['exclude'] = filter_server_pattern()
+def list_servers(filter_data):
+    finder = {
+        'collection': 'servers',
+        'filter': filter_data,
+        'exclude': filter_server_pattern()
+    }
     return data.ex(finder)
 
 
-def load_server(finder, no_filter_pattern=False):
-    finder['collection'] = 'servers'
+def load_server(filter_data, no_filter_pattern=False):
+    finder = {
+        'collection': 'users',
+        'filter': filter_data
+    }
     if not no_filter_pattern:
         finder['exclude'] = filter_server_pattern()
     return data.one(finder)

@@ -3,14 +3,20 @@ from core import app, utils, data
 from core.ctrl import secret, mailer
 
 
-def list_users(finder={'collection': 'users'}):
-    finder['collection'] = 'users'
-    finder['exclude'] = filter_user_pattern()
+def list_users(filter_data):
+    finder = {
+        'collection': 'users',
+        'filter': filter_data,
+        'exclude': filter_user_pattern()
+    }
     return data.ex(finder)
 
 
-def load_user(finder, no_filter_pattern=False):
-    finder['collection'] = 'users'
+def load_user(filter_data, no_filter_pattern=False):
+    finder = {
+        'collection': 'users',
+        'filter': filter_data
+    }
     if not no_filter_pattern:
         finder['exclude'] = filter_user_pattern()
     return data.one(finder)
@@ -86,7 +92,7 @@ def modify(user_data):
             },
             {
             '_id': {
-                    '$ne': ObjectId(user_data['id'])
+                    '$ne': ObjectId(str(user_data['id']))
                 }
             }
         ]
@@ -135,7 +141,8 @@ def modify(user_data):
             result['email_status'] = es
         else:
             result['message'] = "Username or email already exists"
-            #result['finder'] = finder
+            result['finder'] = finder
+            result['modify_user'] = modify_user
 
     return result
 

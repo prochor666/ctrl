@@ -2,7 +2,7 @@ import json
 from flask import render_template
 from core import app, data, utils
 from core.ctrl import device, network as net, mailer, users as usr, servers as srv
-
+from bson import json_util
 
 def about(data_pass=None):
     data = {
@@ -101,7 +101,7 @@ def users(data_pass=None):
     if result['count'] > 0:
         result['status'] = True
         result['message'] = f"Found users: {result['count']}"
-        result['users'] = data.collect(u)
+        result['users'] = json_util.dumps(data.collect(u))
 
     return result
 
