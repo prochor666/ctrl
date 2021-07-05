@@ -136,9 +136,9 @@ def server_model(server_data):
         'publish': utils.eval_key('publish', server_data, 'bool'),
         'use': utils.eval_key('use', server_data, 'bool'),
         'owner': utils.eval_key('owner', server_data),
+        'creator': utils.eval_key('creator', server_data),
         'created_at': utils.eval_key('created_at', server_data),
         'updated_at': utils.eval_key('updated_at', server_data),
     }
 
     return server
-
