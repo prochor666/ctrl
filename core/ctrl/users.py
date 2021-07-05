@@ -11,7 +11,7 @@ def list_users(finder={'collection': 'users'}):
 
 def load_user(finder, no_filter_pattern=False):
     finder['collection'] = 'users'
-    if no_filter_pattern:
+    if not no_filter_pattern:
         finder['exclude'] = filter_user_pattern()
     return data.one(finder)
 
