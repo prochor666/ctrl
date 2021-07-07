@@ -101,7 +101,7 @@ def users(data_pass=None):
     if result['count'] > 0:
         result['status'] = True
         result['message'] = f"Found users: {result['count']}"
-        result['users'] = json_util.dumps(data.collect(u))
+        result['users'] = data.collect(u)
 
     return result
 

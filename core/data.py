@@ -23,6 +23,7 @@ def one(finder={}):
 def collect(find_result):
     result = []
     for document in find_result:
+        document['_id'] = str(document['_id'])
         result.append(document)
     return result
 
