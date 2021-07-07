@@ -33,9 +33,11 @@ def delete(server_data):
     }
 
     if 'id' in server_data.keys():
-        result['modify_server'] = load_server({
+        modify_server = load_server({
             '_id': ObjectId(server_data['id'])
         }, no_filter_pattern=True)
+
+        result['modify_server'] = str(modify_server) if type(modify_server) is str else data.collect(modify_server)
 
     return result
 
