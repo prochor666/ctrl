@@ -41,7 +41,7 @@ def delete(server_data):
 
         servers = app.db['servers']
         result['delete_status'] = servers.delete_one({'_id': ObjectId(server_data['id'])})
-        result['delete_status'] = 'Server deleted'
+        result['message'] = 'Server deleted'
 
     return result
 
