@@ -33,16 +33,14 @@ def delete(server_data):
     }
 
     if 'id' in server_data.keys():
-        modify_server = load_server({
+        """ modify_server = load_server({
             '_id': ObjectId(server_data['id'])
         }, no_filter_pattern=True)
-
-        result['modify_server'] = str(modify_server) if type(modify_server) is str else data.collect_one(modify_server)
-
+        """
         servers = app.db['servers']
         r = servers.delete_one({'_id': ObjectId(server_data['id'])})
         result['delete_status'] = r.deleted_count
-        result['message'] = False if r.deleted_count == 0 else True
+        result['status'] = False if r.deleted_count == 0 else True
         result['message'] = 'Server delete error' if r.deleted_count == 0 else 'Server deleted'
 
     return result
