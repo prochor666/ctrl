@@ -13,7 +13,7 @@ def list_servers(filter_data):
 
 def load_server(filter_data, no_filter_pattern=False):
     finder = {
-        'collection': 'users',
+        'collection': 'servers',
         'filter': filter_data
     }
     if not no_filter_pattern:
@@ -23,7 +23,6 @@ def load_server(filter_data, no_filter_pattern=False):
 
 def filter_server_pattern():
     return {'ssh_private_key': 0}
-
 
 
 def delete(server_data):
