@@ -37,10 +37,11 @@ def delete(server_data):
             '_id': ObjectId(server_data['id'])
         }, no_filter_pattern=True)
 
-        servers = app.db['servers']
-        servers.delete_one({'id': ObjectId(server_data['id'])})
-
         result['modify_server'] = str(modify_server) if type(modify_server) is str else data.collect_one(modify_server)
+
+        servers = app.db['servers']
+        result['delete_status'] = servers.delete_one({'_id': ObjectId(server_data['id'])})
+        result['delete_status'] = 'Server deleted'
 
     return result
 
