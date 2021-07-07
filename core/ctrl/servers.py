@@ -29,7 +29,8 @@ def filter_server_pattern():
 def delete(server_data):
     result = {
         'status': False,
-        'message': 'Need id to delete server'
+        'message': 'Need id to delete server',
+        'server_data': server_data
     }
 
     if 'id' not in server_data.keys():
