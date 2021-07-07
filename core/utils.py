@@ -2,6 +2,7 @@ import os
 import datetime
 import re
 import json
+import ipaddress
 from core import colors, app
 
 
@@ -72,6 +73,31 @@ def validate_data_pass(d):
         if v != None:
             result[k] = v
     return result
+
+
+def ip_valid(ip):
+    r = {
+        'ip': ip,
+        'version': 0,
+        'is_global': False,
+        'is_multicast': False,
+        'is_private': False,
+        'is_reserved': False,
+        'is_loopback': False,
+        'is_link_local': False,
+    }
+    try:
+        i = ipaddress.ip_address(ip)
+        r['version'] = i.version
+        r['is_global'] = i.is_global
+        r['is_multicast'] = i.is_multicast
+        r['is_private'] = i.is_private
+        r['is_reserved'] = i.is_reserved
+        r['is_loopback'] = i.is_loopback
+        r['is_link_local'] = i.is_link_local
+        return r
+    except:
+        return r
 
 
 def file_save(file, content=' '):
