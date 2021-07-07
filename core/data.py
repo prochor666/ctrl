@@ -20,6 +20,10 @@ def one(finder={}):
         return f"Database server error {str(e)}"
 
 
+def collect_one(document):
+    document['_id'] = str(document['_id'])
+    return document;
+
 def collect(find_result):
     result = []
     for document in find_result:
