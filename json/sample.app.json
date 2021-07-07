@@ -37,7 +37,8 @@
             "full_recovery": {},
             "servers": {},
             "create_server": {},
-            "modify_server": {}
+            "modify_server": {},
+            "delete_server": {}
         },
         "rest_free": {
             "test": {},
@@ -61,7 +62,8 @@
             "full_recovery": {},
             "servers": {},
             "create_server": {},
-            "modify_server": {}
+            "modify_server": {},
+            "delete_server": {}
         }
     }
 }

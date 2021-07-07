@@ -152,3 +152,8 @@ def create_server(data_pass=None):
 def modify_server(data_pass=None):
     result = srv.modify(data_pass)
     return result
+
+
+def delete_server(data_pass=None):
+    result = srv.delete(data_pass)
+    return result

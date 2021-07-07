@@ -25,6 +25,21 @@ def filter_server_pattern():
     return {'ssh_private_key': 0}
 
 
+
+def delete(server_data):
+    result = {
+        'status': False,
+        'message': 'Need id to delete server'
+    }
+
+    if 'id' not in server_data.keys():
+        result['modify_server'] = load_server({
+            '_id': ObjectId(server_data['id'])
+        }, no_filter_pattern=True)
+
+    return result
+
+
 def modify(server_data):
     result = validator(server_data)
 
@@ -132,7 +147,8 @@ def server_model(server_data):
         'ssh_user': utils.eval_key('ssh_user', server_data),
         'ssh_pwd': utils.eval_key('ssh_pwd', server_data),
         'ssh_port': utils.eval_key('ssh_port', server_data),
-        'ssh_private_key': utils.eval_key('ssh_private_key', server_data),
+        'ssh_dir': utils.eval_key('ssh_dir', server_data),
+        'ssh_pub_key': utils.eval_key('ssh_pub_key', server_data),
         'publish': utils.eval_key('publish', server_data, 'bool'),
         'use': utils.eval_key('use', server_data, 'bool'),
         'owner': utils.eval_key('owner', server_data),
