@@ -50,7 +50,8 @@ def respond(api_method=None):
         if request.method == 'POST':
             request_method = 'POST'
 
-            if request.headers.get('Content-type') != None and 'application/json' == request.headers.get('Content-type'):
+            if request.headers.get('Content-type') != None and request.headers.get('Content-type').startswith('application/json'):
+                request_method = 'POST-JSON'
                 data_pass = request.get_json()
             else:
                 data_pass = request.form
