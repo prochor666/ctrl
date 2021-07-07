@@ -33,7 +33,7 @@ def delete(server_data):
         'server_data': server_data
     }
 
-    if 'id' not in server_data.keys():
+    if 'id' in server_data.keys():
         result['modify_server'] = load_server({
             '_id': ObjectId(server_data['id'])
         }, no_filter_pattern=True)
