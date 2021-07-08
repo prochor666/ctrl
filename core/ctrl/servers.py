@@ -77,7 +77,7 @@ def modify(server_data):
         }, no_filter_pattern=True)
 
         if type(finder) is not dict and type(modify_server) is dict:
-            server_data.pop('id', None)
+            _id = server_data.pop('id', None)
             server_data.pop('creator', None)
             server_data.pop('created_at', None)
 
@@ -88,7 +88,7 @@ def modify(server_data):
             servers = app.db['servers']
 
             server = server_model(server)
-            servers.update_one({'_id': ObjectId(server_data['id']) }, { '$set': server })
+            servers.update_one({'_id': ObjectId(_id) }, { '$set': server })
 
             result['status'] = True
             result['message'] = f"Server {server['name']} modified"
