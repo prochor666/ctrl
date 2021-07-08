@@ -63,6 +63,7 @@ def respond(api_method=None):
 
         logged = auth.authorization_process(api_method)
         result = logged
+        app.config['user'] = result
 
         if logged['status'] == True:
             # Start api request passing

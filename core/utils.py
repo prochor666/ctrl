@@ -1,5 +1,5 @@
 import os
-import datetime
+from datetime import timezone, datetime
 import re
 import json
 import ipaddress
@@ -49,7 +49,8 @@ def is_username(username=None):
 
 
 def now():
-    return datetime.datetime.utcnow()
+    dt_now = datetime.now(tz=timezone.utc)
+    return dt_now
 
 
 def app_root():
@@ -116,6 +117,12 @@ def eval_key(key, data, data_type='str'):
 
     if data_type == 'bool':
         return False if str(key) not in data.keys() else bool(data[key])
+
+    if data_type == 'ipv4':
+        return '' if str(key) not in data.keys() and ip_valid(data[key]).version == 4 else data[key]
+
+    if data_type == 'ipv6':
+        return '' if str(key) not in data.keys() and ip_valid(data[key]).version == 6 else data[key]
 
 
 def arg_json(arg):

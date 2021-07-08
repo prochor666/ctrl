@@ -293,6 +293,44 @@ def validator(user_data):
     return result
 
 
+def system_user():
+    finder = load_user({
+        'username': 'system'
+    })
+
+    if type(finder) is not dict:
+        create_system_user()
+
+        finder = load_user({
+            'username': 'system'
+        })
+
+    return finder
+
+
+def create_system_user():
+
+    user = user_model({
+        'username': 'system',
+        'firstname': 'System',
+        'lastname': 'User',
+        'role': 'admin',
+        'email': 'noreply@local.none'
+    })
+
+    users = app.db['users']
+
+    user['pwd'] = 'system'
+    user['salt'] = secret.token_rand(64)
+    user['secret'] = hash_user(user)
+    user['ulc'] = ''
+    user['pin'] = 0
+
+    users.insert_one(user)
+
+    return user
+
+
 def user_model(user_data):
     if type(user_data) is not dict:
         user_data = {}

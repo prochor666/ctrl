@@ -35,6 +35,7 @@
             "activate_user": {},
             "soft_recovery": {},
             "full_recovery": {},
+            "get_system_user": {},
             "servers": {},
             "create_server": {},
             "modify_server": {},

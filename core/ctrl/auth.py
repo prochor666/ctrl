@@ -1,4 +1,4 @@
-from core import app
+from core import app, data
 from core.ctrl import users
 from flask import request
 
@@ -52,6 +52,8 @@ def login(data_pass=None):
                 result['message'] = "Authorization succeeded"
                 result['username'] = user_data['username']
                 result['role'] = user_data['role']
+                result['email'] = user_data['email']
+                result['_id'] = user_data['_id']
                 result['status'] = True
 
     return result
@@ -72,6 +74,6 @@ def get_user_from_db(token):
     }, no_filter_pattern=True)
 
     if type(user) is dict:
-        return user
+        return data.collect_one(user)
 
     return False

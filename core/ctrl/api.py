@@ -106,6 +106,10 @@ def users(data_pass=None):
     return result
 
 
+def get_system_user(data_pass=None):
+    return usr.system_user()
+
+
 def activate_user(data_pass=None):
     return usr.activate(data_pass)
 

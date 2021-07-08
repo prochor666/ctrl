@@ -41,6 +41,8 @@ for key, value in data_pass.items():
 
 if method != None and method in dir(api) and method in app.config['api']['cli']:
 
+    app.config['user'] = api.get_system_user()
+
     #data_pass['config'] = app.config
     result = getattr(api, str(method))(data_pass)
 
