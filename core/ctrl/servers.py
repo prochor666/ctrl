@@ -77,6 +77,9 @@ def modify(server_data):
         }, no_filter_pattern=True)
 
         if type(finder) is not dict and type(modify_server) is dict:
+            server_data.pop('id', None)
+            server_data.pop('creator', None)
+            server_data.pop('created_at', None)
 
             server = {**modify_server, **server_data}
 
@@ -130,6 +133,9 @@ def insert(server_data):
             })
 
         if type(finder) is not dict:
+
+            server_data.pop('id', None)
+            server_data.pop('updated_at', None)
 
             server['created_at'] = utils.now()
             server['creator'] = app.config['user']['_id']
