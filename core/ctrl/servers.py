@@ -32,7 +32,7 @@ def modify(server_data):
         result['message'] = 'Need id to modify server'
         result['status'] = False
 
-    if len(server_data['id']) == 24:
+    if len(server_data['id']) != 24:
         result['message'] = 'Server id is invalid'
         result['status'] = False
 
