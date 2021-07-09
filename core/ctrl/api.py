@@ -133,7 +133,6 @@ def full_recovery(data_pass):
 
 
 def servers(data_pass=None):
-
     u = srv.list_servers(data_pass)
     result = {
         'status': False,
