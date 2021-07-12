@@ -45,6 +45,9 @@ def proxy(finder):
             'desc': -1
         }
 
+        if 'id' in _filter:
+            _filter['_id'] = ObjectId(_filter.pop('id'))
+
         if type(_sort) is list and len(_sort) == 2:
             if type(_sort[1]) is str and _sort[1].lower() in _from_str.keys():
                 _sort[1] = _from_str[_sort[1]]

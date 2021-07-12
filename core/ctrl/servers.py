@@ -32,77 +32,79 @@ def modify(server_data):
         result['message'] = 'Need id to modify server'
         result['status'] = False
 
-    if len(server_data['id']) != 24:
-        result['message'] = 'Server id is invalid'
-        result['status'] = False
+    else:
 
-    if result['status'] == True:
+        if len(server_data['id']) != 24:
+            result['message'] = 'Server id is invalid'
+            result['status'] = False
 
-        if len(server_data['ipv6']) > 0:
-            finder = load_server({
-            '$and': [
-                {
-                    '$or': [
-                        {'name': server_data['name']},
-                        {'ipv4': server_data['ipv4']},
-                        {'ipv6': server_data['ipv6']}
-                    ],
-                },
-                {
-                '_id': {
-                        '$ne': ObjectId(server_data['id'])
+        if result['status'] == True:
+
+            if len(server_data['ipv6']) > 0:
+                finder = load_server({
+                '$and': [
+                    {
+                        '$or': [
+                            {'name': server_data['name']},
+                            {'ipv4': server_data['ipv4']},
+                            {'ipv6': server_data['ipv6']}
+                        ],
+                    },
+                    {
+                    '_id': {
+                            '$ne': ObjectId(server_data['id'])
+                        }
                     }
-                }
-            ]
-            })
-        else:
-            finder = load_server({
-            '$and': [
-                {
-                    '$or': [
-                        {'name': server_data['name']},
-                        {'ipv4': server_data['ipv4']}
-                    ],
-                },
-                {
-                '_id': {
-                        '$ne': ObjectId(server_data['id'])
+                ]
+                })
+            else:
+                finder = load_server({
+                '$and': [
+                    {
+                        '$or': [
+                            {'name': server_data['name']},
+                            {'ipv4': server_data['ipv4']}
+                        ],
+                    },
+                    {
+                    '_id': {
+                            '$ne': ObjectId(server_data['id'])
+                        }
                     }
-                }
-            ]
-            })
+                ]
+                })
 
-        modify_server = load_server({
-            '_id': ObjectId(server_data['id'])
-        }, no_filter_pattern=True)
+            modify_server = load_server({
+                '_id': ObjectId(server_data['id'])
+            }, no_filter_pattern=True)
 
-        if type(finder) is not dict and type(modify_server) is dict:
-            _id = server_data.pop('id', None)
-            server_data.pop('creator', None)
-            server_data.pop('created_at', None)
+            if type(finder) is not dict and type(modify_server) is dict:
+                _id = server_data.pop('id', None)
+                server_data.pop('creator', None)
+                server_data.pop('created_at', None)
 
-            server = {**modify_server, **server_data}
+                server = {**modify_server, **server_data}
 
-            server['updated_at'] = utils.now()
+                server['updated_at'] = utils.now()
 
-            servers = app.db['servers']
+                servers = app.db['servers']
 
-            server = server_model(server)
-            servers.update_one({'_id': ObjectId(_id) }, { '$set': server })
+                server = server_model(server)
+                servers.update_one({'_id': ObjectId(_id) }, { '$set': server })
 
-            result['status'] = True
-            result['message'] = f"Server {server['name']} modified"
+                result['status'] = True
+                result['message'] = f"Server {server['name']} modified"
 
-        else:
-            param_found = ''
-            if finder['name'] == server_data['name']:
-                param_found = f"with name {server_data['name']}"
-            if len(param_found)==0 and finder['ipv4'] == server_data['ipv4']:
-                param_found = f"with IPv4 {server_data['ipv4']}"
-            if len(param_found)==0 and finder['ipv6'] == server_data['ipv6']:
-                param_found = f"with IPv6 {server_data['ipv6']}"
+            else:
+                param_found = ''
+                if finder['name'] == server_data['name']:
+                    param_found = f"with name {server_data['name']}"
+                if len(param_found)==0 and finder['ipv4'] == server_data['ipv4']:
+                    param_found = f"with IPv4 {server_data['ipv4']}"
+                if len(param_found)==0 and finder['ipv6'] == server_data['ipv6']:
+                    param_found = f"with IPv6 {server_data['ipv6']}"
 
-            result['message'] = f"Server {param_found} already exists"
+                result['message'] = f"Server {param_found} already exists"
 
     return result
 
