@@ -165,6 +165,7 @@ def recipe_model(recipe_data):
     recipe = {
         'name': utils.eval_key('name', recipe_data),
         'description': utils.eval_key('description', recipe_data),
+        'safe': utils.eval_key('safe', recipe_data, 'bool'),
         'content': utils.eval_key('content', recipe_data),
         'creator': utils.eval_key('creator', recipe_data),
         'created_at': utils.eval_key('created_at', recipe_data),
