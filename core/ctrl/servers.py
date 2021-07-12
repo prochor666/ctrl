@@ -189,16 +189,16 @@ def validator(server_data):
 
     if type(server_data) is dict and 'ipv4' in server_data.keys() and 'name' in server_data.keys():
 
+        if type(server_data['name']) != str or len(server_data['name'])<2:
+            result['message'] = f"{server_data['name']} is not a valid server name"
+            return result
+
         if utils.ip_valid(server_data['ipv4'])['version'] != 4:
             result['message'] = "Enter valid IPv4 address"
             return result
 
         if len(server_data['ipv6'])>0 and utils.ip_valid(server_data['ipv6'])['version'] != 6:
             result['message'] = "Enter valid IPv6 address"
-            return result
-
-        if type(server_data['name']) != str or len(server_data['name'])<2:
-            result['message'] = f"{server_data['name']} is not a valid server name"
             return result
 
         result['status'] = True

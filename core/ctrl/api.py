@@ -1,7 +1,7 @@
 import json
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps
 from bson import json_util
 
 def about(data_pass=None):
@@ -160,4 +160,35 @@ def modify_server(data_pass=None):
 
 def delete_server(data_pass=None):
     result = srv.delete(data_pass)
+    return result
+
+
+def recipes(data_pass=None):
+    u = rcps.list_recipes(data_pass)
+    result = {
+        'status': False,
+        'message': str(u) if type(u) is str else "No recipes",
+        'recipes': {},
+        'count': 0 if type(u) is str or u == None else u.count()
+    }
+    if result['count'] > 0:
+        result['status'] = True
+        result['message'] = f"Found servers: {result['count']}"
+        result['recipes'] = data.collect(u)
+
+    return result
+
+
+def create_recipe(data_pass=None):
+    result = rcps.insert(data_pass)
+    return result
+
+
+def modify_recipe(data_pass=None):
+    result = rcps.modify(data_pass)
+    return result
+
+
+def delete_recipe(data_pass=None):
+    result = rcps.delete(data_pass)
     return result

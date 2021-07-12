@@ -39,7 +39,11 @@
             "servers": {},
             "create_server": {},
             "modify_server": {},
-            "delete_server": {}
+            "delete_server": {},
+            "recipes": {},
+            "create_recipe": {},
+            "modify_recipe": {},
+            "delete_recipe": {}
         },
         "rest_free": {
             "test": {},
@@ -64,7 +68,11 @@
             "servers": {},
             "create_server": {},
             "modify_server": {},
-            "delete_server": {}
+            "delete_server": {},
+            "recipes": {},
+            "create_recipe": {},
+            "modify_recipe": {},
+            "delete_recipe": {}
         }
     }
 }
