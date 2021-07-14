@@ -32,6 +32,7 @@
             "users": {},
             "create_user": {},
             "modify_user": {},
+            "delete_user": {},
             "activate_user": {},
             "soft_recovery": {},
             "full_recovery": {},

@@ -275,6 +275,23 @@ def compose_client_url(user_data, http_origin=''):
     return link
 
 
+def delete(user_data):
+    result = {
+        'status': False,
+        'message': 'Need id to delete user',
+        'user_data': user_data
+    }
+
+    if 'id' in user_data.keys():
+        users = app.db['users']
+        r = users.delete_one({'_id': ObjectId(user_data['id'])})
+        result['delete_status'] = r.deleted_count
+        result['status'] = False if r.deleted_count == 0 else True
+        result['message'] = 'User delete error' if r.deleted_count == 0 else 'User deleted'
+
+    return result
+
+
 def validator(user_data):
     result = {
         'status': False,

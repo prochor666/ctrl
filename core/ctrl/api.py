@@ -130,6 +130,11 @@ def modify_user(data_pass=None):
     return result
 
 
+def delete_user(data_pass=None):
+    result = usr.delete(data_pass)
+    return result
+
+
 def soft_recovery(data_pass):
     return usr.recover(data_pass, True)
 
@@ -167,6 +172,7 @@ def modify_server(data_pass=None):
 def delete_server(data_pass=None):
     result = srv.delete(data_pass)
     return result
+
 
 # Recipes
 def recipes(data_pass=None):
