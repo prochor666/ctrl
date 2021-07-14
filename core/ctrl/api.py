@@ -162,7 +162,7 @@ def delete_server(data_pass=None):
     result = srv.delete(data_pass)
     return result
 
-
+# Recipes
 def recipes(data_pass=None):
     u = rcps.list_recipes(data_pass)
     result = {

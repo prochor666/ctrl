@@ -53,6 +53,9 @@ def insert(user_data):
             if 'http_origin' in user_data.keys():
                 http_origin = user_data.pop('http_origin', None)
 
+            user['created_at'] = utils.now()
+            user['creator'] = app.config['user']['_id']
+
             users.insert_one(user)
 
             html_message = mailer.email_template('register').format(**{
@@ -123,6 +126,13 @@ def modify(user_data):
                 html_template = 'modify'
 
             user['secret'] = hash_user(user)
+            user['updated_at'] = utils.now()
+
+            if 'created_at' not in modify_user:
+                user['created_at'] = utils.now()
+
+            if 'creator' not in modify_user:
+                user['creator'] = app.config['user']['_id']
 
             user = user_model(user)
             users.update_one({'_id': ObjectId(user_data['id']) }, { '$set': user })
@@ -193,6 +203,8 @@ def recover(user_data, soft=True):
                 subject_suffix = "account recovery"
 
             users = app.db['users']
+            user['updated_at'] = utils.now()
+
             users.update_one({'_id': ObjectId(user['_id']) }, { '$set': user })
 
             html_message = mailer.email_template(html_template).format(**{
@@ -346,6 +358,9 @@ def user_model(user_data):
         'salt': utils.eval_key('salt', user_data),
         'secret': utils.eval_key('secret', user_data),
         'ulc': utils.eval_key('ulc', user_data),
+        'creator': utils.eval_key('creator', user_data),
+        'created_at': utils.eval_key('created_at', user_data),
+        'updated_at': utils.eval_key('updated_at', user_data),
     }
 
     return user

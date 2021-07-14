@@ -128,7 +128,6 @@ def delete(recipe_data):
     }
 
     if 'id' in recipe_data.keys():
-
         recipes = app.db['recipes']
         r = recipes.delete_one({'_id': ObjectId(recipe_data['id'])})
         result['delete_status'] = r.deleted_count
