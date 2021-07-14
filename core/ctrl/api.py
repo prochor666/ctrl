@@ -95,12 +95,18 @@ def users(data_pass=None):
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No users",
-        'users': {},
+        'users': [],
         'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
         result['status'] = True
         result['message'] = f"Found users: {result['count']}"
+
+    if app.mode == 'http':
+        for user in data.collect(u):
+            if user['username'] != 'system':
+            result['users'] = user
+    else:
         result['users'] = data.collect(u)
 
     return result
@@ -137,7 +143,7 @@ def servers(data_pass=None):
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No servers",
-        'servers': {},
+        'servers': [],
         'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
@@ -168,7 +174,7 @@ def recipes(data_pass=None):
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No recipes",
-        'recipes': {},
+        'recipes': [],
         'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
