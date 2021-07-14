@@ -70,8 +70,14 @@ def insert(user_data):
             result['message'] = f"User {user['username']} created"
             result['email_status'] = es
         else:
+            param_found = ''
+            if finder['username'] == user['username']:
+                param_found = f"with username {finder['username']}"
+            if len(param_found)==0 and finder['email'] == user['email']:
+                param_found = f"with email {finder['email']}"
+
             result['status'] = False
-            result['message'] = "Username or email already exists"
+            result['message'] = f"User {param_found} already exists"
 
     return result
 
@@ -147,12 +153,15 @@ def modify(user_data):
             es = mailer.send(user['email'], f"{app.config['name']} account updated", html_message)
             result['status'] = True
             result['message'] = f"User {user['username']} modified"
-            #result['finder'] = finder
             result['email_status'] = es
         else:
-            result['message'] = "Username or email already exists"
-            result['finder'] = finder
-            result['modify_user'] = modify_user
+            param_found = ''
+            if finder['username'] == modify_user['username']:
+                param_found = f"with username {modify_user['username']}"
+            if len(param_found)==0 and finder['email'] == modify_user['email']:
+                param_found = f"with email {modify_user['email']}"
+
+            result['message'] = f"User {param_found} already exists"
 
     return result
 
