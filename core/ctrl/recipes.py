@@ -75,6 +75,7 @@ def modify(recipe_data):
             if len(param_found)==0 and finder['content'] == recipe_data['content']:
                 param_found = f"with same content"
 
+            result['status'] = False
             result['message'] = f"Recipe {param_found} already exists"
 
     return result

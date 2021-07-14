@@ -161,6 +161,7 @@ def modify(user_data):
             if len(param_found)==0 and finder['email'] == user_data['email']:
                 param_found = f"with email {user_data['email']}"
 
+            result['status'] = False
             result['message'] = f"User {param_found} already exists"
 
     return result

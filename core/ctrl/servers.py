@@ -103,6 +103,7 @@ def modify(server_data):
                     param_found = f"with IPv4 {server_data['ipv4']}"
                 if len(param_found)==0 and finder['ipv6'] == server_data['ipv6']:
                     param_found = f"with IPv6 {server_data['ipv6']}"
+                result['status'] = False
 
                 result['message'] = f"Server {param_found} already exists"
 
