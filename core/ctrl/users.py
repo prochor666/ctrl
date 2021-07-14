@@ -289,7 +289,7 @@ def validator(user_data):
 
         email_validation = mailer.check_email(user_data['email'])
         if not email_validation['valid']:
-            result['message'] = f"{user_data['email']} is invalid. {email_validation['description']}"
+            result['message'] = f"Email '{user_data['email']}' is invalid. {email_validation['description']}"
             return result
 
         if type(user_data['username']) != str:
