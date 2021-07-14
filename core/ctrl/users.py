@@ -156,10 +156,10 @@ def modify(user_data):
             result['email_status'] = es
         else:
             param_found = ''
-            if finder['username'] == modify_user['username']:
-                param_found = f"with username {finder['username']}"
-            if len(param_found)==0 and finder['email'] == modify_user['email']:
-                param_found = f"with email {finder['email']}"
+            if finder['username'] == user_data['username']:
+                param_found = f"with username {user_data['username']}"
+            if len(param_found)==0 and finder['email'] == user_data['email']:
+                param_found = f"with email {user_data['email']}"
 
             result['message'] = f"User {param_found} already exists"
 
