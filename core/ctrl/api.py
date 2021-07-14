@@ -105,7 +105,7 @@ def users(data_pass=None):
     if app.mode == 'http':
         for user in data.collect(u):
             if user['username'] != 'system':
-                result['users'] = user
+                result['users'].append(user)
     else:
         result['users'] = data.collect(u)
 
