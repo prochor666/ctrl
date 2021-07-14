@@ -49,8 +49,8 @@ def is_username(username=None):
 
 
 def now():
-    dt_now = datetime.now(tz=timezone.utc)
-    return dt_now
+    dt_now = datetime.now(tz=timezone.utc).isoformat()
+    return str(dt_now)
 
 
 def app_root():

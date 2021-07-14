@@ -173,7 +173,7 @@ def recipes(data_pass=None):
     }
     if result['count'] > 0:
         result['status'] = True
-        result['message'] = f"Found servers: {result['count']}"
+        result['message'] = f"Found recipes: {result['count']}"
         result['recipes'] = data.collect(u)
 
     return result
