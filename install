@@ -40,15 +40,16 @@ fi
 
 if [[ -x "$PYTHON" ]] & [[ -x "$PIP" ]];
 then
-    pip install  pymongo
-    pip install  Flask
-    pip install  pyopenssl
-    pip install  pyIsEmail
-    pip install  psutil
-    pip install  websocket
-    pip install  websocket-client
+    pip install pymongo
+    pip install Flask
+    pip install pyopenssl
+    pip install pyIsEmail
+    pip install psutil
+    pip install websocket
+    pip install websocket-client
     pip install -U python-digitalocean
-    pip install  pyarubacloud
+    pip install pyarubacloud
+    pip install dnspython
 
     if [[ ! -d $RECIPESDIR ]];
     then

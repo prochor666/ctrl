@@ -36,6 +36,7 @@ IF %ERRORLEVEL% NEQ 0 (
     pip install websocket-client
     pip install -U python-digitalocean
     pip install pyarubacloud
+    pip install dnspython
 
     IF exist storage\recipes (
         echo storage\recipes exists
