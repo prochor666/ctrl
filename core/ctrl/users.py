@@ -387,6 +387,7 @@ def user_model(user_data):
         'ulc': utils.eval_key('ulc', user_data),
         'creator': utils.eval_key('creator', user_data),
         'created_at': utils.eval_key('created_at', user_data),
+        'settings': utils.eval_key('settings', user_data, 'dict'),
         'updated_at': utils.eval_key('updated_at', user_data),
     }
 

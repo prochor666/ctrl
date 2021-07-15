@@ -115,6 +115,9 @@ def eval_key(key, data, data_type='str'):
     if data_type == 'int':
         return 0 if str(key) not in data.keys() else int(data[key])
 
+    if data_type == 'dict':
+        return {} if str(key) not in data.keys() or type(data[key]) is not dict else data[key]
+
     if data_type == 'bool':
         return False if str(key) not in data.keys() else bool(data[key])
 
