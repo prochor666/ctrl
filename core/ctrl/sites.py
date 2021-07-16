@@ -104,7 +104,7 @@ def insert(site_data):
             site['creator'] = app.config['user']['_id']
 
             sites = app.db['sites']
-            sites.insert_one(site)
+            #sites.insert_one(site)
             result['status'] = True
             result['message'] = f"Site {site['name']} created"
         else:
