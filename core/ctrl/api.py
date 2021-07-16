@@ -57,6 +57,7 @@ def domain_info(data_pass=None):
     if 'domain' in data_pass.keys():
         result['data'] = utils.domain_dns_info(str(data_pass['domain']))
         if len(result['data'])>0:
+            result['message'] = f"Domain {str(data_pass['domain'])} DNS records found"
             result['status'] = True
 
     return result

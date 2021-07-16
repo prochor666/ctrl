@@ -170,7 +170,6 @@ def validator(site_data):
             result['message'] = f"At least on recipe is required"
             return result
 
-
         result['status'] = True
 
     return result
