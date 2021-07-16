@@ -1,7 +1,7 @@
 import json
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts
 from bson import json_util
 
 def about(data_pass=None):
@@ -50,6 +50,16 @@ def countries(data_pass=None):
         return json.load(countries)
     return []
 
+
+def domain_info(data_pass=None):
+    result = {'status': False, 'message': 'Data error', 'data': {}}
+
+    if 'domain' in data_pass.keys():
+        result['data'] = utils.domain_dns_info(str(data_pass['domain']))
+        if len(result['data'])>0:
+            result['status'] = True
+
+    return result
 
 def client_ip(data_pass=None):
     return app.config['client_ip']

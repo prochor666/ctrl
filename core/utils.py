@@ -4,6 +4,7 @@ import re
 import json
 import ipaddress
 from core import colors, app
+import dns.resolver
 
 
 def database_check():
@@ -101,6 +102,95 @@ def ip_valid(ip):
         return r
 
 
+
+def domain_dns_info(domain):
+    record_types = [
+        'NONE',
+        'A',
+        'NS',
+        'MD',
+        'MF',
+        'CNAME',
+        'SOA',
+        'MB',
+        'MG',
+        'MR',
+        'NULL',
+        'WKS',
+        'PTR',
+        'HINFO',
+        'MINFO',
+        'MX',
+        'TXT',
+        'RP',
+        'AFSDB',
+        'X25',
+        'ISDN',
+        'RT',
+        'NSAP',
+        'NSAP-PTR',
+        'SIG',
+        'KEY',
+        'PX',
+        'GPOS',
+        'AAAA',
+        'LOC',
+        'NXT',
+        'SRV',
+        'NAPTR',
+        'KX',
+        'CERT',
+        'A6',
+        'DNAME',
+        'OPT',
+        'APL',
+        'DS',
+        'SSHFP',
+        'IPSECKEY',
+        'RRSIG',
+        'NSEC',
+        'DNSKEY',
+        'DHCID',
+        'NSEC3',
+        'NSEC3PARAM',
+        'TLSA',
+        'HIP',
+        'CDS',
+        'CDNSKEY',
+        'CSYNC',
+        'SPF',
+        'UNSPEC',
+        'EUI48',
+        'EUI64',
+        'TKEY',
+        'TSIG',
+        'IXFR',
+        'AXFR',
+        'MAILB',
+        'MAILA',
+        'ANY',
+        'URI',
+        'CAA',
+        'TA',
+        'DLV',
+    ]
+    result = []
+
+    for record_type in record_types:
+        try:
+            answers = dns.resolver.resolve(domain, record_type)
+            for rdata in answers:
+                result.append({'type': record_type, 'value': rdata.to_text()})
+        except Exception as e:
+            pass
+
+    return result
+
+def domain_dns_check(domain):
+
+    return True
+
+
 def file_save(file, content=' '):
     fh = open(file, 'w')
     fh.write(content)
@@ -117,6 +207,9 @@ def eval_key(key, data, data_type='str'):
 
     if data_type == 'dict':
         return {} if str(key) not in data.keys() or type(data[key]) is not dict else data[key]
+
+    if data_type == 'list':
+        return [] if str(key) not in data.keys() or type(data[key]) is not list else data[key]
 
     if data_type == 'bool':
         return False if str(key) not in data.keys() else bool(data[key])
