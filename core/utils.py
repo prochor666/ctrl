@@ -105,6 +105,7 @@ def ip_valid(ip):
 
 def domain_dns_info(domain):
     record_types = [
+        'ALIAS',
         'NONE',
         'A',
         'NS',
