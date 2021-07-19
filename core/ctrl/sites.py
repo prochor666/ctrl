@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 from core import app, data, utils
+from core.ctrl import servers, recipes
 
 
 def list_sites(filter_data):
@@ -36,7 +37,7 @@ def modify(site_data):
             {
                 '$or': [
                     {'name': site_data['name']},
-                    {'content': site_data['content']}
+                    {'domain': site_data['domain']}
                 ],
             },
             {
@@ -91,7 +92,7 @@ def insert(site_data):
         finder = load_site({
         '$or': [
                 {'name': site['name']},
-                {'content': site['content']}
+                {'domain': site['domain']}
             ]
         })
 
@@ -150,29 +151,52 @@ def validator(site_data):
             result['message'] = f"'{str(site_data['name'])}' is not a valid site name"
             return result
 
-        if 'domain' in site_data.keys() or type(site_data['domain']) is not str or len(site_data['domain'])<1:
-            result['message'] = f"At least on recipe is required"
-            return result
-
-        if 'recipes' in site_data.keys() or type(site_data['recipes']) is not dict or len(site_data['recipes'])<1:
-            result['message'] = f"At least on recipe is required"
-            return result
-
         if 'recipes' in site_data.keys() or type(site_data['recipes']) is not dict or len(site_data['recipes'])<1:
             result['message'] = f"At least on recipe is required"
             return result
 
         if 'server_id' in site_data.keys() or type(site_data['server_id']) is not str or len(site_data['server_id'])!=24:
+            result['message'] = f"Server id is required"
+            return result
+
+        if 'domain' in site_data.keys() or type(site_data['domain']) is not str or len(site_data['domain'])<1:
+            result['message'] = f"Domain is required"
+            return result
+
+        # server validation
+        server_data = servers.load_server({'id':site_data['server_id']})
+
+        if type(server_data) is not dict or len(server_data) == 0:
             result['message'] = f"Server not found"
             return result
 
-        if 'recipes' in site_data.keys() or type(site_data['recipes']) is not dict or len(site_data['recipes'])<1:
-            result['message'] = f"At least on recipe is required"
+        # domain name validation
+        if not is_domain_on_server(site_data['domain'], server_data['ipv4']):
+            result['message'] = f"Domain {site_data['domain']} is not redirected on selected server"
             return result
 
         result['status'] = True
 
     return result
+
+
+def is_domain_on_server(domain, server_ip):
+    dns_records = utils.domain_dns_info(domain, ['A', 'CNAME', 'ALIAS'])
+
+    if len(dns_records) > 0:
+
+        for r in dns_records:
+            if r['type'] == 'A' and r['value'] == server_ip:
+                return True
+
+            if r['type'] in ['CNAME','ALIAS']:
+                dns_records_cn = utils.domain_dns_info(r['value'], ['A'])
+
+                for x in dns_records_cn:
+                    if x['type'] == 'A' and x['value'] == server_ip:
+                        return True
+
+    return False
 
 
 def site_model(site_data):

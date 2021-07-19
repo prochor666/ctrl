@@ -208,7 +208,7 @@ def recipes(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
 
-    u = rcps.list_recipes(data_pass)
+    u = rcps.list_recipes(data_filter)
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No recipes",
@@ -236,3 +236,39 @@ def modify_recipe(data_pass=None):
 def delete_recipe(data_pass=None):
     result = rcps.delete(data_pass)
     return result
+
+
+# Sites
+def sites(data_pass=None):
+
+    data_filter = utils.apply_filter(data_pass)
+
+    u = sts.list_sites(data_filter)
+    result = {
+        'status': False,
+        'message': str(u) if type(u) is str else "No recipes",
+        'sites': [],
+        'count': 0 if type(u) is str or u == None else u.count()
+    }
+    if result['count'] > 0:
+        result['status'] = True
+        result['message'] = f"Found recipes: {result['count']}"
+        result['sites'] = data.collect(u)
+
+    return result
+
+
+def create_site(data_pass=None):
+    result = sts.insert(data_pass)
+    return result
+
+
+def modify_site(data_pass=None):
+    result = sts.modify(data_pass)
+    return result
+
+
+def delete_site(data_pass=None):
+    result = sts.delete(data_pass)
+    return result
+
