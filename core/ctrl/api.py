@@ -53,14 +53,24 @@ def countries(data_pass=None):
 
 def domain_info(data_pass=None):
     result = {'status': False, 'message': 'Data error', 'data': {}}
+    record_filter = []
+
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter'])>0:
+        record_filter = data_pass['filter']
+
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter'])>0:
+        record_filter = data_pass['filter'].split(',')
+
+
 
     if 'domain' in data_pass.keys():
-        result['data'] = utils.domain_dns_info(str(data_pass['domain']))
+        result['data'] = utils.domain_dns_info(str(data_pass['domain']), record_filter)
         if len(result['data'])>0:
             result['message'] = f"Domain {str(data_pass['domain'])} DNS records found"
             result['status'] = True
 
     return result
+
 
 def client_ip(data_pass=None):
     return app.config['client_ip']
@@ -102,7 +112,10 @@ def db_check(data_pass=None):
 
 
 def users(data_pass=None):
-    u = usr.list_users(data_pass)
+
+    data_filter = utils.apply_filter(data_pass)
+
+    u = usr.list_users(data_filter)
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No users",
@@ -115,7 +128,9 @@ def users(data_pass=None):
 
     if app.mode == 'http':
         for user in data.collect(u):
-            if user['username'] != 'system':
+            if user['username'] == 'system':
+                result['count'] = result['count'] - 1
+            else:
                 result['users'].append(user)
     else:
         result['users'] = data.collect(u)
@@ -155,7 +170,10 @@ def full_recovery(data_pass):
 
 
 def servers(data_pass=None):
-    u = srv.list_servers(data_pass)
+
+    data_filter = utils.apply_filter(data_pass)
+
+    u = srv.list_servers(data_filter)
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No servers",
@@ -187,6 +205,9 @@ def delete_server(data_pass=None):
 
 # Recipes
 def recipes(data_pass=None):
+
+    data_filter = utils.apply_filter(data_pass)
+
     u = rcps.list_recipes(data_pass)
     result = {
         'status': False,

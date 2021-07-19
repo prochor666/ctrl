@@ -17,10 +17,10 @@ parser.add_argument('-email', type=str)
 parser.add_argument('-firstname', type=str)
 parser.add_argument('-lastname', type=str)
 parser.add_argument('-role', type=str)
-parser.add_argument('-filter', type=str)
+parser.add_argument('-filter', type=str, nargs='+')
 parser.add_argument('-ulc', type=str)
 parser.add_argument('-pin', type=int)
-parser.add_argument('-sort', type=str)
+parser.add_argument('-sort', type=str, nargs='+')
 parser.add_argument('-domain', type=str)
 parser.add_argument('-ip', type=str)
 #parser.add_argument('-auth_token', type=str)
@@ -33,11 +33,7 @@ data_pass = utils.validate_data_pass(dict(vars(args)))
 
 method = data_pass.pop('method', None)
 
-for key, value in data_pass.items():
-
-    if key in ['filter', 'sort']:
-        data_pass[key] = utils.arg_json(value)
-
+#for key, value in data_pass.items():
 
 if method != None and method in dir(api) and method in app.config['api']['cli']:
 
