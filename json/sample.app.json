@@ -45,7 +45,11 @@
             "create_recipe": {},
             "modify_recipe": {},
             "delete_recipe": {},
-            "domain_info": {}
+            "domain_info": {},
+            "sites": {},
+            "create_site": {},
+            "modify_site": {},
+            "delete_site": {}
         },
         "rest_free": {
             "test": {},
@@ -75,7 +79,11 @@
             "create_recipe": {},
             "modify_recipe": {},
             "delete_recipe": {},
-            "domain_info": {}
+            "domain_info": {},
+            "sites": {},
+            "create_site": {},
+            "modify_site": {},
+            "delete_site": {}
         }
     }
 }
