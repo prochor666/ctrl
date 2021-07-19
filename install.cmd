@@ -37,6 +37,7 @@ IF %ERRORLEVEL% NEQ 0 (
     pip install -U python-digitalocean
     pip install pyarubacloud
     pip install dnspython
+    pip install fakturoid
 
     IF exist storage\recipes (
         echo storage\recipes exists

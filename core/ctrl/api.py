@@ -1,7 +1,7 @@
 import json
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing
 from bson import json_util
 
 def about(data_pass=None):
@@ -272,3 +272,8 @@ def delete_site(data_pass=None):
     result = sts.delete(data_pass)
     return result
 
+
+# Billing
+def invoices(data_pass=None):
+    result = billing.load_invoices(data_pass)
+    return result

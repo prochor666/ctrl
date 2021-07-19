@@ -15,6 +15,11 @@
         "port": 27017,
         "db": "ctrl"
     },
+    "billing": {
+        "slug": "fakturoid-slug",
+        "email": "fakturoid@email",
+        "apiKey": "fakturoid.api.key"
+    },
     "api": {
         "cli": {
             "system": {},
@@ -49,7 +54,8 @@
             "sites": {},
             "create_site": {},
             "modify_site": {},
-            "delete_site": {}
+            "delete_site": {},
+            "invoices": {}
         },
         "rest_free": {
             "test": {},
@@ -83,7 +89,8 @@
             "sites": {},
             "create_site": {},
             "modify_site": {},
-            "delete_site": {}
+            "delete_site": {},
+            "invoices": {}
         }
     }
 }

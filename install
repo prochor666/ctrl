@@ -50,6 +50,7 @@ then
     pip install -U python-digitalocean
     pip install pyarubacloud
     pip install dnspython
+    pip install fakturoid
 
     if [[ ! -d $RECIPESDIR ]];
     then
