@@ -246,13 +246,13 @@ def sites(data_pass=None):
     u = sts.list_sites(data_filter)
     result = {
         'status': False,
-        'message': str(u) if type(u) is str else "No recipes",
+        'message': str(u) if type(u) is str else "No sites",
         'sites': [],
         'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
         result['status'] = True
-        result['message'] = f"Found recipes: {result['count']}"
+        result['message'] = f"Found sites: {result['count']}"
         result['sites'] = data.collect(u)
 
     return result
