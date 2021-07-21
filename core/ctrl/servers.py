@@ -96,7 +96,7 @@ def modify(server_data):
 
                 result['status'] = True
                 result['message'] = f"Server {server['name']} modified"
-                result['server'] = server
+
             else:
                 param_found = ''
                 if finder['name'] == server_data['name']:
