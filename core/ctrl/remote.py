@@ -1,35 +1,66 @@
 import asyncio, asyncssh, sys
+from core.ctrl import servers
 
 async def run_client(server, tasks = []):
-    async with asyncssh.connect(server['ipv4'], username=server['ssh_user'], client_keys=[server['ssh_key']]) as conn:
 
-        result = ""
-
-        for task in tasks:
-            response = await conn.run(task, check=False)
-            result += response.stdout
-
-        return result
-
-
-def task():
-
-    server = {
-        'ipv4': '159.89.29.171',
-        'ssh_user': 'root',
-        'ssh_key': '~/.ssh/id_ed25519_ctrl_server'
+    result = {
+        'status': False,
+        'message': 'Try client run',
+        'shell': []
     }
 
+    if 'ssh_key' in server.keys() and len(server['ssh_key'])>0:
+
+        try:
+            async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], client_keys=[server['ssh_key']], known_hosts=None) as conn:
+
+                result = await run_task(conn, tasks, result)
+
+        except(asyncssh.Error) as exc:
+            result['message'] = exc
+    else:
+
+        try:
+            async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], password=server['ssh_pwd'], known_hosts=None) as conn:
+
+                result = await run_task(conn, tasks, result)
+
+        except(asyncssh.Error) as exc:
+            result['message'] = exc
+
+    return result
+
+
+async def run_task(conn, tasks, result):
+
+    for task in tasks:
+        response = await conn.run(task, check=False)
+        result['shell'].append(response.stdout)
+
+    conn.close()
+    result['message'] = 'Task completed'
+    result['status'] = True
+
+    return result
+
+
+
+def test_connection(server_id):
+
+    server = servers.load_server({
+        'id': server_id
+    })
+
     tasks = [
-        'printf \'%s✖ %s%s\n\' "$(tput setaf 1)" "Okay" "$(tput sgr0)"',
-        'ls -la ~/testing-dir',
-        'echo $(cat ~/testing-dir/a.txt)'
+        'printf "SSH server hostname: $(hostname)"',
+        'printf "$(lsb_release -a)"',
     ]
 
-    try:
-        r = asyncio.get_event_loop().run_until_complete(run_client(server, tasks))
-        print(r, end='')
-    except (OSError, asyncssh.Error) as exc:
-        sys.exit('SSH connection failed: ' + str(exc))
+    return task_init(server, tasks)
 
-task()
+
+def task_init(server, tasks):
+
+    r = asyncio.get_event_loop().run_until_complete(run_client(server, tasks))
+    return r
+

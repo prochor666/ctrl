@@ -1,7 +1,7 @@
 import json
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote
 from bson import json_util
 
 def about(data_pass=None):
@@ -213,6 +213,18 @@ def delete_server(data_pass=None):
     result = srv.delete(data_pass)
     return result
 
+
+def test_connection(data_pass=None):
+    result = {
+        'status': False,
+        'message': 'Data error',
+        'shell': []
+    }
+
+    if 'id' in data_pass.keys() and len(data_pass['id'])>0:
+        result = remote.test_connection(data_pass['id'])
+
+    return result
 
 # Recipes
 def recipes(data_pass=None):

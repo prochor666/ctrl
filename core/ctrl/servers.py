@@ -40,7 +40,7 @@ def modify(server_data):
 
         if result['status'] == True:
 
-            if len(server_data['ipv6']) > 0:
+            if 'ipv6' in server_data.keys() and len(server_data['ipv6']) > 0:
                 finder = load_server({
                 '$and': [
                     {
@@ -202,7 +202,7 @@ def validator(server_data):
             result['message'] = "Enter valid IPv4 address"
             return result
 
-        if len(server_data['ipv6'])>0 and utils.ip_valid(server_data['ipv6'])['version'] != 6:
+        if 'ipv6' in server_data.keys() and len(server_data['ipv6'])>0 and utils.ip_valid(server_data['ipv6'])['version'] != 6:
             result['message'] = "Enter valid IPv6 address"
             return result
 
