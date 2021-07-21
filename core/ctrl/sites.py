@@ -149,11 +149,11 @@ def validator(site_data):
 
     if type(site_data) is dict:
 
-        if 'name' in site_data.keys() or type(site_data['name']) is not str or len(site_data['name'])<2:
+        if 'name' in site_data.keys() or len(site_data['name'])<2:
             result['message'] = f"'{str(site_data['name'])}' is not a valid site name"
             return result
 
-        if 'recipe_id' in site_data.keys() or type(site_data['recipe_id']) is not str or len(site_data['recipes'])!=24:
+        if 'recipe_id' in site_data.keys() or type(site_data['recipe_id']) is not str or len(site_data['recipe_id'])!=24:
             result['message'] = f"Recipe id is required"
             return result
 
