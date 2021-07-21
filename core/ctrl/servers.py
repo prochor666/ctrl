@@ -22,7 +22,7 @@ def load_server(filter_data, no_filter_pattern=False):
 
 
 def filter_server_pattern():
-    return {'ssh_pub_key': 0, 'ssh_pw': 0}
+    return {'ssh_key': 0, 'ssh_pw': 0}
 
 
 def modify(server_data):

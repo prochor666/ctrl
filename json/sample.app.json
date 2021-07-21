@@ -55,7 +55,8 @@
             "create_site": {},
             "modify_site": {},
             "delete_site": {},
-            "invoices": {}
+            "invoices": {},
+            "ssh_keys": {}
         },
         "rest_free": {
             "test": {},
@@ -90,7 +91,8 @@
             "create_site": {},
             "modify_site": {},
             "delete_site": {},
-            "invoices": {}
+            "invoices": {},
+            "ssh_keys": {}
         }
     }
 }

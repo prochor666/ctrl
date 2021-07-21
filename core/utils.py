@@ -1,4 +1,5 @@
 import os
+import glob
 from datetime import timezone, datetime
 import re
 import json
@@ -102,7 +103,6 @@ def ip_valid(ip):
         return r
 
 
-
 def domain_dns_info(domain, record_filter=[]):
     record_types = [
         'ALIAS',
@@ -190,9 +190,16 @@ def domain_dns_info(domain, record_filter=[]):
 
     return result
 
-def domain_dns_check(domain):
 
-    return True
+def list_ssh_keys():
+    ssh_dir = f"{os.path.expanduser('~')}{os.path.sep}.ssh{os.path.sep}*"
+    files = []
+    for f in glob.glob(ssh_dir):
+        filename, file_extension = os.path.splitext(f)
+        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts','authorized_keys','config'] and file_extension != '.pub':
+            files.append(f)
+
+    return files
 
 
 def file_save(file, content=' '):

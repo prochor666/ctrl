@@ -51,6 +51,17 @@ def countries(data_pass=None):
     return []
 
 
+def ssh_keys(data_pass=None):
+
+    result = {
+        'status': True,
+        'message': 'Keys list',
+        'data': utils.list_ssh_keys()
+    }
+
+    return result
+
+
 def domain_info(data_pass=None):
     result = {'status': False, 'message': 'Data error', 'data': {}}
     record_filter = []
