@@ -51,6 +51,7 @@ then
     pip install pyarubacloud
     pip install dnspython
     pip install asyncssh
+    pip install python-slugify
     pip install fakturoid
 
     if [[ ! -d $RECIPESDIR ]];

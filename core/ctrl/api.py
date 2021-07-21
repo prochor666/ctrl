@@ -226,6 +226,20 @@ def test_connection(data_pass=None):
 
     return result
 
+
+def deploy_recipe(data_pass=None):
+    result = {
+        'status': False,
+        'message': 'Data error',
+        'shell': []
+    }
+
+    if 'server_id' in data_pass.keys() and len(data_pass['server_id'])>0 and 'recipe_id' in data_pass.keys() and len(data_pass['recipe_id'])>0:
+        result = remote.deploy(data_pass['server_id'], data_pass['recipe_id'])
+
+    return result
+
+
 # Recipes
 def recipes(data_pass=None):
 

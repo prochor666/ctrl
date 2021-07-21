@@ -57,7 +57,8 @@
             "delete_site": {},
             "invoices": {},
             "ssh_keys": {},
-            "test_connection": {}
+            "test_connection": {},
+            "deploy_recipe": {}
         },
         "rest_free": {
             "test": {},
@@ -94,7 +95,8 @@
             "delete_site": {},
             "invoices": {},
             "ssh_keys": {},
-            "test_connection": {}
+            "test_connection": {},
+            "deploy_recipe": {}
         }
     }
 }
