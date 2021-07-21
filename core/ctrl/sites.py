@@ -8,6 +8,7 @@ def list_sites(filter_data):
         'collection': 'sites',
         'filter': filter_data,
     }
+
     return data.ex(finder)
 
 
@@ -175,6 +176,13 @@ def validator(site_data):
         # domain name validation
         if not is_domain_on_server(site_data['domain'], server_data['ipv4']):
             result['message'] = f"Domain {site_data['domain']} is not redirected on selected server"
+            return result
+
+        # recipe validation
+        recipe_data = recipes.load_recipe({'id':site_data['recipe_id']})
+
+        if type(recipe_data) is not dict or len(recipe_data) == 0:
+            result['message'] = f"Recipe not found"
             return result
 
         result['status'] = True

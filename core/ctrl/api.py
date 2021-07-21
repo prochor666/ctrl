@@ -290,7 +290,16 @@ def sites(data_pass=None):
     if result['count'] > 0:
         result['status'] = True
         result['message'] = f"Found sites: {result['count']}"
-        result['sites'] = data.collect(u)
+
+        _sites = data.collect(u)
+        sites = []
+        # Map servers and recipes, to be more complex
+        for site_data in _sites:
+            site_data['server'] = servers.load_server({'id':site_data['server_id']})
+            site_data['recipe'] = recipes.load_recipe({'id':site_data['recipe_id']})
+            sites.append(site_data)
+
+        result['sites'] = sites
 
     return result
 
