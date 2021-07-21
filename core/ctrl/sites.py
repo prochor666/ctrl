@@ -153,8 +153,8 @@ def validator(site_data):
             result['message'] = f"'{str(site_data['name'])}' is not a valid site name"
             return result
 
-        if 'recipes' in site_data.keys() or type(site_data['recipes']) is not dict or len(site_data['recipes'])<1:
-            result['message'] = f"At least on recipe is required"
+        if 'recipe_id' in site_data.keys() or type(site_data['recipe_id']) is not str or len(site_data['recipes'])!=24:
+            result['message'] = f"Recipe id is required"
             return result
 
         if 'server_id' in site_data.keys() or type(site_data['server_id']) is not str or len(site_data['server_id'])!=24:
@@ -209,7 +209,7 @@ def site_model(site_data):
         'name': utils.eval_key('name', site_data),
         'description': utils.eval_key('description', site_data),
         'server_id': utils.eval_key('server_id', site_data),
-        'recipes': utils.eval_key('recipes', site_data, 'dict'),
+        'recipe_id': utils.eval_key('recipe_id', site_data),
         'publish': utils.eval_key('publish', site_data, 'bool'),
         'domain': utils.eval_key('domain', site_data),
         'dev_domain': utils.eval_key('domains', site_data),

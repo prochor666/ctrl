@@ -1,7 +1,7 @@
 import asyncio, asyncssh, sys
 from slugify import slugify
 from core import utils
-from core.ctrl import servers, recipes
+from core.ctrl import servers, recipes, sites
 
 async def run_client(server, tasks = [], recipe = None):
 
@@ -60,13 +60,17 @@ async def transfer_file(recipe, conn):
     return r
 
 
-def deploy(server_id, recipe_id):
+def deploy(id):
+    site = sites.load_site({
+        'id': id
+    })
+
     server = servers.load_server({
-        'id': server_id
+        'id': site['server_id']
     })
 
     recipe = recipes.load_recipe({
-        'id': recipe_id
+        'id': site['recipe_id']
     })
 
     tasks = [

@@ -234,8 +234,8 @@ def deploy_recipe(data_pass=None):
         'shell': []
     }
 
-    if 'server_id' in data_pass.keys() and len(data_pass['server_id'])>0 and 'recipe_id' in data_pass.keys() and len(data_pass['recipe_id'])>0:
-        result = remote.deploy(data_pass['server_id'], data_pass['recipe_id'])
+    if 'id' in data_pass.keys() and len(data_pass['id'])>0:
+        result = remote.deploy(data_pass['id'])
 
     return result
 
