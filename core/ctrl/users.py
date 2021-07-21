@@ -117,7 +117,10 @@ def modify(user_data):
             if 'http_origin' in user_data.keys():
                 http_origin = user_data.pop('http_origin', None)
 
-            user = {**modify_user, **user_data}
+            user = dict()
+            user.update(modify_user)
+            user.update(user_data)
+
             users = app.db['users']
 
             # Email changed, need authorize new auth token

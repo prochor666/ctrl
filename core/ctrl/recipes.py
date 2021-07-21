@@ -56,7 +56,9 @@ def modify(recipe_data):
             recipe_data.pop('creator', None)
             recipe_data.pop('created_at', None)
 
-            recipe = {**modify_recipe, **recipe_data}
+            recipe = dict()
+            recipe.update(modify_recipe)
+            recipe.update(recipe_data)
 
             recipe['updated_at'] = utils.now()
 

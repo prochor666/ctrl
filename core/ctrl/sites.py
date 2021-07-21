@@ -57,7 +57,9 @@ def modify(site_data):
             site_data.pop('creator', None)
             site_data.pop('created_at', None)
 
-            site = {**modify_site, **site_data}
+            site = dict()
+            site.update(modify_site)
+            site.update(site_data)
 
             site['updated_at'] = utils.now()
 

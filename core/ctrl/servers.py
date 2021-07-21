@@ -83,7 +83,9 @@ def modify(server_data):
                 server_data.pop('creator', None)
                 server_data.pop('created_at', None)
 
-                server = {**modify_server, **server_data}
+                server = dict()
+                server.update(modify_server)
+                server.update(server_data)
 
                 server['updated_at'] = utils.now()
 
