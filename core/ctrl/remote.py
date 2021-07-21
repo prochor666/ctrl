@@ -10,6 +10,7 @@ async def run_client(server, tasks = []):
     }
 
     if 'ssh_key' in server.keys() and len(server['ssh_key'])>0:
+        result['auth_method'] = 'Private key'
 
         try:
             async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], client_keys=[server['ssh_key']], known_hosts=None) as conn:
@@ -19,6 +20,7 @@ async def run_client(server, tasks = []):
         except(asyncssh.Error) as exc:
             result['message'] = exc
     else:
+        result['auth_method'] = 'Password'
 
         try:
             async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], password=server['ssh_pwd'], known_hosts=None) as conn:
