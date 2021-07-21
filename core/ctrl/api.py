@@ -295,8 +295,8 @@ def sites(data_pass=None):
         sites = []
         # Map servers and recipes, to be more complex
         for site_data in _sites:
-            site_data['server'] = servers.load_server({'id':site_data['server_id']})
-            site_data['recipe'] = recipes.load_recipe({'id':site_data['recipe_id']})
+            site_data['server'] = srv.load_server({'id':site_data['server_id']})
+            site_data['recipe'] = rcps.load_recipe({'id':site_data['recipe_id']})
             sites.append(site_data)
 
         result['sites'] = sites
