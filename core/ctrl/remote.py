@@ -7,7 +7,7 @@ async def run_client(server, tasks = [], recipe = None):
 
     result = {
         'status': False,
-        'message': f"Server {server['name']} try connect",
+        'message': f"Server {server['name']}: ",
         'shell': []
     }
 
@@ -45,7 +45,7 @@ async def run_task(conn, tasks, recipe, result):
         result['shell'].append(response.stdout)
 
     conn.close()
-    result['message'] = f"Server {server['name']}: task completed"
+    result['message'] += f"task completed"
     result['status'] = True
 
     return result
