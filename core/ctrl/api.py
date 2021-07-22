@@ -137,14 +137,14 @@ def users(data_pass=None):
         result['status'] = True
         result['message'] = f"Found users: {result['count']}"
 
-    if app.mode == 'http':
-        for user in data.collect(u):
-            if user['username'] == 'system':
-                result['count'] = result['count'] - 1
-            else:
-                result['users'].append(user)
-    else:
-        result['users'] = data.collect(u)
+        if app.mode == 'http':
+            for user in data.collect(u):
+                if user['username'] == 'system':
+                    result['count'] = result['count'] - 1
+                else:
+                    result['users'].append(user)
+        else:
+            result['users'] = data.collect(u)
 
     return result
 
