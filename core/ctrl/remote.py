@@ -7,7 +7,7 @@ async def run_client(server, tasks = [], recipe = None):
 
     result = {
         'status': False,
-        'message': 'Try client run',
+        'message': f"Server {server['name']} try connect",
         'shell': []
     }
 
@@ -20,7 +20,7 @@ async def run_client(server, tasks = [], recipe = None):
                 result = await run_task(conn, tasks, recipe, result)
 
         except(asyncssh.Error) as exc:
-            result['message'] = str(exc)
+            result['message'] = f"Server {server['name']}: {str(exc)}"
     else:
         result['auth_method'] = 'Password'
 
@@ -30,7 +30,7 @@ async def run_client(server, tasks = [], recipe = None):
                 result = await run_task(conn, tasks, recipe, result)
 
         except(asyncssh.Error) as exc:
-            result['message'] = str(exc)
+            result['message'] = f"Server {server['name']}: {str(exc)}"
 
     return result
 
@@ -45,7 +45,7 @@ async def run_task(conn, tasks, recipe, result):
         result['shell'].append(response.stdout)
 
     conn.close()
-    result['message'] = 'Task completed'
+    result['message'] = f"Server {server['name']}: task completed"
     result['status'] = True
 
     return result
