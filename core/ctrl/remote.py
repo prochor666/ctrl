@@ -20,7 +20,7 @@ async def run_client(server, tasks = [], recipe = None):
                 result = await run_task(conn, tasks, recipe, result)
 
         except(asyncssh.Error) as exc:
-            result['message'] = exc
+            result['message'] = str(exc)
     else:
         result['auth_method'] = 'Password'
 
@@ -30,7 +30,7 @@ async def run_client(server, tasks = [], recipe = None):
                 result = await run_task(conn, tasks, recipe, result)
 
         except(asyncssh.Error) as exc:
-            result['message'] = exc
+            result['message'] = str(exc)
 
     return result
 
@@ -98,6 +98,8 @@ def test_connection(server_id):
 
 def init_client(server, tasks, recipe = None):
 
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     r = asyncio.get_event_loop().run_until_complete(run_client(server, tasks, recipe))
     return r
 
