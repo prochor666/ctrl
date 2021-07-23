@@ -227,7 +227,7 @@ def test_connection(data_pass=None):
     return result
 
 
-def deploy_recipe(data_pass=None):
+def deploy(data_pass=None):
     result = {
         'status': False,
         'message': 'Data error',

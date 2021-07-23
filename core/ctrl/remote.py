@@ -3,6 +3,7 @@ from slugify import slugify
 from core import utils
 from core.ctrl import servers, recipes, sites
 
+
 async def run_client(server, tasks = [], recipe = None):
 
     result = {
@@ -72,6 +73,30 @@ def deploy(id):
     recipe = recipes.load_recipe({
         'id': site['recipe_id']
     })
+
+    # Site validation
+    if type(site) is not dict:
+        return {
+                'status': False,
+                'message': f"Invalid site",
+                'shell': []
+            }
+
+    # Recipe validation
+    if type(recipe) is not dict or 'content' not in recipe or recipe['safe'] == False:
+        return {
+                'status': False,
+                'message': f"Invalid or unsafe recipe",
+                'shell': []
+            }
+
+    # domain name validation
+    if type(server) is not dict or 'ipv4' not in server or sites.is_domain_on_server(site['domain'], server['ipv4']) == False:
+        return {
+                'status': False,
+                'message': f"Domain {site['domain']} is not redirected on selected server",
+                'shell': []
+            }
 
     tasks = [
         'ls -lah /opt/ctrl',
