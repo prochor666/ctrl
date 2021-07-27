@@ -149,10 +149,9 @@ def compose_deploy_call_params(site):
         cmd += f" --dev_domain {site['dev_domain']}"
 
     if type(site['alias_domains']) is list and len(site['alias_domains'])>0:
-        cmd += f" --alias_domains {' '.join(site['alias_domains'])}"
+        cmd += f" --alias_domains {':'.join(site['alias_domains'])}"
 
     return cmd
-
 
 
 def init_client(server, tasks, recipe = None):
