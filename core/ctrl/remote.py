@@ -65,8 +65,8 @@ async def process_recipe_file(conn, recipe, result):
     utils.file_save(f"{cache_dir}/{cache_file}", recipe['content'])
 
     # Transfer recipe file
-    response = await asyncssh.scp(f"{cache_dir}/{cache_file}", (conn, f"/opt/ctrl/scripts/{cache_file}"))
-    result['shell'].append(response.stdout)
+    # Returns None type, so we can't log
+    await asyncssh.scp(f"{cache_dir}/{cache_file}", (conn, f"/opt/ctrl/scripts/{cache_file}"))
 
     # Make recipe file executable
     response = await conn.run(f"chmod +x /opt/ctrl/scripts/{cache_file}", check=False)
