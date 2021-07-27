@@ -67,10 +67,6 @@ def modify(site_data):
             site.update(modify_site)
             site.update(site_data)
 
-            site.pop('server', None)
-            site.pop('recipe', None)
-
-
             if modify_site['domain'] != site['domain']:
                 # Domain change deteced, we have to modify config file
                 # TO-DO: Autodeploy changes
