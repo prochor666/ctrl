@@ -234,7 +234,7 @@ def deploy(data_pass=None):
         'shell': []
     }
 
-    if 'id' in data_pass.keys() and len(data_pass['id'])>0:
+    if 'id' in data_pass.keys() and type(data_pass['id']) is str and len(data_pass['id'])>0:
         result = remote.deploy(data_pass['id'])
 
     return result
@@ -246,7 +246,7 @@ def validate_domain(data_pass=None):
         'message': 'Data error',
     }
 
-    if 'domain' in data_pass.keys() and len(data_pass['domain'])>0:
+    if 'domain' in data_pass.keys() and type(data_pass['domain']) is str and len(data_pass['domain'])>0:
         pre = re.compile(r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
         if not pre.match(data_pass['domain']):
             result['message'] = f"Domain name {data_pass['domain']} is invalid"

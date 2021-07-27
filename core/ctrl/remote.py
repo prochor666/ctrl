@@ -84,14 +84,6 @@ def deploy(id):
         'id': id
     })
 
-    server = servers.load_server({
-        'id': site['server_id']
-    })
-
-    recipe = recipes.load_recipe({
-        'id': site['recipe_id']
-    })
-
     # Site validation
     if type(site) is not dict:
         return {
@@ -99,6 +91,14 @@ def deploy(id):
                 'message': f"Invalid site",
                 'shell': []
             }
+
+    server = servers.load_server({
+        'id': site['server_id']
+    })
+
+    recipe = recipes.load_recipe({
+        'id': site['recipe_id']
+    })
 
     # Recipe validation
     if type(recipe) is not dict or 'content' not in recipe or recipe['safe'] == False:
@@ -108,7 +108,7 @@ def deploy(id):
                 'shell': []
             }
 
-    # domain name validation
+    # Domain name validation
     if type(server) is not dict or 'ipv4' not in server or sites.is_domain_on_server(site['domain'], server['ipv4']) == False:
         return {
                 'status': False,

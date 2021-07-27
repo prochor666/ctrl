@@ -67,6 +67,11 @@ def modify(site_data):
             site.update(modify_site)
             site.update(site_data)
 
+            if modify_site['domain'] != site['domain']:
+                # Domain change deteced, we have to modify config file
+                # TO-DO: Autodeploy changes
+                pass
+
             site['updated_at'] = utils.now()
 
             sites = app.db['sites']
@@ -204,7 +209,7 @@ def validator(site_data):
             return result
 
         # Optional Alias domains name validation
-        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str:
+        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str and len(site_data['alias_domains'])>3:
 
             for alias_domain in site_data['alias_domains'].splitlines():
 
