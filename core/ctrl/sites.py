@@ -37,22 +37,41 @@ def modify(site_data):
         if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str:
             site_data['alias_domains'] = site_data['alias_domains'].splitlines()
 
-        finder = load_site({
-        '$and': [
-            {
-                '$or': [
-                    {'name': site_data['name']},
-                    {'domain': site_data['domain']},
-                    {'dev_domain': site_data['dev_domain']}
-                ],
-            },
-            {
-            '_id': {
-                    '$ne': ObjectId(site_data['id'])
+        if 'dev_domain' in server_data.keys() and len(server_data['dev_domain']) > 0:
+            finder = load_site({
+            '$and': [
+                {
+                    '$or': [
+                        {'name': site_data['name']},
+                        {'domain': site_data['domain']},
+                        {'dev_domain': site_data['dev_domain']}
+                    ],
+                },
+                {
+                '_id': {
+                        '$ne': ObjectId(site_data['id'])
+                    }
                 }
-            }
-        ]
-        })
+            ]
+            })
+
+        else:
+            finder = load_site({
+            '$and': [
+                {
+                    '$or': [
+                        {'name': site_data['name']},
+                        {'domain': site_data['domain']}
+                    ],
+                },
+                {
+                '_id': {
+                        '$ne': ObjectId(site_data['id'])
+                    }
+                }
+            ]
+            })
+
 
         modify_site = load_site({
             '_id': ObjectId(site_data['id'])
@@ -90,7 +109,6 @@ def modify(site_data):
                 param_found = f"with same domain {site_data['domain']}"
             if len(param_found)==0 and finder['dev_domain'] == site_data['dev_domain']:
                 param_found = f"with same dev domain {site_data['dev_domain']}"
-
 
             result['status'] = False
             result['message'] = f"Site {param_found} already exists"
