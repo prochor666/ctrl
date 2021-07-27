@@ -199,7 +199,7 @@ def validator(site_data):
             return result
 
         # Optional Dev domain name validation
-        if 'dev_domain' in site_data.keys() and type(site_data['domain']) is str and len(site_data['domain'])>3 and not pre.match(site_data['dev_domain']):
+        if 'dev_domain' in site_data.keys() and type(site_data['dev_domain']) is str and len(site_data['dev_domain'])>3 and not pre.match(site_data['dev_domain']):
             result['message'] = f"Dev domain name {site_data['dev_domain']} is invalid"
             return result
 
