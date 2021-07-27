@@ -25,7 +25,7 @@ def modify(recipe_data):
         result['message'] = 'Need id to modify recipe'
         result['status'] = False
 
-    if len(recipe_data['id']) != 24:
+    if len(str(recipe_data['id'])) != 24:
         result['message'] = 'Recipe id is invalid'
         result['status'] = False
 

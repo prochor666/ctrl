@@ -28,7 +28,7 @@ def modify(site_data):
         result['message'] = 'Need id to modify site'
         result['status'] = False
 
-    if len(site_data['id']) != 24:
+    if len(str(site_data['id'])) != 24:
         result['message'] = 'Site id is invalid'
         result['status'] = False
 
@@ -66,6 +66,10 @@ def modify(site_data):
             site = dict()
             site.update(modify_site)
             site.update(site_data)
+
+            site.pop('server', None)
+            site.pop('recipe', None)
+
 
             if modify_site['domain'] != site['domain']:
                 # Domain change deteced, we have to modify config file
