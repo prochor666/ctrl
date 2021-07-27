@@ -37,7 +37,7 @@ def modify(site_data):
         if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str:
             site_data['alias_domains'] = site_data['alias_domains'].splitlines()
 
-        if 'dev_domain' in server_data.keys() and len(server_data['dev_domain']) > 0:
+        if 'dev_domain' in site_data.keys() and len(site_data['dev_domain']) > 0:
             finder = load_site({
             '$and': [
                 {
