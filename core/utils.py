@@ -265,7 +265,11 @@ def arg_json(arg):
 
 
 def br2nl(s):
-    return re.sub('<br\s*?>', '\n', str(s))
+    return re.sub('<br\s*?>', "\n", str(s))
+
+
+def nl2br(s):
+    return '<br />'.join(s.split("\n"))
 
 
 # 3rd party

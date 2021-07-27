@@ -1,6 +1,6 @@
 import asyncio, asyncssh, sys
 from slugify import slugify
-from core import utils
+from core import app, utils
 from core.ctrl import servers, recipes, sites
 
 
@@ -27,6 +27,7 @@ async def run_client(server, tasks = [], recipe = None):
 
         try:
             async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], password=server['ssh_pwd'], known_hosts=None) as conn:
+                print(recipe)
 
                 result = await run_task(conn, tasks, recipe, result)
 
@@ -39,26 +40,43 @@ async def run_client(server, tasks = [], recipe = None):
 async def run_task(conn, tasks, recipe, result):
 
     if type(recipe) is dict:
-        await transfer_file(recipe, conn)
+        result = await process_recipe_file(conn, recipe, result)
 
     for task in tasks:
         response = await conn.run(task, check=False)
         result['shell'].append(response.stdout)
 
     conn.close()
-    result['message'] += f"task completed"
+    result['message'] += f"Task completed"
     result['status'] = True
 
     return result
 
 
-async def transfer_file(recipe, conn):
-    cache_file = slugify(f"{utils.now()}-{recipe.name}.sh")
-    utils.file_save(f"recipes/{cache_file}", recipe.content)
-    r = await conn.run('mkdir -p /opt/ctrl/scripts', check=False)
-    r = await conn.scp(f"recipes/{cache_file}", f"/opt/ctrl/scripts/{cache_file}")
+async def process_recipe_file(conn, recipe, result):
+    cache_dir = app.config['filesystem']['recipes']
+    cache_file = slugify(f"{utils.now()}-{recipe['name']}") + ".sh"
 
-    return r
+    # Check remote dir for scripts
+    response = await conn.run('xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)"', check=False)
+    result['shell'].append(response.stdout)
+
+    # Cache recipe file localy
+    utils.file_save(f"{cache_dir}/{cache_file}", recipe['content'])
+
+    # Transfer recipe file
+    response = await asyncssh.scp(f"{cache_dir}/{cache_file}", (conn, f"/opt/ctrl/scripts/{cache_file}"))
+    result['shell'].append(response.stdout)
+
+    # Make recipe file executable
+    response = await conn.run(f"chmod +x /opt/ctrl/scripts/{cache_file}", check=False)
+    result['shell'].append(response.stdout)
+
+    # Run script in remote dir
+    response = await conn.run(f"/opt/ctrl/scripts/{cache_file}", check=False)
+    result['shell'].append(response.stdout)
+
+    return result
 
 
 def deploy(id):
@@ -112,17 +130,32 @@ def test_connection(server_id):
     })
 
     tasks = [
-        'printf "SSH server hostname: $(hostname)"',
-        'printf "$(lsb_release -a)"',
-        'mkdir -p /opt/ctrl/scripts',
-        'ls -lah /opt/ctrl',
+        'echo "SSH server hostname: $(hostname)"',
+        'echo "$(lsb_release -a)"',
+        'xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)" | echo $xnope',
+        'echo "$(ls -lah /opt/ctrl)"',
     ]
 
     return init_client(server, tasks)
 
 
-def init_client(server, tasks, recipe = None):
+def compose_deploy_call_params(site):
+    cmd = f""
 
+    if len(site['domain'])>0:
+        cmd += f" --domain {site['domain']}"
+
+    if len(site['dev_domain'])>0:
+        cmd += f" --dev_domain {site['dev_domain']}"
+
+    if type(site['alias_domains']) is list and len(site['alias_domains'])>0:
+        cmd += f" --alias_domains {' '.join(site['alias_domains'])}"
+
+    return cmd
+
+
+
+def init_client(server, tasks, recipe = None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     r = asyncio.get_event_loop().run_until_complete(run_client(server, tasks, recipe))
