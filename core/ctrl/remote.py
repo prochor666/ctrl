@@ -73,7 +73,7 @@ async def process_recipe_file(conn, recipe, result):
     result['shell'].append(response.stdout)
 
     # Run script in remote dir
-    response = await conn.run(f"/opt/ctrl/scripts/{cache_file}", check=False)
+    response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_deploy_call_params(recipe['arguments'])}", check=False)
     result['shell'].append(response.stdout)
 
     return result
@@ -116,9 +116,9 @@ def deploy(id):
                 'shell': []
             }
 
-    tasks = [
-        'ls -lah /opt/ctrl',
-    ]
+    tasks = []
+
+    recipe['arguments'] = site
 
     return init_client(server, tasks, recipe)
 
