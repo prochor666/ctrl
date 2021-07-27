@@ -58,7 +58,8 @@
             "invoices": {},
             "ssh_keys": {},
             "test_connection": {},
-            "deploy": {}
+            "deploy": {},
+            "validate_domain": {}
         },
         "rest_free": {
             "test": {},
@@ -96,7 +97,8 @@
             "invoices": {},
             "ssh_keys": {},
             "test_connection": {},
-            "deploy": {}
+            "deploy": {},
+            "validate_domain": {}
         }
     }
 }

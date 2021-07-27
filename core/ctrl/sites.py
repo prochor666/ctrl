@@ -1,3 +1,4 @@
+import re
 from bson.objectid import ObjectId
 from core import app, data, utils
 from core.ctrl import servers, recipes
@@ -33,12 +34,16 @@ def modify(site_data):
 
     if result['status'] == True:
 
+        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str:
+            site_data['alias_domains'] = site_data['alias_domains'].splitlines()
+
         finder = load_site({
         '$and': [
             {
                 '$or': [
                     {'name': site_data['name']},
-                    {'domain': site_data['domain']}
+                    {'domain': site_data['domain']},
+                    {'dev_domain': site_data['dev_domain']}
                 ],
             },
             {
@@ -76,8 +81,11 @@ def modify(site_data):
             param_found = ''
             if finder['name'] == site_data['name']:
                 param_found = f"with name {site_data['name']}"
-            if len(param_found)==0 and finder['content'] == site_data['content']:
-                param_found = f"with same content"
+            if len(param_found)==0 and finder['domain'] == site_data['domain']:
+                param_found = f"with same domain {site_data['domain']}"
+            if len(param_found)==0 and finder['dev_domain'] == site_data['dev_domain']:
+                param_found = f"with same dev domain {site_data['dev_domain']}"
+
 
             result['status'] = False
             result['message'] = f"Site {param_found} already exists"
@@ -90,12 +98,16 @@ def insert(site_data):
 
     if result['status'] == True:
 
+        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str:
+            site_data['alias_domains'] = site_data['alias_domains'].splitlines()
+
         site = site_model(site_data)
 
         finder = load_site({
         '$or': [
                 {'name': site['name']},
-                {'domain': site['domain']}
+                {'domain': site['domain']},
+                {'dev_domain': site_data['dev_domain']}
             ]
         })
 
@@ -116,8 +128,10 @@ def insert(site_data):
             param_found = ''
             if finder['name'] == site['name']:
                 param_found = f"with name {site['name']}"
-            if len(param_found)==0 and finder['content'] == site['content']:
-                param_found = f"with same content"
+            if len(param_found)==0 and finder['domain'] == site['domain']:
+                param_found = f"with same domain {site['domain']}"
+            if len(param_found)==0 and finder['dev_domain'] == site['dev_domain']:
+                param_found = f"with same dev domain {site['dev_domain']}"
 
             result['status'] = False
             result['message'] = f"Site {param_found} already exists"
@@ -162,7 +176,7 @@ def validator(site_data):
             result['message'] = f"Server id is required"
             return result
 
-        if 'domain' not in site_data.keys() or type(site_data['domain']) is not str or len(site_data['domain'])<1:
+        if 'domain' not in site_data.keys() or type(site_data['domain']) is not str or len(site_data['domain'])<4:
             result['message'] = f"Domain is required"
             return result
 
@@ -173,12 +187,32 @@ def validator(site_data):
             result['message'] = f"Server not found"
             return result
 
-        # domain name validation
-        if not is_domain_on_server(site_data['domain'], server_data['ipv4']):
-            result['message'] = f"Domain {site_data['domain']} is not redirected on selected server"
+        # Domain name DNS validation
+        #if not is_domain_on_server(site_data['domain'], server_data['ipv4']):
+        #    result['message'] = f"Domain {site_data['domain']} is not redirected on selected server"
+        #    return result
+
+        # Domain name validation
+        pre = re.compile(r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
+        if not pre.match(site_data['domain']):
+            result['message'] = f"Domain name {site_data['domain']} is invalid"
             return result
 
-        # recipe validation
+        # Optional Dev domain name validation
+        if 'dev_domain' in site_data.keys() and type(site_data['domain']) is str and len(site_data['domain'])>3 and not pre.match(site_data['dev_domain']):
+            result['message'] = f"Dev domain name {site_data['dev_domain']} is invalid"
+            return result
+
+        # Optional Alias domains name validation
+        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str:
+
+            for alias_domain in site_data['alias_domains'].splitlines():
+
+                if len(alias_domain)<4 or not pre.match(alias_domain):
+                    result['message'] = f"Alias domain name {alias_domain} is invalid"
+                    return result
+
+        # Recipe validation
         recipe_data = recipes.load_recipe({'id':site_data['recipe_id']})
 
         if type(recipe_data) is not dict or len(recipe_data) == 0:
@@ -220,7 +254,7 @@ def site_model(site_data):
         'recipe_id': utils.eval_key('recipe_id', site_data),
         'publish': utils.eval_key('publish', site_data, 'bool'),
         'domain': utils.eval_key('domain', site_data),
-        'dev_domain': utils.eval_key('domains', site_data),
+        'dev_domain': utils.eval_key('dev_domain', site_data),
         'alias_domains': utils.eval_key('alias_domains', site_data, 'list'),
         'owner': utils.eval_key('owner', site_data),
         'creator': utils.eval_key('creator', site_data),

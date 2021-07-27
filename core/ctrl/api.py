@@ -1,4 +1,4 @@
-import json
+import json, re
 from flask import render_template
 from core import app, data, utils
 from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote
@@ -236,6 +236,23 @@ def deploy(data_pass=None):
 
     if 'id' in data_pass.keys() and len(data_pass['id'])>0:
         result = remote.deploy(data_pass['id'])
+
+    return result
+
+
+def validate_domain(data_pass=None):
+    result = {
+        'status': False,
+        'message': 'Data error',
+    }
+
+    if 'domain' in data_pass.keys() and len(data_pass['domain'])>0:
+        pre = re.compile(r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
+        if not pre.match(data_pass['domain']):
+            result['message'] = f"Domain name {data_pass['domain']} is invalid"
+        else:
+            result['status'] = True
+            result['message'] = f"Domain name {data_pass['domain']} is valid"
 
     return result
 
