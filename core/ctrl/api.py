@@ -1,8 +1,10 @@
-import json, re
+import json
+import re
 from flask import render_template
 from core import app, data, utils
 from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote
 from bson import json_util
+
 
 def about(data_pass=None):
     data = {
@@ -66,17 +68,16 @@ def domain_info(data_pass=None):
     result = {'status': False, 'message': 'Data error', 'data': {}}
     record_filter = []
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter'])>0:
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
         record_filter = data_pass['filter']
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter'])>0:
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter']) > 0:
         record_filter = data_pass['filter'].split(',')
 
-
-
     if 'domain' in data_pass.keys():
-        result['data'] = utils.domain_dns_info(str(data_pass['domain']), record_filter)
-        if len(result['data'])>0:
+        result['data'] = utils.domain_dns_info(
+            str(data_pass['domain']), record_filter)
+        if len(result['data']) > 0:
             result['message'] = f"Domain {str(data_pass['domain'])} DNS records found"
             result['status'] = True
 
@@ -221,7 +222,7 @@ def test_connection(data_pass=None):
         'shell': []
     }
 
-    if 'id' in data_pass.keys() and len(data_pass['id'])>0:
+    if 'id' in data_pass.keys() and len(data_pass['id']) > 0:
         result = remote.test_connection(data_pass['id'])
 
     return result
@@ -234,7 +235,7 @@ def deploy(data_pass=None):
         'shell': []
     }
 
-    if 'id' in data_pass.keys() and type(data_pass['id']) is str and len(data_pass['id'])>0:
+    if 'id' in data_pass.keys() and type(data_pass['id']) is str and len(data_pass['id']) > 0:
         result = remote.deploy(data_pass['id'])
 
     return result
@@ -246,8 +247,9 @@ def validate_domain(data_pass=None):
         'message': 'Data error',
     }
 
-    if 'domain' in data_pass.keys() and type(data_pass['domain']) is str and len(data_pass['domain'])>0:
-        pre = re.compile(r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
+    if 'domain' in data_pass.keys() and type(data_pass['domain']) is str and len(data_pass['domain']) > 0:
+        pre = re.compile(
+            r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
         if not pre.match(data_pass['domain']):
             result['message'] = f"Domain name {data_pass['domain']} is invalid"
         else:
@@ -312,8 +314,10 @@ def sites(data_pass=None):
         sites = []
         # Map servers and recipes, to be more complex
         for site_data in _sites:
-            site_data['server'] = data.collect_one(srv.load_server({'id':site_data['server_id']}))
-            site_data['recipe'] = data.collect_one(rcps.load_recipe({'id':site_data['recipe_id']}))
+            site_data['server'] = data.collect_one(
+                srv.load_server({'id': site_data['server_id']}))
+            site_data['recipe'] = data.collect_one(
+                rcps.load_recipe({'id': site_data['recipe_id']}))
             sites.append(site_data)
 
         result['sites'] = sites

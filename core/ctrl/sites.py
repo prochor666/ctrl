@@ -39,39 +39,38 @@ def modify(site_data):
 
         if 'dev_domain' in site_data.keys() and len(site_data['dev_domain']) > 0:
             finder = load_site({
-            '$and': [
-                {
-                    '$or': [
-                        {'name': site_data['name']},
-                        {'domain': site_data['domain']},
-                        {'dev_domain': site_data['dev_domain']}
-                    ],
-                },
-                {
-                '_id': {
-                        '$ne': ObjectId(site_data['id'])
+                '$and': [
+                    {
+                        '$or': [
+                            {'name': site_data['name']},
+                            {'domain': site_data['domain']},
+                            {'dev_domain': site_data['dev_domain']}
+                        ],
+                    },
+                    {
+                        '_id': {
+                            '$ne': ObjectId(site_data['id'])
+                        }
                     }
-                }
-            ]
+                ]
             })
 
         else:
             finder = load_site({
-            '$and': [
-                {
-                    '$or': [
-                        {'name': site_data['name']},
-                        {'domain': site_data['domain']}
-                    ],
-                },
-                {
-                '_id': {
-                        '$ne': ObjectId(site_data['id'])
+                '$and': [
+                    {
+                        '$or': [
+                            {'name': site_data['name']},
+                            {'domain': site_data['domain']}
+                        ],
+                    },
+                    {
+                        '_id': {
+                            '$ne': ObjectId(site_data['id'])
+                        }
                     }
-                }
-            ]
+                ]
             })
-
 
         modify_site = load_site({
             '_id': ObjectId(site_data['id'])
@@ -96,7 +95,9 @@ def modify(site_data):
             sites = app.db['sites']
 
             site = site_model(site)
-            sites.update_one({'_id': ObjectId(_id) }, { '$set': site }, { '$unset': { 'server': "", 'recipe': "" } })
+            sites.update_one(
+                {'_id': ObjectId(_id)},
+                {'$set': site})
 
             result['status'] = True
             result['message'] = f"Site {site['name']} modified"
@@ -105,9 +106,9 @@ def modify(site_data):
             param_found = ''
             if finder['name'] == site_data['name']:
                 param_found = f"with name {site_data['name']}"
-            if len(param_found)==0 and finder['domain'] == site_data['domain']:
+            if len(param_found) == 0 and finder['domain'] == site_data['domain']:
                 param_found = f"with same domain {site_data['domain']}"
-            if len(param_found)==0 and finder['dev_domain'] == site_data['dev_domain']:
+            if len(param_found) == 0 and finder['dev_domain'] == site_data['dev_domain']:
                 param_found = f"with same dev domain {site_data['dev_domain']}"
 
             result['status'] = False
@@ -127,7 +128,7 @@ def insert(site_data):
         site = site_model(site_data)
 
         finder = load_site({
-        '$or': [
+            '$or': [
                 {'name': site['name']},
                 {'domain': site['domain']},
                 {'dev_domain': site_data['dev_domain']}
@@ -151,9 +152,9 @@ def insert(site_data):
             param_found = ''
             if finder['name'] == site['name']:
                 param_found = f"with name {site['name']}"
-            if len(param_found)==0 and finder['domain'] == site['domain']:
+            if len(param_found) == 0 and finder['domain'] == site['domain']:
                 param_found = f"with same domain {site['domain']}"
-            if len(param_found)==0 and finder['dev_domain'] == site['dev_domain']:
+            if len(param_found) == 0 and finder['dev_domain'] == site['dev_domain']:
                 param_found = f"with same dev domain {site['dev_domain']}"
 
             result['status'] = False
@@ -187,56 +188,57 @@ def validator(site_data):
 
     if type(site_data) is dict:
 
-        if 'name' not in site_data.keys() or type(site_data['name']) is not str or len(site_data['name'])<2:
+        if 'name' not in site_data.keys() or type(site_data['name']) is not str or len(site_data['name']) < 2:
             result['message'] = f"'{str(site_data['name'])}' is not a valid site name"
             return result
 
-        if 'recipe_id' not in site_data.keys() or type(site_data['recipe_id']) is not str or len(site_data['recipe_id'])!=24:
+        if 'recipe_id' not in site_data.keys() or type(site_data['recipe_id']) is not str or len(site_data['recipe_id']) != 24:
             result['message'] = f"Recipe id is required"
             return result
 
-        if 'server_id' not in site_data.keys() or type(site_data['server_id']) is not str or len(site_data['server_id'])!=24:
+        if 'server_id' not in site_data.keys() or type(site_data['server_id']) is not str or len(site_data['server_id']) != 24:
             result['message'] = f"Server id is required"
             return result
 
-        if 'domain' not in site_data.keys() or type(site_data['domain']) is not str or len(site_data['domain'])<4:
+        if 'domain' not in site_data.keys() or type(site_data['domain']) is not str or len(site_data['domain']) < 4:
             result['message'] = f"Domain is required"
             return result
 
         # server validation
-        server_data = servers.load_server({'id':site_data['server_id']})
+        server_data = servers.load_server({'id': site_data['server_id']})
 
         if type(server_data) is not dict or len(server_data) == 0:
             result['message'] = f"Server not found"
             return result
 
         # Domain name DNS validation
-        #if not is_domain_on_server(site_data['domain'], server_data['ipv4']):
+        # if not is_domain_on_server(site_data['domain'], server_data['ipv4']):
         #    result['message'] = f"Domain {site_data['domain']} is not redirected on selected server"
         #    return result
 
         # Domain name validation
-        pre = re.compile(r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
+        pre = re.compile(
+            r'^(?=.{1,253}$)(?!.*\.\..*)(?!\..*)([a-zA-Z0-9-]{,63}\.){,127}[a-zA-Z0-9-]{1,63}$')
         if not pre.match(site_data['domain']):
             result['message'] = f"Domain name {site_data['domain']} is invalid"
             return result
 
         # Optional Dev domain name validation
-        if 'dev_domain' in site_data.keys() and type(site_data['dev_domain']) is str and len(site_data['dev_domain'])>3 and not pre.match(site_data['dev_domain']):
+        if 'dev_domain' in site_data.keys() and type(site_data['dev_domain']) is str and len(site_data['dev_domain']) > 3 and not pre.match(site_data['dev_domain']):
             result['message'] = f"Dev domain name {site_data['dev_domain']} is invalid"
             return result
 
         # Optional Alias domains name validation
-        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str and len(site_data['alias_domains'])>3:
+        if 'alias_domains' in site_data.keys() and type(site_data['alias_domains']) is str and len(site_data['alias_domains']) > 3:
 
             for alias_domain in site_data['alias_domains'].splitlines():
 
-                if len(alias_domain)<4 or not pre.match(alias_domain):
+                if len(alias_domain) < 4 or not pre.match(alias_domain):
                     result['message'] = f"Alias domain name {alias_domain} is invalid"
                     return result
 
         # Recipe validation
-        recipe_data = recipes.load_recipe({'id':site_data['recipe_id']})
+        recipe_data = recipes.load_recipe({'id': site_data['recipe_id']})
 
         if type(recipe_data) is not dict or len(recipe_data) == 0:
             result['message'] = f"Recipe not found"
@@ -256,7 +258,7 @@ def is_domain_on_server(domain, server_ip):
             if r['type'] == 'A' and r['value'] == server_ip:
                 return True
 
-            if r['type'] in ['CNAME','ALIAS']:
+            if r['type'] in ['CNAME', 'ALIAS']:
                 dns_records_cn = utils.domain_dns_info(r['value'], ['A'])
 
                 for x in dns_records_cn:

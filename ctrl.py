@@ -35,7 +35,7 @@ data_pass = utils.validate_data_pass(dict(vars(args)))
 
 method = data_pass.pop('method', None)
 
-#for key, value in data_pass.items():
+# for key, value in data_pass.items():
 
 if method != None and method in dir(api) and method in app.config['api']['cli']:
 

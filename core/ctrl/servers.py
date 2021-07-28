@@ -42,36 +42,36 @@ def modify(server_data):
 
             if 'ipv6' in server_data.keys() and len(server_data['ipv6']) > 0:
                 finder = load_server({
-                '$and': [
-                    {
-                        '$or': [
-                            {'name': server_data['name']},
-                            {'ipv4': server_data['ipv4']},
-                            {'ipv6': server_data['ipv6']}
-                        ],
-                    },
-                    {
-                    '_id': {
-                            '$ne': ObjectId(server_data['id'])
+                    '$and': [
+                        {
+                            '$or': [
+                                {'name': server_data['name']},
+                                {'ipv4': server_data['ipv4']},
+                                {'ipv6': server_data['ipv6']}
+                            ],
+                        },
+                        {
+                            '_id': {
+                                '$ne': ObjectId(server_data['id'])
+                            }
                         }
-                    }
-                ]
+                    ]
                 })
             else:
                 finder = load_server({
-                '$and': [
-                    {
-                        '$or': [
-                            {'name': server_data['name']},
-                            {'ipv4': server_data['ipv4']}
-                        ],
-                    },
-                    {
-                    '_id': {
-                            '$ne': ObjectId(server_data['id'])
+                    '$and': [
+                        {
+                            '$or': [
+                                {'name': server_data['name']},
+                                {'ipv4': server_data['ipv4']}
+                            ],
+                        },
+                        {
+                            '_id': {
+                                '$ne': ObjectId(server_data['id'])
+                            }
                         }
-                    }
-                ]
+                    ]
                 })
 
             modify_server = load_server({
@@ -92,7 +92,7 @@ def modify(server_data):
                 servers = app.db['servers']
 
                 server = server_model(server)
-                servers.update_one({'_id': ObjectId(_id) }, { '$set': server })
+                servers.update_one({'_id': ObjectId(_id)}, {'$set': server})
 
                 result['status'] = True
                 result['message'] = f"Server {server['name']} modified"
@@ -101,9 +101,9 @@ def modify(server_data):
                 param_found = ''
                 if finder['name'] == server_data['name']:
                     param_found = f"with name {server_data['name']}"
-                if len(param_found)==0 and finder['ipv4'] == server_data['ipv4']:
+                if len(param_found) == 0 and finder['ipv4'] == server_data['ipv4']:
                     param_found = f"with IPv4 {server_data['ipv4']}"
-                if len(param_found)==0 and finder['ipv6'] == server_data['ipv6']:
+                if len(param_found) == 0 and finder['ipv6'] == server_data['ipv6']:
                     param_found = f"with IPv6 {server_data['ipv6']}"
                 result['status'] = False
 
@@ -121,7 +121,7 @@ def insert(server_data):
 
         if len(server['ipv6']) > 0:
             finder = load_server({
-            '$or': [
+                '$or': [
                     {'name': server['name']},
                     {'ipv4': server['ipv4']},
                     {'ipv6': server['ipv6']},
@@ -131,7 +131,7 @@ def insert(server_data):
         else:
 
             finder = load_server({
-            '$or': [
+                '$or': [
                     {'name': server['name']},
                     {'ipv4': server['ipv4']}
                 ]
@@ -154,9 +154,9 @@ def insert(server_data):
             param_found = ''
             if finder['name'] == server['name']:
                 param_found = f"with name {server['name']}"
-            if len(param_found)==0 and finder['ipv4'] == server['ipv4']:
+            if len(param_found) == 0 and finder['ipv4'] == server['ipv4']:
                 param_found = f"with IPv4 {server['ipv4']}"
-            if len(param_found)==0 and finder['ipv6'] == server['ipv6']:
+            if len(param_found) == 0 and finder['ipv6'] == server['ipv6']:
                 param_found = f"with IPv6 {server['ipv6']}"
 
             result['status'] = False
@@ -194,7 +194,7 @@ def validator(server_data):
 
     if type(server_data) is dict and 'ipv4' in server_data.keys() and 'name' in server_data.keys():
 
-        if type(server_data['name']) != str or len(server_data['name'])<2:
+        if type(server_data['name']) != str or len(server_data['name']) < 2:
             result['message'] = f"{server_data['name']} is not a valid server name"
             return result
 
@@ -202,7 +202,7 @@ def validator(server_data):
             result['message'] = "Enter valid IPv4 address"
             return result
 
-        if 'ipv6' in server_data.keys() and len(server_data['ipv6'])>0 and utils.ip_valid(server_data['ipv6'])['version'] != 6:
+        if 'ipv6' in server_data.keys() and len(server_data['ipv6']) > 0 and utils.ip_valid(server_data['ipv6'])['version'] != 6:
             result['message'] = "Enter valid IPv6 address"
             return result
 

@@ -5,7 +5,7 @@ from core import app, data, utils
 
 def auth():
     fa = Fakturoid(app.config['billing']['slug'], app.config['billing']['email'],
-    app.config['billing']['apiKey'], f"{app.config['full_name']} ({app.config['billing']['email']})")
+                   app.config['billing']['apiKey'], f"{app.config['full_name']} ({app.config['billing']['email']})")
     return fa
 
 
@@ -19,7 +19,7 @@ def load_invoices(data_pass):
 
     fa = auth()
 
-    _invoices = fa.invoices(proforma=False, since=date(year,1,1))
+    _invoices = fa.invoices(proforma=False, since=date(year, 1, 1))
     invoices = []
 
     for invoice in _invoices:
@@ -33,8 +33,3 @@ def load_invoices(data_pass):
     }
 
     return result
-
-
-
-
-

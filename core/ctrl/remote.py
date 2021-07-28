@@ -1,10 +1,12 @@
-import asyncio, asyncssh, sys
+import asyncio
+import asyncssh
+import sys
 from slugify import slugify
 from core import app, utils
 from core.ctrl import servers, recipes, sites
 
 
-async def run_client(server, tasks = [], recipe = None):
+async def run_client(server, tasks=[], recipe=None):
 
     result = {
         'status': False,
@@ -12,7 +14,7 @@ async def run_client(server, tasks = [], recipe = None):
         'shell': []
     }
 
-    if 'ssh_key' in server.keys() and len(server['ssh_key'])>0:
+    if 'ssh_key' in server.keys() and len(server['ssh_key']) > 0:
         result['auth_method'] = 'Private key'
 
         try:
@@ -87,10 +89,10 @@ def deploy(id):
     # Site validation
     if type(site) is not dict:
         return {
-                'status': False,
-                'message': f"Invalid site",
-                'shell': []
-            }
+            'status': False,
+            'message': f"Invalid site",
+            'shell': []
+        }
 
     server = servers.load_server({
         'id': site['server_id']
@@ -103,18 +105,18 @@ def deploy(id):
     # Recipe validation
     if type(recipe) is not dict or 'content' not in recipe or recipe['safe'] == False:
         return {
-                'status': False,
-                'message': f"Invalid or unsafe recipe",
-                'shell': []
-            }
+            'status': False,
+            'message': f"Invalid or unsafe recipe",
+            'shell': []
+        }
 
     # Domain name validation
     if type(server) is not dict or 'ipv4' not in server or sites.is_domain_on_server(site['domain'], server['ipv4']) == False:
         return {
-                'status': False,
-                'message': f"Domain {site['domain']} is not redirected on selected server",
-                'shell': []
-            }
+            'status': False,
+            'message': f"Domain {site['domain']} is not redirected on selected server",
+            'shell': []
+        }
 
     tasks = []
 
@@ -142,21 +144,21 @@ def test_connection(server_id):
 def compose_deploy_call_params(site):
     cmd = f""
 
-    if len(site['domain'])>0:
+    if len(site['domain']) > 0:
         cmd += f" --domain {site['domain']}"
 
-    if len(site['dev_domain'])>0:
+    if len(site['dev_domain']) > 0:
         cmd += f" --dev_domain {site['dev_domain']}"
 
-    if type(site['alias_domains']) is list and len(site['alias_domains'])>0:
+    if type(site['alias_domains']) is list and len(site['alias_domains']) > 0:
         cmd += f" --alias_domains {':'.join(site['alias_domains'])}"
 
     return cmd
 
 
-def init_client(server, tasks, recipe = None):
+def init_client(server, tasks, recipe=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    r = asyncio.get_event_loop().run_until_complete(run_client(server, tasks, recipe))
+    r = asyncio.get_event_loop().run_until_complete(
+        run_client(server, tasks, recipe))
     return r
-

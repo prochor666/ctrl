@@ -32,19 +32,19 @@ def modify(recipe_data):
     if result['status'] == True:
 
         finder = load_recipe({
-        '$and': [
-            {
-                '$or': [
-                    {'name': recipe_data['name']},
-                    {'content': recipe_data['content']}
-                ],
-            },
-            {
-            '_id': {
-                    '$ne': ObjectId(recipe_data['id'])
+            '$and': [
+                {
+                    '$or': [
+                        {'name': recipe_data['name']},
+                        {'content': recipe_data['content']}
+                    ],
+                },
+                {
+                    '_id': {
+                        '$ne': ObjectId(recipe_data['id'])
+                    }
                 }
-            }
-        ]
+            ]
         })
 
         modify_recipe = load_recipe({
@@ -65,7 +65,7 @@ def modify(recipe_data):
             recipes = app.db['recipes']
 
             recipe = recipe_model(recipe)
-            recipes.update_one({'_id': ObjectId(_id) }, { '$set': recipe })
+            recipes.update_one({'_id': ObjectId(_id)}, {'$set': recipe})
 
             result['status'] = True
             result['message'] = f"Recipe {recipe['name']} modified"
@@ -74,7 +74,7 @@ def modify(recipe_data):
             param_found = ''
             if finder['name'] == recipe_data['name']:
                 param_found = f"with name {recipe_data['name']}"
-            if len(param_found)==0 and finder['content'] == recipe_data['content']:
+            if len(param_found) == 0 and finder['content'] == recipe_data['content']:
                 param_found = f"with same content"
 
             result['status'] = False
@@ -91,7 +91,7 @@ def insert(recipe_data):
         recipe = recipe_model(recipe_data)
 
         finder = load_recipe({
-        '$or': [
+            '$or': [
                 {'name': recipe['name']},
                 {'content': recipe['content']}
             ]
@@ -114,7 +114,7 @@ def insert(recipe_data):
             param_found = ''
             if finder['name'] == recipe['name']:
                 param_found = f"with name {recipe['name']}"
-            if len(param_found)==0 and finder['content'] == recipe['content']:
+            if len(param_found) == 0 and finder['content'] == recipe['content']:
                 param_found = f"with same content"
 
             result['status'] = False
@@ -147,11 +147,11 @@ def validator(recipe_data):
     }
 
     if type(recipe_data) is dict and 'content' in recipe_data.keys() and 'name' in recipe_data.keys():
-        if type(recipe_data['name']) != str or len(recipe_data['name'])<2:
+        if type(recipe_data['name']) != str or len(recipe_data['name']) < 2:
             result['message'] = f"'{recipe_data['name']}' is not a valid recipe name"
             return result
 
-        if type(recipe_data['content']) != str or len(recipe_data['content'])<10:
+        if type(recipe_data['content']) != str or len(recipe_data['content']) < 10:
             result['message'] = f"{recipe_data['name']} invalid recipe content"
             return result
 

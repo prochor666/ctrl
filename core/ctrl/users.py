@@ -34,7 +34,7 @@ def insert(user_data):
         user = user_model(user_data)
 
         finder = load_user({
-        '$or': [
+            '$or': [
                 {'username': user['username']},
                 {'email': user['email']}
             ]
@@ -65,7 +65,8 @@ def insert(user_data):
                 'activation_link': activation_link(user, http_origin)
             })
 
-            es = mailer.send(user['email'], f"{app.config['name']} new account", html_message)
+            es = mailer.send(
+                user['email'], f"{app.config['name']} new account", html_message)
             result['status'] = True
             result['message'] = f"User {user['username']} created"
             result['email_status'] = es
@@ -73,7 +74,7 @@ def insert(user_data):
             param_found = ''
             if finder['username'] == user['username']:
                 param_found = f"with username {user['username']}"
-            if len(param_found)==0 and finder['email'] == user['email']:
+            if len(param_found) == 0 and finder['email'] == user['email']:
                 param_found = f"with email {user['email']}"
 
             result['status'] = False
@@ -92,19 +93,19 @@ def modify(user_data):
     if result['status'] == True:
 
         finder = load_user({
-        '$and': [
-            {
-                '$or': [
-                    {'username': user_data['username']},
-                    {'email': user_data['email']}
-                ],
-            },
-            {
-            '_id': {
-                    '$ne': ObjectId(str(user_data['id']))
+            '$and': [
+                {
+                    '$or': [
+                        {'username': user_data['username']},
+                        {'email': user_data['email']}
+                    ],
+                },
+                {
+                    '_id': {
+                        '$ne': ObjectId(str(user_data['id']))
+                    }
                 }
-            }
-        ]
+            ]
         })
 
         modify_user = load_user({
@@ -144,7 +145,8 @@ def modify(user_data):
                 user['creator'] = app.config['user']['_id']
 
             user = user_model(user)
-            users.update_one({'_id': ObjectId(user_data['id']) }, { '$set': user })
+            users.update_one(
+                {'_id': ObjectId(user_data['id'])}, {'$set': user})
 
             html_message = mailer.email_template(html_template).format(**{
                 'app_full_name': app.config['full_name'],
@@ -153,7 +155,8 @@ def modify(user_data):
                 'activation_link': activation_link(user, http_origin)
             })
 
-            es = mailer.send(user['email'], f"{app.config['name']} account updated", html_message)
+            es = mailer.send(
+                user['email'], f"{app.config['name']} account updated", html_message)
             result['status'] = True
             result['message'] = f"User {user['username']} modified"
             result['email_status'] = es
@@ -161,7 +164,7 @@ def modify(user_data):
             param_found = ''
             if finder['username'] == user_data['username']:
                 param_found = f"with username {user_data['username']}"
-            if len(param_found)==0 and finder['email'] == user_data['email']:
+            if len(param_found) == 0 and finder['email'] == user_data['email']:
                 param_found = f"with email {user_data['email']}"
 
             result['status'] = False
@@ -218,7 +221,7 @@ def recover(user_data, soft=True):
             users = app.db['users']
             user['updated_at'] = utils.now()
 
-            users.update_one({'_id': ObjectId(user['_id']) }, { '$set': user })
+            users.update_one({'_id': ObjectId(user['_id'])}, {'$set': user})
 
             html_message = mailer.email_template(html_template).format(**{
                 'app_full_name': app.config['full_name'],
@@ -227,7 +230,8 @@ def recover(user_data, soft=True):
                 'activation_link': new_activation_link
             })
 
-            es = mailer.send(user['email'], f"{app.config['name']} {subject_suffix}", html_message)
+            es = mailer.send(
+                user['email'], f"{app.config['name']} {subject_suffix}", html_message)
             result['email_status'] = es
 
     return result

@@ -2,6 +2,7 @@ from core import app, data
 from core.ctrl import users
 from flask import request
 
+
 def authorization_process(api_method):
 
     result = {

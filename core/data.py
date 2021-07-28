@@ -22,7 +22,7 @@ def one(finder={}):
 
 def collect_one(document):
     document['_id'] = str(document['_id'])
-    return document;
+    return document
 
 
 def collect(find_result):
@@ -34,7 +34,7 @@ def collect(find_result):
 
 
 def proxy(finder):
-    col = finder.get('collection');
+    col = finder.get('collection')
     data_source = app.db[col]
     if type(finder) is dict:
         _filter = finder.get('filter', None)
@@ -58,6 +58,3 @@ def proxy(finder):
             'exclude': _exclude,
             'sort': _sort,
         }
-
-
-

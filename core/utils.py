@@ -12,7 +12,8 @@ def database_check():
     try:
         db_info = app.dbclient.server_info()
         db_db = app.dbclient.list_database_names()
-        print(f"{colors.green('DB INSTANCE')}: MongoDB version {db_info['version']} at {app.config['mongodb']['host']}:{str(app.config['mongodb']['port'])}")
+        print(
+            f"{colors.green('DB INSTANCE')}: MongoDB version {db_info['version']} at {app.config['mongodb']['host']}:{str(app.config['mongodb']['port'])}")
         print(f"{colors.blue('DATABASES')}: {db_db}")
     except Exception as error:
         print(f"{colors.red('DATABASE ERROR')}: {str(error)}")
@@ -177,7 +178,7 @@ def domain_dns_info(domain, record_filter=[]):
     ]
     result = []
 
-    if type(record_filter) is list and len(record_filter)>0:
+    if type(record_filter) is list and len(record_filter) > 0:
         record_types = record_filter
 
     for record_type in record_types:
@@ -196,7 +197,7 @@ def list_ssh_keys():
     files = []
     for f in glob.glob(ssh_dir):
         filename, file_extension = os.path.splitext(f)
-        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts','authorized_keys','config'] and file_extension != '.pub':
+        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts', 'authorized_keys', 'config'] and file_extension != '.pub':
             files.append(f)
 
     return files
@@ -235,13 +236,13 @@ def eval_key(key, data, data_type='str'):
 def apply_filter(data_pass):
     data_filter = {}
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is dict and len(data_pass['filter'])>0:
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is dict and len(data_pass['filter']) > 0:
         data_filter = filter_to_dict(data_pass['filter'])
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter'])>0:
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
         data_filter = filter_to_dict(data_pass['filter'])
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter'])>0:
+    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter']) > 0:
         df = data_pass['filter'].split(':')
         if len(df) == 2:
             data_filter = {df[0]: df[1]}
@@ -251,7 +252,7 @@ def apply_filter(data_pass):
 
 def filter_to_dict(data_filter):
     d = {}
-    #return filter_data
+    # return filter_data
     for f in data_filter:
         s = f.split(':')
         if len(s) == 2:

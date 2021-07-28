@@ -35,7 +35,6 @@ def respond(api_method=None):
     if request.headers.get('X-Real-Ip') != None:
         app.config['client_ip'] = request.headers.get('X-Real-Ip')
 
-
     api_method = str(api_method).replace('/', '')
     reason = f"API route {api_method} is not supported"
     module_status = False
@@ -85,7 +84,8 @@ def respond(api_method=None):
 
 if __name__ == '__main__':
     today = datetime.date.today()
-    logging.basicConfig(filename=f"storage/logs/ctrl-server-{today.strftime('%Y-%m')}.log",level=logging.INFO)
+    logging.basicConfig(
+        filename=f"storage/logs/ctrl-server-{today.strftime('%Y-%m')}.log", level=logging.INFO)
 
     # Open, any host allowed
     webapp.run(debug=True, host='0.0.0.0', port='5007')
