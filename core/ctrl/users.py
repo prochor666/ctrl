@@ -122,6 +122,14 @@ def modify(user_data):
             user.update(modify_user)
             user.update(user_data)
 
+            changed = utils.detect_object_changes([
+                'username',
+                'email',
+                'firstname',
+                'lastname',
+                'role',
+            ], modify_user, user)
+
             users = app.db['users']
 
             # Email changed, need authorize new auth token
@@ -148,18 +156,24 @@ def modify(user_data):
             users.update_one(
                 {'_id': ObjectId(user_data['id'])}, {'$set': user})
 
-            html_message = mailer.email_template(html_template).format(**{
-                'app_full_name': app.config['full_name'],
-                'username': user['username'],
-                'pin': user['pin'],
-                'activation_link': activation_link(user, http_origin)
-            })
+            if changed == True:
 
-            es = mailer.send(
-                user['email'], f"{app.config['name']} account updated", html_message)
+                html_message = mailer.email_template(html_template).format(**{
+                    'app_full_name': app.config['full_name'],
+                    'username': user['username'],
+                    'pin': user['pin'],
+                    'activation_link': activation_link(user, http_origin)
+                })
+
+                es = mailer.send(
+                    user['email'], f"{app.config['name']} account updated", html_message)
+                result['email_status'] = es
+
             result['status'] = True
             result['message'] = f"User {user['username']} modified"
-            result['email_status'] = es
+            result['changed'] = changed
+            result['email_status'] = False
+
         else:
             param_found = ''
             if finder['username'] == user_data['username']:

@@ -192,6 +192,17 @@ def domain_dns_info(domain, record_filter=[]):
     return result
 
 
+def detect_object_changes(keys, origin, new):
+    for key in keys:
+        if key in origin.keys() and key in new:
+            if origin[key] != new[key]:
+                return True
+        else:
+            pass
+
+    return False
+
+
 def list_ssh_keys():
     ssh_dir = f"{os.path.expanduser('~')}{os.path.sep}.ssh{os.path.sep}*"
     files = []

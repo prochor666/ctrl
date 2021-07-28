@@ -62,13 +62,25 @@ def modify(recipe_data):
 
             recipe['updated_at'] = utils.now()
 
+            changed = utils.detect_object_changes([
+                'name',
+                'description',
+                'safe',
+                'content'
+            ], modify_recipe, recipe)
+
             recipes = app.db['recipes']
 
             recipe = recipe_model(recipe)
             recipes.update_one({'_id': ObjectId(_id)}, {'$set': recipe})
 
+            if changed == True:
+                # TO-DO: notification here
+                pass
+
             result['status'] = True
             result['message'] = f"Recipe {recipe['name']} modified"
+            result['changed'] = changed
 
         else:
             param_found = ''

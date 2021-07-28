@@ -92,6 +92,18 @@ def modify(site_data):
 
             site['updated_at'] = utils.now()
 
+            changed = utils.detect_object_changes([
+                'name',
+                'description',
+                'server_id',
+                'recipe_id',
+                'publish',
+                'domain',
+                'dev_domain',
+                'alias_domains',
+                'owner',
+            ], modify_site, site)
+
             sites = app.db['sites']
 
             site = site_model(site)
@@ -99,8 +111,13 @@ def modify(site_data):
                 {'_id': ObjectId(_id)},
                 {'$set': site})
 
+            if changed == True:
+                # TO-DO: notification here
+                pass
+
             result['status'] = True
             result['message'] = f"Site {site['name']} modified"
+            result['changed'] = changed
 
         else:
             param_found = ''

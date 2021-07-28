@@ -91,11 +91,30 @@ def modify(server_data):
 
                 servers = app.db['servers']
 
+                changed = utils.detect_object_changes([
+                    'name',
+                    'ipv4',
+                    'ipv6',
+                    'os',
+                    'provider',
+                    'ssh_user',
+                    'ssh_pwd',
+                    'ssh_port',
+                    'ssh_key',
+                    'publish',
+                    'use',
+                ], modify_server, server_data)
+
                 server = server_model(server)
                 servers.update_one({'_id': ObjectId(_id)}, {'$set': server})
 
+                if changed == True:
+                    # TO-DO: notification here
+                    pass
+
                 result['status'] = True
                 result['message'] = f"Server {server['name']} modified"
+                result['changed'] = changed
 
             else:
                 param_found = ''
