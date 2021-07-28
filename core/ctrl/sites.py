@@ -96,7 +96,7 @@ def modify(site_data):
             sites = app.db['sites']
 
             site = site_model(site)
-            sites.update_one({'_id': ObjectId(_id) }, { '$set': site })
+            sites.update_one({'_id': ObjectId(_id) }, { '$set': site }, { '$unset': { 'server': None, 'recipe': None } })
 
             result['status'] = True
             result['message'] = f"Site {site['name']} modified"
