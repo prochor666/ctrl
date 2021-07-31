@@ -75,7 +75,7 @@ async def process_recipe_file(conn, recipe, result):
     result['shell'].append(response.stdout)
 
     # Run script in remote dir
-    response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_deploy_call_params(recipe['arguments'])}", check=False)
+    response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False)
     result['shell'].append(response.stdout)
 
     return result
@@ -141,7 +141,7 @@ def test_connection(server_id):
     return init_client(server, tasks)
 
 
-def compose_deploy_call_params(site):
+def compose_script_call_args(site):
     cmd = f""
 
     if len(site['domain']) > 0:

@@ -20,6 +20,24 @@
         "email": "fakturoid@email",
         "apiKey": "fakturoid.api.key"
     },
+    "options": {
+        "providers": [
+            {
+                "name": "Self hosted",
+                "api": false
+            }
+        ],
+        "os_versions": [
+            {
+                "name": "Debian 10 Buster",
+                "arch": "amd64"
+            },
+            {
+                "name": "Ubuntu 20.04",
+                "arch": "amd64"
+            }
+        ]
+    },
     "api": {
         "cli": {
             "system": {},
@@ -27,7 +45,6 @@
             "cpu": {},
             "memory": {},
             "disk": {},
-            "login": {},
             "is_email": {},
             "countries": {},
             "ip": {},
@@ -43,17 +60,11 @@
             "full_recovery": {},
             "get_system_user": {},
             "servers": {},
-            "create_server": {},
-            "modify_server": {},
             "delete_server": {},
             "recipes": {},
-            "create_recipe": {},
-            "modify_recipe": {},
             "delete_recipe": {},
             "domain_info": {},
             "sites": {},
-            "create_site": {},
-            "modify_site": {},
             "delete_site": {},
             "invoices": {},
             "ssh_keys": {},
