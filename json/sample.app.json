@@ -20,7 +20,7 @@
         "email": "fakturoid@email",
         "apiKey": "fakturoid.api.key"
     },
-    "options": {
+    "enum_options": {
         "providers": [
             {
                 "name": "Self hosted",
@@ -70,7 +70,8 @@
             "ssh_keys": {},
             "test_connection": {},
             "deploy": {},
-            "validate_domain": {}
+            "validate_domain": {},
+            "get_enums": {}
         },
         "rest_free": {
             "test": {},
@@ -109,7 +110,8 @@
             "ssh_keys": {},
             "test_connection": {},
             "deploy": {},
-            "validate_domain": {}
+            "validate_domain": {},
+            "get_enums": {}
         }
     }
 }

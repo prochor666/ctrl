@@ -48,9 +48,11 @@ def is_email(data_pass):
 
 
 def countries(data_pass=None):
-    with open('json/iso-3166-1.json') as countries:
-        return json.load(countries)
-    return []
+    try:
+        with open('json/iso-3166-1.json') as countries:
+            return json.load(countries)
+    except Exception as error:
+        return []
 
 
 def ssh_keys(data_pass=None):
@@ -65,14 +67,17 @@ def ssh_keys(data_pass=None):
 
 
 def domain_info(data_pass=None):
-    result = {'status': False, 'message': 'Data error', 'data': {}}
+    result = {'status': False, 'message': 'Data error', 'data': None, 'pass': data_pass}
     record_filter = []
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
-        record_filter = data_pass['filter']
+    if 'filter' in data_pass.keys():
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter']) > 0:
-        record_filter = data_pass['filter'].split(',')
+        if type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
+            record_filter = data_pass['filter']
+
+        if type(data_pass['filter']) is str and len(data_pass['filter']) > 0:
+            record_filter = data_pass['filter'].split(',')
+
 
     if 'domain' in data_pass.keys():
         result['data'] = utils.domain_dns_info(
@@ -121,6 +126,10 @@ def test(data_pass=None):
 
 def db_check(data_pass=None):
     return utils.database_check()
+
+
+def get_enums(data_pass=None):
+    return app.config['enum_options']
 
 
 def users(data_pass=None):
