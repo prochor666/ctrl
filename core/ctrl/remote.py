@@ -141,9 +141,9 @@ def deploy(id):
         recipe['arguments']['dev_domain'] = site['dev_domain']
 
     # Validate alias domains DNS entries
-    if 'alias_domains' in site.keys() and type(site['alias_domains']) is str and len(site['alias_domains']) > 3:
+    if 'alias_domains' in site.keys() and type(site['alias_domains']) is list and len(site['alias_domains']) > 3:
 
-        for alias_domain in site['alias_domains'].splitlines():
+        for alias_domain in site['alias_domains']:
 
             if sites.is_domain_on_server(alias_domain, server['ipv4']) == True:
                 valid_domains.append(alias_domain)
