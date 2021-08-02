@@ -111,7 +111,7 @@ def deploy(id):
         }
 
     # Domain name validation
-    if type(server) is not dict or 'ipv4' not in server or sites.is_domain_on_server(site['domain'], server['ipv4']) == False:
+    if type(server) is not dict or 'ipv4' not in server:
         return {
             'status': False,
             'message': f"Domain {site['domain']} is not redirected on selected server",
@@ -120,7 +120,43 @@ def deploy(id):
 
     tasks = []
 
-    recipe['arguments'] = site
+    recipe['arguments'] = {
+        'home_dir': site['home_dir'],
+        'domain': '',
+        'dev_domain': '',
+        'alias_domains': []
+    }
+
+    valid_domains = []
+
+    # Validate domain DNS entries
+    if sites.is_domain_on_server(site['domain'], server['ipv4']) == True:
+        valid_domains.append(site['domain'])
+        recipe['arguments']['domain'] = site['domain']
+
+
+    # Validate dev_domain DNS entries
+    if 'dev_domain' in site.keys() and type(site['dev_domain']) is str and len(site['dev_domain']) > 3 and sites.is_domain_on_server(site['dev_domain'], server['ipv4']) == True:
+        valid_domains.append(site['dev_domain'])
+        recipe['arguments']['dev_domain'] = site['dev_domain']
+
+    # Validate alias domains DNS entries
+    if 'alias_domains' in site.keys() and type(site['alias_domains']) is str and len(site['alias_domains']) > 3:
+
+        for alias_domain in site['alias_domains'].splitlines():
+
+            if sites.is_domain_on_server(alias_domain, server['ipv4']) == True:
+                valid_domains.append(alias_domain)
+                recipe['arguments']['alias_domains'].append(alias_domain)
+
+    if len(valid_domains) == 0:
+        return {
+            'status': False,
+            'message': f"None of the specified domains are redirected to the selected server",
+            'shell': []
+        }
+
+    recipe['valid_domains'] = valid_domains
 
     return init_client(server, tasks, recipe)
 
@@ -141,19 +177,28 @@ def test_connection(server_id):
     return init_client(server, tasks)
 
 
-def compose_script_call_args(site):
+def compose_script_call_args(recipe_arguments):
     cmd = f""
 
-    if len(site['domain']) > 0:
-        cmd += f" --domain {site['domain']}"
+    if len(recipe_arguments['home_dir']) > 0:
+        cmd += f" --home_dir {recipe_arguments['home_dir']}"
 
-    if len(site['dev_domain']) > 0:
-        cmd += f" --dev_domain {site['dev_domain']}"
+    if len(recipe_arguments['domain']) > 0:
+        cmd += f" --domain {recipe_arguments['domain']}"
 
-    if type(site['alias_domains']) is list and len(site['alias_domains']) > 0:
-        cmd += f" --alias_domains {':'.join(site['alias_domains'])}"
+    if len(recipe_arguments['dev_domain']) > 0:
+        cmd += f" --dev_domain {recipe_arguments['dev_domain']}"
+
+    if type(recipe_arguments['alias_domains']) is list and len(recipe_arguments['alias_domains']) > 0:
+        cmd += f" --alias_domains {':'.join(recipe_arguments['alias_domains'])}"
 
     return cmd
+
+
+def validate_dns_entry(domain, server_ipv4):
+    if not sites.is_domain_on_server(domain, server_ipv4):
+        return False
+    return True
 
 
 def init_client(server, tasks, recipe=None):

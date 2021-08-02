@@ -87,8 +87,11 @@ def modify(site_data):
 
             if modify_site['domain'] != site['domain']:
                 # Domain change deteced, we have to modify config file
-                # TO-DO: Autodeploy changes
+                # TO-DO: Autodeploy + changes
                 pass
+
+            if 'home_dir' not in site.keys() or len(site['home_dir']) == 0:
+                site['home_dir'] = site['domain']
 
             site['updated_at'] = utils.now()
 
@@ -159,6 +162,7 @@ def insert(site_data):
 
             site['created_at'] = utils.now()
             site['creator'] = app.config['user']['_id']
+            site['home_dir'] = site['domain']
 
             sites = app.db['sites']
             sites.insert_one(site)
@@ -295,6 +299,7 @@ def site_model(site_data):
         'server_id': utils.eval_key('server_id', site_data),
         'recipe_id': utils.eval_key('recipe_id', site_data),
         'publish': utils.eval_key('publish', site_data, 'bool'),
+        'home_dir': utils.eval_key('home_dir', site_data),
         'domain': utils.eval_key('domain', site_data),
         'dev_domain': utils.eval_key('dev_domain', site_data),
         'alias_domains': utils.eval_key('alias_domains', site_data, 'list'),

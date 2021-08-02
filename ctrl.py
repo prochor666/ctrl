@@ -25,6 +25,7 @@ parser.add_argument('-domain', type=str)
 parser.add_argument('-ssh_key', type=str)
 parser.add_argument('-ssh_pwd', type=str)
 parser.add_argument('-ipv4', type=str)
+parser.add_argument('-ip', type=str)
 parser.add_argument('-name', type=str)
 parser.add_argument('-http_origin', type=str)
 
