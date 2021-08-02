@@ -2,8 +2,9 @@ from core.config import app_config
 import json
 import datetime
 import logging
-from flask import Flask, render_template, Response, request
-from core import compat, app
+import os
+from flask import Flask, render_template, Response, request, send_from_directory
+from core import compat, app, utils
 from core.ctrl import api, auth
 
 compat.check_version()
@@ -80,6 +81,23 @@ def respond(api_method=None):
     })
 
     return Response(res, mimetype='application/json')
+
+
+@webapp.route('/resource/')
+@webapp.route('/resource/<path:resource_name>')
+def get_resource(resource_name=None):
+
+    resource_name = str(resource_name).replace('/', '')
+    resource_dir = app.config['filesystem']['resources'].replace('/', os.path.sep)
+
+    if resource_name != None:
+        try:
+            return send_from_directory(directory=resource_dir, path=resource_name)
+
+        except Exception as error:
+            return Response(f"Resource {resource_name} not found.", mimetype='text/plain')
+
+    return Response(f"Resource not defined.", mimetype='text/plain')
 
 
 if __name__ == '__main__':

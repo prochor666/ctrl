@@ -3,7 +3,7 @@ import os
 
 
 def locate_dirs():
-    return {'templates': 'templates', 'json': 'json', 'static': 'static'}
+    return {'templates': 'templates', 'json': 'json', 'static': 'static', 'resources': 'resources'}
 
 
 def app_config():

@@ -4,7 +4,8 @@
     "version": "1.0",
     "filesystem": {
         "recipes": "storage/recipes",
-        "templates": "storage/templates"
+        "templates": "storage/templates",
+        "resources": "storage/resources"
     },
     "timezone": "UTC",
     "mask_http_origin": "127.0.0.1",
