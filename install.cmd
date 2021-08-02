@@ -47,6 +47,12 @@ IF %ERRORLEVEL% NEQ 0 (
         mkdir storage\recipes && echo storage\recipes created
     )
 
+    IF exist storage\resources (
+        echo storage\resources exists
+    ) ELSE (
+        mkdir storage\resources && echo storage\resources created
+    )
+
     IF exist storage\templates (
         echo storage\templates exists
     ) ELSE (
