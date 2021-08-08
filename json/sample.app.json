@@ -22,6 +22,16 @@
         "apiKey": "fakturoid.api.key"
     },
     "enum_options": {
+        "recipe_targets": [
+            {
+                "target": "site",
+                "name": "Sites"
+            },
+            {
+                "target": "server",
+                "name": "Servers"
+            }
+        ],
         "providers": [
             {
                 "name": "Self hosted",

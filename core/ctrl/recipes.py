@@ -71,6 +71,9 @@ def modify(recipe_data):
 
             recipes = app.db['recipes']
 
+            if 'target' in recipe or type(recipe['target']) != str:
+                recipe['target'] = 'site'
+
             recipe = recipe_model(recipe)
             recipes.update_one({'_id': ObjectId(_id)}, {'$set': recipe})
 
@@ -116,6 +119,9 @@ def insert(recipe_data):
 
             recipe['created_at'] = utils.now()
             recipe['creator'] = app.config['user']['_id']
+
+            if 'target' in recipe or type(recipe['target']) != str:
+                recipe['target'] = 'site'
 
             recipes = app.db['recipes']
             recipes.insert_one(recipe)
@@ -180,6 +186,7 @@ def recipe_model(recipe_data):
         'name': utils.eval_key('name', recipe_data),
         'description': utils.eval_key('description', recipe_data),
         'safe': utils.eval_key('safe', recipe_data, 'bool'),
+        'target': utils.eval_key('safe', recipe_data),
         'content': utils.eval_key('content', recipe_data),
         'creator': utils.eval_key('creator', recipe_data),
         'created_at': utils.eval_key('created_at', recipe_data),
