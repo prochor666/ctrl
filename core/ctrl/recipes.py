@@ -186,7 +186,7 @@ def recipe_model(recipe_data):
         'name': utils.eval_key('name', recipe_data),
         'description': utils.eval_key('description', recipe_data),
         'safe': utils.eval_key('safe', recipe_data, 'bool'),
-        'target': utils.eval_key('safe', recipe_data),
+        'target': utils.eval_key('target', recipe_data),
         'content': utils.eval_key('content', recipe_data),
         'creator': utils.eval_key('creator', recipe_data),
         'created_at': utils.eval_key('created_at', recipe_data),
