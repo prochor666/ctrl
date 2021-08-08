@@ -109,6 +109,7 @@ def domain_dns_info(domain, record_filter=[]):
         'A',
         'AAAA',
         'AFSDB',
+        'ALIAS',
         'APL',
         'CAA',
         'CDNSKEY',
