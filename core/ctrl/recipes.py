@@ -71,7 +71,7 @@ def modify(recipe_data):
 
             recipes = app.db['recipes']
 
-            if 'target' in recipe or type(recipe['target']) != str:
+            if 'target' not in recipe or type(recipe['target']) != str:
                 recipe['target'] = 'site'
 
             recipe = recipe_model(recipe)
@@ -120,7 +120,7 @@ def insert(recipe_data):
             recipe['created_at'] = utils.now()
             recipe['creator'] = app.config['user']['_id']
 
-            if 'target' in recipe or type(recipe['target']) != str:
+            if 'target' not in recipe or type(recipe['target']) != str:
                 recipe['target'] = 'site'
 
             recipes = app.db['recipes']
