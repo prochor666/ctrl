@@ -147,13 +147,22 @@ def insert(site_data):
 
         site = site_model(site_data)
 
-        finder = load_site({
-            '$or': [
-                {'name': site['name']},
-                {'domain': site['domain']},
-                {'dev_domain': site_data['dev_domain']}
-            ]
-        })
+        if 'dev_domain' in site.keys() and len(site['dev_domain']) > 0:
+            finder = load_site({
+                '$or': [
+                    {'name': site['name']},
+                    {'domain': site['domain']},
+                    {'dev_domain': site['dev_domain']}
+                ]
+            })
+        else:
+            finder = load_site({
+                '$or': [
+                    {'name': site['name']},
+                    {'domain': site['domain']}
+                ]
+            })
+
 
         if type(finder) is not dict:
 
