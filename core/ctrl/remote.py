@@ -75,7 +75,7 @@ async def process_recipe_file(conn, recipe, result):
     result['shell'].append(response.stdout)
 
     # Run script in remote dir
-    response = await asyncio.wait_for(await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False), timeout=6000)
+    response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False)
     result['shell'].append(response.stdout)
 
     return result
