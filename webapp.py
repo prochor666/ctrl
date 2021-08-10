@@ -103,7 +103,7 @@ def get_resource(resource_name=None):
 if __name__ == '__main__':
     today = datetime.date.today()
     logging.basicConfig(
-        filename=f"storage/logs/ctrl-server-{today.strftime('%Y-%m')}.log", level=logging.INFO)
+        filename=f"storage/logs/ctrl-server-{today.strftime('%Y-%m')}.log", level=logging.INFO, format='%(asctime)s %(message)s')
 
     # Open, any host allowed
     webapp.run(debug=True, host='0.0.0.0', port='5007')
