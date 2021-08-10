@@ -28,7 +28,7 @@ async def run_client(server, tasks=[], recipe=None):
         result['auth_method'] = 'Password'
 
         try:
-            async with (await asyncio.wait_for(asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], password=server['ssh_pwd'], known_hosts=None), timeout=600)) as conn:
+            async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], password=server['ssh_pwd'], known_hosts=None) as conn:
                 #print(recipe)
 
                 result = await run_task(conn, tasks, recipe, result)
@@ -75,7 +75,7 @@ async def process_recipe_file(conn, recipe, result):
     result['shell'].append(response.stdout)
 
     # Run script in remote dir
-    response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False)
+    response = await asyncio.wait_for(await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False), timeout=6000)
     result['shell'].append(response.stdout)
 
     return result
