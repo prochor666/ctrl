@@ -1,9 +1,11 @@
 import asyncio
 import asyncssh
 import sys
+import json
+from flask import render_template
 from slugify import slugify
-from core import app, utils
-from core.ctrl import servers, recipes, sites
+from core import app, utils, data
+from core.ctrl import servers, recipes, sites, mailer
 
 
 async def run_client(server, tasks=[], recipe=None):
@@ -158,7 +160,49 @@ def deploy(id):
 
     recipe['valid_domains'] = valid_domains
 
-    return init_client(server, tasks, recipe)
+    result = init_client(server, tasks, recipe)
+    # TO-DO: notify
+
+    return result
+
+
+def notify_deploy_result(result, site):
+
+    valid_users = data.ex({
+        'collection': 'users',
+        'filter': {
+            'settings': {
+                'notificatios': {
+                    'sites': True
+                }
+            }
+        },
+        'exclude': {'secret': 0, 'pwd': 0, 'salt': 0}
+    })
+
+    html_message_data = {
+        'app_full_name': app.config['full_name'],
+    }
+
+    try:
+        json_object = json.loads(result)
+        html_message_data['data'] = json_object
+        template = 'deploy-json'
+
+    except ValueError as e:
+        html_message_data['data'] = result
+        template = 'deploy-text'
+
+    #html_message = mailer.email_template(template).format(**html_message_data)
+
+    for user in valid_users:
+
+        html_message_data['user'] = user
+        html_message = render_template(
+            f"email/{template}.html", data=html_message_data)
+        es = mailer.send(
+            user['email'], f"{app.config['name']} site deployed", html_message)
+
 
 
 def test_connection(server_id):

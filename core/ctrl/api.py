@@ -135,17 +135,20 @@ def get_enums(data_pass=None):
 def users(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
+    ftype = None
+    if 'filter' in data_pass.keys() and type(data_pass['filter']):
+        ftype = type(data_pass['filter'])
 
     u = usr.list_users(data_filter)
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No users",
         'users': [],
+        'ftype': str(ftype),
         'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
         result['status'] = True
-        result['message'] = f"Found users: {result['count']}"
 
         if app.mode == 'http':
             for user in data.collect(u):
@@ -155,6 +158,8 @@ def users(data_pass=None):
                     result['users'].append(user)
         else:
             result['users'] = data.collect(u)
+
+        result['message'] = f"Found users: {result['count']}"
 
     return result
 
@@ -182,11 +187,11 @@ def delete_user(data_pass=None):
     return result
 
 
-def soft_recovery(data_pass):
+def soft_recovery(data_pass=None):
     return usr.recover(data_pass, True)
 
 
-def full_recovery(data_pass):
+def full_recovery(data_pass=None):
     return usr.recover(data_pass, False)
 
 

@@ -40,4 +40,4 @@ def email_template_load(template):
     with open(app_dirs['templates']+'/email/'+str(template)+'.html') as template:
         return str(template.read())
 
-    return False
+    return ''
