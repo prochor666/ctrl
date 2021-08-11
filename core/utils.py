@@ -227,7 +227,7 @@ def apply_filter(data_pass):
     data_filter = {}
 
     if 'filter' in data_pass.keys() and type(data_pass['filter']) is dict and len(data_pass['filter']) > 0:
-        data_filter = filter_to_dict(data_pass['filter'])
+        data_filter = data_pass['filter']
 
     if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
         data_filter = filter_to_dict(data_pass['filter'])
