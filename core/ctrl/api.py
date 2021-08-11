@@ -152,11 +152,11 @@ def users(data_pass=None):
         result['status'] = True
 
         if app.mode == 'http':
-            for user in data.collect(u):
+            for user in u:
                 if user['username'] == 'system':
                     result['count'] = result['count'] - 1
                 else:
-                    result['users'].append(user)
+                    result['users'].append(data.collect_one(user))
         else:
             result['users'] = data.collect(u)
 
