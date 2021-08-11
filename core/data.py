@@ -22,14 +22,18 @@ def one(finder={}):
 
 def collect_one(document):
     document['_id'] = str(document['_id'])
+    if 'creator' in document:
+        document['creator'] = str(document['creator'])
+    if 'owner' in document:
+        document['owner'] = str(document['owner'])
+
     return document
 
 
 def collect(find_result):
     result = []
     for document in find_result:
-        document['_id'] = str(document['_id'])
-        result.append(document)
+        result.append(collect_one(document))
     return result
 
 
