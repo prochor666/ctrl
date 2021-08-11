@@ -145,7 +145,6 @@ def users(data_pass=None):
         'message': str(u) if type(u) is str else "No users",
         'users': [],
         'ftype': str(ftype),
-        'data_filter': data_filter,
         'count': 0 if type(u) is str or u == None else u.count()
     }
     if result['count'] > 0:
