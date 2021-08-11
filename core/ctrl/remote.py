@@ -2,7 +2,7 @@ import asyncio
 import asyncssh
 import sys
 import json
-from flask import render_template
+import re
 from slugify import slugify
 from core import app, utils, data
 from core.ctrl import servers, recipes, sites, mailer
@@ -161,48 +161,58 @@ def deploy(id):
     recipe['valid_domains'] = valid_domains
 
     result = init_client(server, tasks, recipe)
-    # TO-DO: notify
+    # TO-DO: notify and parse shell response
+    parsed = parse_shell_result("\n".join(result['shell']))
+    notify_deploy_result(
+        parsed['template'], parsed['html_message_data'], parsed['result'])
+    result['shell'] = [parsed['nice']]
 
     return result
 
 
-def notify_deploy_result(result, site):
+def parse_shell_result(result):
+    tag_result = result
 
-    valid_users = data.ex({
-        'collection': 'users',
-        'filter': {
-            'settings': {
-                'notificatios': {
-                    'sites': True
-                }
-            }
-        },
-        'exclude': {'secret': 0, 'pwd': 0, 'salt': 0}
-    })
+    custom_tag = re.findall(
+        "<control-result>(.*?)</control-result>", result, re.DOTALL)
+
+    if len(custom_tag) > 0:
+        tag_result = custom_tag[0]
 
     html_message_data = {
         'app_full_name': app.config['full_name'],
     }
-
     try:
-        json_object = json.loads(result)
-        html_message_data['data'] = json_object
+        json_object = json.loads(tag_result)
+        html_message_data['data'] = json.dumps(json_object, indent=4)
         template = 'deploy-json'
 
     except ValueError as e:
-        html_message_data['data'] = result
+        html_message_data['data'] = tag_result
         template = 'deploy-text'
 
-    #html_message = mailer.email_template(template).format(**html_message_data)
+    return {
+        'result': result,
+        'nice': html_message_data['data'],
+        'template': template,
+        'html_message_data': html_message_data
+    }
+
+
+def notify_deploy_result(template, html_message_data, att):
+    valid_users = data.collect(data.ex({
+        'collection': 'users',
+        'filter': {
+            'settings.notifications.sites': True
+        }
+    }))
 
     for user in valid_users:
-
         html_message_data['user'] = user
-        html_message = render_template(
-            f"email/{template}.html", data=html_message_data)
-        es = mailer.send(
-            user['email'], f"{app.config['name']} site deployed", html_message)
-
+        html_message = mailer.assign_template(
+            template, html_message_data)
+        mailer.send(
+            user['email'], f"{app.config['name']} site deployed", html_message, att)
 
 
 def test_connection(server_id):

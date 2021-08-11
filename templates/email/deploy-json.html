@@ -2,16 +2,17 @@
     <div
         style="max-width: 800px; text-align: left; margin-left: auto; margin-right: auto; padding: 15px 25px; background: #FEFEFE; color: #323232; border-radius: 10px; border: 6px solid #0db39e;">
         <p style="padding:  5px 0; font-family: sans-serif; font-size: 22px; font-weight: bold; color: #023047;">
-            {app_full_name}
+            {{data.app_full_name}}
         </p>
         <p style="padding:  5px 0; font-family: sans-serif; font-size: 16px;">
-            Hello <b>{username}</b>, site {site_name} deployed.
+            Hello <b>{{data.user.username}}</b>, site deployed.
         </p>
-        <p style="padding:  5px 0; font-family: sans-serif; font-size: 16px;">
-            {formated_data}
+        <p style="padding: 5px 0; font-family: sans-serif; font-size: 16px; font-weight: bold;">
+            Result
         </p>
-        <p style="padding:  5px 10px; font-size: 16px; border-radius: 5px; color: #FFF; background-color: #F00;">
-            <pre style="font-family: 'Courier New', Courier, monospace;">{data}</pre>
+        <p style="padding: 5px 10px; font-size: 14px; border-radius: 5px;">
+            <pre style="font-family: 'Courier New', Courier, monospace;">{{data.data}}</pre>
         </p>
+
     </div>
 </div>

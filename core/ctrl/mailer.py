@@ -2,11 +2,13 @@ import smtplib
 import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
 from pyisemail import is_email
 from core import config, utils, app
+from flask import render_template
 
 
-def send(to, subject, body):
+def send(to, subject, body, att = None):
     conf = config.smtp_config()
     if type(conf) is dict:
         return via(conf, email_compose({
@@ -15,7 +17,7 @@ def send(to, subject, body):
             'subject': subject,
             'alt_body': utils.br2nl(utils.strip_tags(subject, '<br>')),
             'body': body
-        }))
+        }, att))
 
     return False
 
@@ -57,7 +59,7 @@ def via(conf, msg):
     return False
 
 
-def email_compose(email):
+def email_compose(email, att=None):
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = email['subject']
@@ -78,6 +80,16 @@ def email_compose(email):
     msg.attach(part1)
     msg.attach(part2)
 
+    if type(att) is str and len(att)>0:
+        part3 = MIMEApplication(
+            att,
+            Name='deploy.log'
+        )
+
+        # After the file is closed
+        part3['Content-Disposition'] = 'attachment; filename="deploy.log"'
+        msg.attach(part3)
+
     return msg
 
 
@@ -91,5 +103,12 @@ def check_email(email=None):
     }
 
 
+def assign_template(template, data):
+    return render_template(
+        f"email/{template}.html", data=data)
+
+
 def email_template(template):
     return config.email_template_load(template)
+
+
