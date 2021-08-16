@@ -82,7 +82,8 @@
             "test_connection": {},
             "deploy": {},
             "validate_domain": {},
-            "get_enums": {}
+            "get_enums": {},
+            "monitor": {}
         },
         "rest_free": {
             "test": {},
@@ -122,7 +123,8 @@
             "test_connection": {},
             "deploy": {},
             "validate_domain": {},
-            "get_enums": {}
+            "get_enums": {},
+            "monitor": {}
         }
     }
 }

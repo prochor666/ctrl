@@ -2,7 +2,7 @@ import json
 import re
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote, monit
 from bson import json_util
 
 
@@ -351,6 +351,18 @@ def modify_site(data_pass=None):
 def delete_site(data_pass=None):
     result = sts.delete(data_pass)
     return result
+
+
+# Monitoring
+def monitor(data_pass=None):
+    if type(data_pass) is dict and 'id' in data_pass:
+        return monit.survey(data_pass['id'])
+
+    return {
+        'status': False,
+        'message': f"Server id is missing",
+        'shell': []
+    }
 
 
 # Billing

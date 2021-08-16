@@ -263,6 +263,16 @@ def nl2br(s):
     return '<br />'.join(s.split("\n"))
 
 
+def tag_parse(tag, raw):
+    result = re.findall(
+        f"<{tag}>(.*?)</{tag}>", raw, re.DOTALL)
+
+    if len(result) > 0:
+        return result[0]
+
+    return ''
+
+
 # 3rd party
 # thx to: https://www.calebthorne.com/blog/python/2012/06/08/python-strip-tags
 def strip_tags(string, allowed_tags=''):

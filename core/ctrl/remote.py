@@ -173,11 +173,10 @@ def deploy(id):
 def parse_shell_result(result):
     tag_result = result
 
-    custom_tag = re.findall(
-        "<control-result>(.*?)</control-result>", result, re.DOTALL)
+    custom_tag = utils.tag_parse('control-result', result)
 
     if len(custom_tag) > 0:
-        tag_result = custom_tag[0]
+        tag_result = custom_tag
 
     html_message_data = {
         'app_full_name': app.config['full_name'],
