@@ -245,7 +245,7 @@ def deploy(data_pass=None):
     result = {
         'status': False,
         'message': 'Data error',
-        'shell': []
+        'data': []
     }
 
     if 'id' in data_pass.keys() and type(data_pass['id']) is str and len(data_pass['id']) > 0:
