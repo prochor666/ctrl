@@ -1,14 +1,13 @@
 import asyncio
 import asyncssh
-import sys
 import json
 import re
 from slugify import slugify
 from core import app, utils, data
-from core.ctrl import servers, recipes, sites, mailer
+from core.ctrl import servers, recipes, sites, mailer, services
 
 
-async def run_client(server, tasks=[], recipe=None):
+async def run_client(server, tasks=[], recipe=None, service_installer=False):
 
     result = {
         'status': False,
@@ -22,7 +21,7 @@ async def run_client(server, tasks=[], recipe=None):
         try:
             async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], client_keys=[server['ssh_key']], known_hosts=None) as conn:
 
-                result = await run_task(conn, tasks, recipe, result)
+                result = await run_task(conn, tasks, recipe, service_installer, result)
 
         except(asyncssh.Error) as exc:
             result['message'] = f"Server {server['name']}: {str(exc)}"
@@ -33,7 +32,7 @@ async def run_client(server, tasks=[], recipe=None):
             async with asyncssh.connect(server['ipv4'], port=int(server['ssh_port']), username=server['ssh_user'], password=server['ssh_pwd'], known_hosts=None) as conn:
                 #print(recipe)
 
-                result = await run_task(conn, tasks, recipe, result)
+                result = await run_task(conn, tasks, recipe, service_installer, result)
 
         except(asyncssh.Error) as exc:
             result['message'] = f"Server {server['name']}: {str(exc)}"
@@ -41,10 +40,13 @@ async def run_client(server, tasks=[], recipe=None):
     return result
 
 
-async def run_task(conn, tasks, recipe, result):
+async def run_task(conn, tasks, recipe, service_installer, result):
 
     if type(recipe) is dict:
         result = await process_recipe_file(conn, recipe, result)
+
+    if service_installer == True:
+        result = await process_service_files(conn, result)
 
     for task in tasks:
         response = await conn.run(task, check=False)
@@ -66,7 +68,8 @@ async def process_recipe_file(conn, recipe, result):
     result['shell'].append(response.stdout)
 
     # Cache recipe file localy
-    utils.file_save(f"{cache_dir}/{cache_file}", recipe['content'])
+    utils.file_save(f"{cache_dir}/{cache_file}",
+                    utils.dos2unix(recipe['content']))
 
     # Transfer recipe file
     # Returns None type, so we can't log
@@ -215,7 +218,6 @@ def notify_deploy_result(template, html_message_data, att):
 
 
 def test_connection(server_id):
-
     server = servers.load_server({
         'id': server_id
     })
@@ -228,6 +230,59 @@ def test_connection(server_id):
     ]
 
     return init_client(server, tasks)
+
+
+async def process_service_files(conn, result):
+    cache_dir = app.config['filesystem']['recipes']
+    config_cache_file = "ctrl-monitor-install.sh"
+    script_cache_file = "ctrl-monitor.sh"
+
+    # Check remote dir for scripts
+    response = await conn.run('xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)"', check=False)
+    result['shell'].append(response.stdout)
+    response = await conn.run('xnope="$(mkdir -p /opt/ctrl/monitor 2>&1)"', check=False)
+    result['shell'].append(response.stdout)
+
+    # Cache files localy
+    utils.file_save(f"{cache_dir}/{config_cache_file}",
+                    utils.dos2unix(services.monitor_service_config()))
+    utils.file_save(f"{cache_dir}/{script_cache_file}",
+                    utils.dos2unix(services.monitor_service_script()))
+
+    # Transfer script filess
+    # Returns None type, so we can't log
+    await asyncssh.scp(f"{cache_dir}/{config_cache_file}", (conn, f"/opt/ctrl/scripts/{config_cache_file}"))
+    await asyncssh.scp(f"{cache_dir}/{script_cache_file}", (conn, f"/opt/ctrl/monitor/{script_cache_file}"))
+
+    response = await conn.run(f"dos2unix /opt/ctrl/scripts/{config_cache_file}", check=False)
+    result['shell'].append(response.stdout)
+    response = await conn.run(f"dos2unix /opt/ctrl/monitor/{script_cache_file}", check=False)
+    result['shell'].append(response.stdout)
+
+    # Make recipe file executable
+    response = await conn.run(f"chmod +x /opt/ctrl/scripts/{config_cache_file}", check=False)
+    result['shell'].append(response.stdout)
+    response = await conn.run(f"chmod +x /opt/ctrl/monitor/{script_cache_file}", check=False)
+    result['shell'].append(response.stdout)
+
+    # Run install script in remote dir
+    response = await conn.run(f"/opt/ctrl/scripts/{config_cache_file}", check=False)
+    result['shell'].append(response.stdout)
+
+    return result
+
+
+def install_monitoring_service(server_id):
+    server = servers.load_server({
+        'id': server_id
+    })
+
+    tasks = [
+        'echo "SSH server hostname: $(hostname)"',
+        'echo "$(systemctl status ctrl-monitor-collector.service)"'
+    ]
+
+    return init_client(server=server, tasks=tasks, recipe=None, service_installer=True)
 
 
 def compose_script_call_args(recipe_arguments):
@@ -254,9 +309,9 @@ def validate_dns_entry(domain, server_ipv4):
     return True
 
 
-def init_client(server, tasks, recipe=None):
+def init_client(server, tasks, recipe=None, service_installer=False):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     r = asyncio.get_event_loop().run_until_complete(
-        run_client(server, tasks, recipe))
+        run_client(server, tasks, recipe, service_installer))
     return r

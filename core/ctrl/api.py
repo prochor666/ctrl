@@ -241,6 +241,19 @@ def test_connection(data_pass=None):
     return result
 
 
+def install_monitoring_service(data_pass=None):
+    result = {
+        'status': False,
+        'message': 'Data error',
+        'shell': []
+    }
+
+    if 'id' in data_pass.keys() and len(data_pass['id']) > 0:
+        result = remote.install_monitoring_service(data_pass['id'])
+
+    return result
+
+
 def deploy(data_pass=None):
     result = {
         'status': False,

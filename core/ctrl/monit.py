@@ -27,6 +27,7 @@ def survey(id):
     result['data']['memory'] = stat.memory(parts['memory'])
     result['data']['storage'] = stat.storage(parts['storage'])
     result['data']['network'] = stat.network(parts['network1'], parts['network2'], parts['network_stats'])
+    result['data']['last_update'] = parts['last_update'].strip()
     result['status'] = True
     result['message'] = f"Server {monitor['server']['name']} stat data"
 
@@ -44,7 +45,7 @@ def compose_monitor_tasks(id):
         return False
 
     tasks = [
-        'cat /opt/ctrl/stats/control-monitor.data',
+        'cat /opt/ctrl/stats/ctrl-monitor.data',
     ]
 
     return {
@@ -65,7 +66,7 @@ def parse_monitor_result(raw):
     storage = utils.tag_parse('control-monitor-storage', raw)
     stats1 = utils.tag_parse('control-monitor-stat-sample1', raw)
     stats2 = utils.tag_parse('control-monitor-stat-sample2', raw)
-
+    last_update = utils.tag_parse('control-monitor-last-update', raw)
     return {
         'cpu': cpu,
         'memory': memory,
@@ -75,4 +76,5 @@ def parse_monitor_result(raw):
         'storage': storage,
         'stats1': stats1,
         'stats2': stats2,
+        'last_update': last_update
     }

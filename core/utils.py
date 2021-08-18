@@ -263,6 +263,10 @@ def nl2br(s):
     return '<br />'.join(s.split("\n"))
 
 
+def dos2unix(s):
+    return str(s).replace('\r\n', '\n')
+
+
 def tag_parse(tag, raw):
     result = re.findall(
         f"<{tag}>(.*?)</{tag}>", raw, re.DOTALL)
