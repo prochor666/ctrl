@@ -226,7 +226,7 @@ def test_connection(server_id):
         'echo "SSH server hostname: $(hostname)"',
         'echo "$(lsb_release -a)"',
         'xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)" | echo $xnope',
-        'echo "$(ls -lah /opt/ctrl)"',
+        'echo "Monitoring service is $(systemctl is-active ctrl-server)"',
     ]
 
     return init_client(server, tasks)
