@@ -226,7 +226,7 @@ def test_connection(server_id):
         'echo "SSH server hostname: $(hostname)"',
         'echo "$(lsb_release -a)"',
         'xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)" | echo $xnope',
-        'echo "Monitoring service is $(systemctl is-active ctrl-server)"',
+        'echo "Monitoring service is $(systemctl is-active ctrl-monitor-collector.service)"',
     ]
 
     return init_client(server, tasks)
@@ -279,7 +279,7 @@ def install_monitoring_service(server_id):
 
     tasks = [
         'echo "SSH server hostname: $(hostname)"',
-        'echo "Monitoring service is $(systemctl is-active ctrl-server)"'
+        'echo "Monitoring service is $(systemctl is-active ctrl-monitor-collector.service)"'
     ]
 
     return init_client(server=server, tasks=tasks, recipe=None, service_installer=True)
