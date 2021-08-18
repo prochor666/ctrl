@@ -56,8 +56,6 @@ def compose_monitor_tasks(id):
 
 def parse_monitor_result(raw):
 
-    print(raw)
-
     cpu = utils.tag_parse('control-monitor-cpu', raw)
     memory = utils.tag_parse('control-monitor-memory', raw)
     network1 = utils.tag_parse('control-monitor-network1', raw)

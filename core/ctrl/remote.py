@@ -279,7 +279,7 @@ def install_monitoring_service(server_id):
 
     tasks = [
         'echo "SSH server hostname: $(hostname)"',
-        'echo "$(systemctl status ctrl-monitor-collector.service)"'
+        'echo "Monitoring service is $(systemctl is-active ctrl-server)"'
     ]
 
     return init_client(server=server, tasks=tasks, recipe=None, service_installer=True)

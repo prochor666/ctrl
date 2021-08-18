@@ -6,7 +6,6 @@ from core import utils
 
 def network(sample1, sample2, stats):
     devices_data = get_alive_devices(stats)
-    print(devices_data)
     devices = get_net_streams(devices_data, sample1, sample2)
 
     return devices
@@ -18,8 +17,6 @@ def get_net_streams(devices_data, sample1, sample2):
     lines2 = sample2.strip().split("\n")
     lines2.pop(0)
     streams = []
-
-    print(sample1, sample2)
 
     for line in lines1:
         i = lines1.index(line)

@@ -374,8 +374,32 @@ def monitor(data_pass=None):
     return {
         'status': False,
         'message': f"Server id is missing",
-        'shell': []
+        'data': []
     }
+
+
+def monitor_servers(data_pass=None):
+
+    result = {
+        'status': False,
+        'message': f"Monitoring results",
+        'data': []
+    }
+    u = srv.list_servers({
+            'publish': True,
+            'use': True
+    })
+    count = 0 if type(u) is str or u == None else u.count()
+
+    if count > 0:
+        servers = data.collect(u)
+
+        for server in servers:
+            result['data'].append(monit.survey(server['_id']))
+
+        result['status'] = True
+
+    return result
 
 
 # Billing
