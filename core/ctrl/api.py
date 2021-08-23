@@ -389,7 +389,7 @@ def monitor(data_pass=None):
 
     try:
         with open(cache_file) as dump:
-            result['data'] = json.loads(dump)
+            result['data'] = json.load(dump)
     except Exception as error:
         result['resource'] = 'direct'
         result['data'] = monitor_servers(data_pass)
