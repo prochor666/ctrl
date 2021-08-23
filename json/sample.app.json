@@ -83,9 +83,10 @@
             "deploy": {},
             "validate_domain": {},
             "get_enums": {},
-            "monitor": {},
+            "monitor_server": {},
             "monitor_servers": {},
-            "install_monitoring_service": {}
+            "install_monitoring_service": {},
+            "monitor": {}
         },
         "rest_free": {
             "test": {},
@@ -126,9 +127,10 @@
             "deploy": {},
             "validate_domain": {},
             "get_enums": {},
-            "monitor": {},
+            "monitor_server": {},
             "monitor_servers": {},
-            "install_monitoring_service": {}
+            "install_monitoring_service": {},
+            "monitor": {}
         }
     }
 }

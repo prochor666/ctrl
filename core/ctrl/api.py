@@ -367,7 +367,7 @@ def delete_site(data_pass=None):
 
 
 # Monitoring
-def monitor(data_pass=None):
+def monitor_server(data_pass=None):
     if type(data_pass) is dict and 'id' in data_pass:
         return monit.survey(data_pass['id'])
 
@@ -378,8 +378,24 @@ def monitor(data_pass=None):
     }
 
 
-def monitor_servers(data_pass=None):
+def monitor(data_pass=None):
+    cache_file = f"{app.config['filesystem']['resources']}/monitoring.json"
+    result = {
+        'status': True,
+        'message': f"Monitoring results",
+        'data': {}
+    }
 
+    try:
+        with open(cache_file) as dump:
+            result['data'] = json.loads(dump)
+    except Exception as error:
+        result['data'] = monitor_servers(data_pass)
+
+    return result
+
+
+def monitor_servers(data_pass=None):
     result = {
         'status': False,
         'message': f"Monitoring results",
@@ -398,6 +414,10 @@ def monitor_servers(data_pass=None):
             result['data'].append(monit.survey(server['_id']))
 
         result['status'] = True
+
+        # Cache data file localy
+        utils.file_save(f"{app.config['filesystem']['resources']}/monitoring.json",
+                        json.dumps(result))
 
     return result
 
