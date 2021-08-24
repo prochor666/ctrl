@@ -380,19 +380,14 @@ def monitor_server(data_pass=None):
 
 def monitor(data_pass=None):
     cache_file = f"{app.config['filesystem']['resources']}/monitoring.json"
-    result = {
-        'status': True,
-        'message': f"Monitoring results",
-        'resource': 'cache',
-        'data': {}
-    }
 
     try:
         with open(cache_file) as dump:
-            result['data'] = json.load(dump)
+            result = json.load(dump)
+            result['resource'] = 'cache'
     except Exception as error:
+        result = monitor_servers(data_pass)
         result['resource'] = 'direct'
-        result['data'] = monitor_servers(data_pass)
 
     return result
 
