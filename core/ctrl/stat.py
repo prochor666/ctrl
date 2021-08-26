@@ -49,7 +49,7 @@ def parse_net_streams(line1, line2):
 
     stream = {
         'downstream': (abs(int(data2[0]) - int(data1[0]))*8)/1000000,
-        'upstream': (abs(int(data2[0]) - int(data1[0]))*8)/1000000,
+        'upstream': (abs(int(data2[1]) - int(data1[1]))*8)/1000000,
         'human_downstream': utils.byte_size(abs(int(data2[0]) - int(data1[0]))),
         'human_upstream': utils.byte_size(abs(int(data2[1]) - int(data1[1])))
     }
