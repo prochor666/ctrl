@@ -4,17 +4,17 @@
             {{data.app_full_name}}
         </p>
         <p style="padding: 5px 0; font-family: sans-serif; font-size: 16px;">
-            Hello <b>{username}</b>, somebody initiated recovery of your account. If it wasn't you, ignore this message or contact administrator.
+            Hello <b>{{username}}</b>, somebody initiated recovery of your account. If it wasn't you, ignore this message or contact administrator.
         </p>
         <p style="padding: 5px 0; font-family: sans-serif; font-size: 16px;">
             Your PIN:
         </p>
-        <p style="padding: 5px 0; font-family: monospace, monospace; color: #4C1D95; font-size: 14px;">{pin}</p>
+        <p style="padding: 5px 0; font-family: monospace, monospace; color: #4C1D95; font-size: 14px;">{{pin}}</p>
         <p style="padding: 5px 0; font-family: sans-serif; font-size: 16px;">
             Click on link to start activation:
         </p>
         <p style="padding: 5px 0; font-family: monospace, monospace; font-size: 14px;">
-            <a href="{activation_link}" style="color:#8B5CF6;">{activation_link}</a>
+            <a href="{{activation_link}}" style="color:#8B5CF6;">{{activation_link}}</a>
         </p>
     </div>
 </div>

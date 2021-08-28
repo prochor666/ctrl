@@ -34,10 +34,3 @@ def smtp_config():
 
     return False
 
-
-def email_template_load(template):
-    app_dirs = locate_dirs()
-    with open(app_dirs['templates']+'/email/'+str(template)+'.html') as template:
-        return str(template.read())
-
-    return ''

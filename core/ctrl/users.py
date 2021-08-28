@@ -58,12 +58,14 @@ def insert(user_data):
 
             users.insert_one(user)
 
-            html_message = mailer.email_template('register').format(**{
-                'app_full_name': app.config['full_name'],
-                'username': user['username'],
-                'pin': user['pin'],
-                'activation_link': activation_link(user, http_origin)
-            })
+            html_message = mailer.assign_template(
+                'register', {
+                    'app_full_name': app.config['full_name'],
+                    'username': user['username'],
+                    'pin': user['pin'],
+                    'activation_link': activation_link(user, http_origin)
+                })
+
 
             es = mailer.send(
                 user['email'], f"{app.config['name']} new account", html_message)
@@ -158,12 +160,14 @@ def modify(user_data):
 
             if changed == True:
 
-                html_message = mailer.email_template(html_template).format(**{
-                    'app_full_name': app.config['full_name'],
-                    'username': user['username'],
-                    'pin': user['pin'],
-                    'activation_link': activation_link(user, http_origin)
-                })
+                html_message = mailer.assign_template(
+                    html_template, {
+                        'app_full_name': app.config['full_name'],
+                        'username': user['username'],
+                        'pin': user['pin'],
+                        'activation_link': activation_link(user, http_origin)
+                    })
+
 
                 es = mailer.send(
                     user['email'], f"{app.config['name']} account updated", html_message)
@@ -237,12 +241,13 @@ def recover(user_data, soft=True):
 
             users.update_one({'_id': ObjectId(user['_id'])}, {'$set': user})
 
-            html_message = mailer.email_template(html_template).format(**{
-                'app_full_name': app.config['full_name'],
-                'username': user['username'],
-                'pin': user['pin'],
-                'activation_link': new_activation_link
-            })
+            html_message = mailer.assign_template(
+                html_template, {
+                    'app_full_name': app.config['full_name'],
+                    'username': user['username'],
+                    'pin': user['pin'],
+                    'activation_link': new_activation_link
+                })
 
             es = mailer.send(
                 user['email'], f"{app.config['name']} {subject_suffix}", html_message)

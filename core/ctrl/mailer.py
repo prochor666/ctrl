@@ -106,9 +106,3 @@ def check_email(email=None):
 def assign_template(template, data):
     return render_template(
         f"email/{template}.html", data=data)
-
-
-def email_template(template):
-    return config.email_template_load(template)
-
-
