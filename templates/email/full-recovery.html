@@ -4,7 +4,7 @@
             {{data.app_full_name}}
         </p>
         <p style="padding:  5px 0; font-family: sans-serif; font-size: 16px;">
-            Hello <b>{{username}}</b>, the full recovery of your account was initiated.
+            Hello <b>{{data.username}}</b>, the full recovery of your account was initiated.
         </p>
         <p style="padding:  5px 10px; font-family: sans-serif; font-size: 16px; border-radius: 5px; color: #FFF; background-color: #DC2626;">
             <b>Your security token was renewed. All your devices are now deactivated.</b>
@@ -12,12 +12,12 @@
         <p style="padding:  5px 0; font-family: sans-serif; font-size: 16px;">
             Your PIN:
         </p>
-        <p style="padding:  5px 0; font-family: monospace, monospace; color: #4C1D95; font-size: 14px;">{{pin}}</p>
+        <p style="padding:  5px 0; font-family: monospace, monospace; color: #4C1D95; font-size: 14px;">{{data.pin}}</p>
         <p style="padding:  5px 0; font-family: sans-serif; font-size: 16px;">
             Click on link to start activation:
         </p>
         <p style="padding:  5px 0; font-family: monospace, monospace; font-size: 14px;">
-            <a href="{{activation_link}}" style="color:#8B5CF6;">{{activation_link}}</a>
+            <a href="{{data.activation_link}}" style="color:#8B5CF6;">{{data.activation_link}}</a>
         </p>
     </div>
 </div>
