@@ -276,7 +276,6 @@ async def process_service_files(conn, result):
 def domain_unique(recipe_arguments):
 
     new_aliases = []
-    print(recipe_arguments)
     if len(recipe_arguments['dev_domain']) > 0 and recipe_arguments['domain'] == recipe_arguments['dev_domain']:
        recipe_arguments['dev_domain'] = ''
 
@@ -288,7 +287,6 @@ def domain_unique(recipe_arguments):
                 new_aliases.append(alias_domain)
 
     recipe_arguments['alias_domains'] = new_aliases
-    print(recipe_arguments)
     return recipe_arguments
 
 
