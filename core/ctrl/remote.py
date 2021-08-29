@@ -80,6 +80,7 @@ async def process_recipe_file(conn, recipe, result):
     result['shell'].append(response.stdout)
 
     # Run script in remote dir
+    recipe['arguments'] = domain_unique(recipe['arguments'])
     response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False)
     result['shell'].append(response.stdout)
 
@@ -272,17 +273,23 @@ async def process_service_files(conn, result):
     return result
 
 
-def install_monitoring_service(server_id):
-    server = servers.load_server({
-        'id': server_id
-    })
+def domain_unique(recipe_arguments):
 
-    tasks = [
-        'echo "SSH server hostname: $(hostname)"',
-        'echo "Monitoring service is $(systemctl is-active ctrl-monitor-collector.service)"'
-    ]
+    new_aliases = []
+    print(recipe_arguments)
+    if len(recipe_arguments['dev_domain']) > 0 and recipe_arguments['domain'] == recipe_arguments['dev_domain']:
+       recipe_arguments['dev_domain'] = ''
 
-    return init_client(server=server, tasks=tasks, recipe=None, service_installer=True)
+    if type(recipe_arguments['alias_domains']) is list and len(recipe_arguments['alias_domains']) > 0:
+
+        for alias_domain in recipe_arguments['alias_domains']:
+            if alias_domain != recipe_arguments['domain'] and alias_domain != recipe_arguments['dev_domain'] and alias_domain not in new_aliases:
+
+                new_aliases.append(alias_domain)
+
+    recipe_arguments['alias_domains'] = new_aliases
+    print(recipe_arguments)
+    return recipe_arguments
 
 
 def compose_script_call_args(recipe_arguments):
@@ -301,6 +308,19 @@ def compose_script_call_args(recipe_arguments):
         cmd += f" --alias_domains {':'.join(recipe_arguments['alias_domains'])}"
 
     return cmd
+
+
+def install_monitoring_service(server_id):
+    server = servers.load_server({
+        'id': server_id
+    })
+
+    tasks = [
+        'echo "SSH server hostname: $(hostname)"',
+        'echo "Monitoring service is $(systemctl is-active ctrl-monitor-collector.service)"'
+    ]
+
+    return init_client(server=server, tasks=tasks, recipe=None, service_installer=True)
 
 
 def validate_dns_entry(domain, server_ipv4):

@@ -80,7 +80,6 @@
             "invoices": {},
             "ssh_keys": {},
             "test_connection": {},
-            "deploy": {},
             "validate_domain": {},
             "get_enums": {},
             "monitor_server": {},
