@@ -92,9 +92,10 @@ function network()
     echo "</control-monitor-network${@}>"
 }
 
-function setTimeStr() {
-    V=`date +"%Y-%m-%d-%H-%M-%S"`
-    echo "$V"
+function setLastUpdateUTC() {
+    echo "<control-monitor-last-update>"
+    echo $(date -u -d @$(date +%s) +"%Y-%m-%d-%H-%M-%S")
+    echo "</control-monitor-last-update>"
 }
 
 function network_totals()
@@ -147,9 +148,7 @@ do
     sleep 1
     network 2
     network_totals
-    echo "<control-monitor-last-update>"
-    setTimeStr
-    echo "</control-monitor-last-update>"
+    setLastUpdateUTC
     cp ${LOG_DIR}/${LOG_FILE_TMP} ${LOG_DIR}/${LOG_FILE}
     cp ${LOG_DIR}/${LOG_FILE_TMP} ${SITE_ROOT}/${LOG_FILE}
     sleep ${SNAPSHOT_INTERVAL}
