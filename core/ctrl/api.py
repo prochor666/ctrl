@@ -369,7 +369,11 @@ def delete_site(data_pass=None):
 # Monitoring
 def monitor_server(data_pass=None):
     if type(data_pass) is dict and 'id' in data_pass:
-        return monit.survey(data_pass['id'])
+
+        mntd = monit.survey(data_pass['id'])
+        print('CPU', mntd['data'])
+        if 'data' in mntd.keys() and 'cpu' in mntd['data'].keys() and 'last_update' in mntd['data'].keys() and len(mntd['data']['cpu']) > 0 and len(mntd['data']['last_update']) > 0:
+            return mntd
 
     return {
         'status': False,
@@ -408,7 +412,9 @@ def monitor_servers(data_pass=None):
         servers = data.collect(u)
 
         for server in servers:
-            result['data'].append(monit.survey(server['_id']))
+            mntd = monit.survey(server['_id'])
+            if 'data' in mntd.keys() and 'cpu' in mntd['data'].keys() and 'last_update' in mntd['data'].keys() and len(mntd['data']['cpu']) > 0 and len(mntd['data']['last_update']) > 0:
+                result['data'].append(mntd)
 
         result['status'] = True
 

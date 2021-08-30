@@ -18,8 +18,6 @@ def survey(id):
     raw_result = ''.join(
         remote.init_client(monitor['server'], monitor['tasks'])['shell'])
 
-    #print(raw_result)
-
     parts = parse_monitor_result(raw_result)
 
     result['data']['cpu'] = stat.cpu(parts['cpu'])
