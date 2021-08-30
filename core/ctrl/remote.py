@@ -223,9 +223,17 @@ def test_connection(server_id):
         'id': server_id
     })
 
+    if type(server) is not dict or 'ipv4' not in server:
+        return {
+            'status': False,
+            'message': f"Server {server_id} not found",
+            'shell': []
+        }
+
     tasks = [
         'echo "SSH server hostname: $(hostname)"',
-        'echo "$(lsb_release -a)"',
+        'echo "$(uname -a)"',
+        'echo "$(cat /etc/os-release)"',
         'xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)" | echo $xnope',
         'echo "Monitoring service is $(systemctl is-active ctrl-monitor-collector.service)"',
     ]
