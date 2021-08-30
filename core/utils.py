@@ -187,7 +187,7 @@ def list_ssh_keys():
     files = []
     for f in glob.glob(ssh_dir):
         filename, file_extension = os.path.splitext(f)
-        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts', 'authorized_keys', 'config'] and file_extension != '.pub':
+        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts', 'authorized_keys', 'config'] and file_extension in ['.pub', '.pem', '.key']:
             files.append(f)
 
     return files
