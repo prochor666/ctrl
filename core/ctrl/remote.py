@@ -247,9 +247,14 @@ async def process_service_files(conn, result):
     script_cache_file = "ctrl-monitor.sh"
 
     # Check remote dir for scripts
-    response = await conn.run('xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)"', check=False)
+    response = await conn.run(as_root('mkdir -p /opt/ctrl/scripts'), check=False)
     result['shell'].append(response.stdout)
-    response = await conn.run('xnope="$(mkdir -p /opt/ctrl/monitor 2>&1)"', check=False)
+    response = await conn.run(as_root('mkdir -p /opt/ctrl/monitor'), check=False)
+    result['shell'].append(response.stdout)
+
+    response = await conn.run(as_root('chown $(ls -ld ~ | awk \'{print $3}\') /opt/ctrl/scripts'), check=False)
+    result['shell'].append(response.stdout)
+    response = await conn.run(as_root('chown $(ls -ld ~ | awk \'{print $3}\') /opt/ctrl/monitor'), check=False)
     result['shell'].append(response.stdout)
 
     # Cache files localy
@@ -263,26 +268,25 @@ async def process_service_files(conn, result):
     await asyncssh.scp(f"{cache_dir}/{config_cache_file}", (conn, f"/opt/ctrl/scripts/{config_cache_file}"))
     await asyncssh.scp(f"{cache_dir}/{script_cache_file}", (conn, f"/opt/ctrl/monitor/{script_cache_file}"))
 
-    response = await conn.run(f"dos2unix /opt/ctrl/scripts/{config_cache_file}", check=False)
+    response = await conn.run(as_root(f"dos2unix /opt/ctrl/scripts/{config_cache_file}"), check=False)
     result['shell'].append(response.stdout)
-    response = await conn.run(f"dos2unix /opt/ctrl/monitor/{script_cache_file}", check=False)
+    response = await conn.run(as_root(f"dos2unix /opt/ctrl/monitor/{script_cache_file}"), check = False)
     result['shell'].append(response.stdout)
 
     # Make recipe file executable
-    response = await conn.run(f"chmod +x /opt/ctrl/scripts/{config_cache_file}", check=False)
+    response = await conn.run(as_root(f"chmod +x /opt/ctrl/scripts/{config_cache_file}"), check=False)
     result['shell'].append(response.stdout)
-    response = await conn.run(f"chmod +x /opt/ctrl/monitor/{script_cache_file}", check=False)
+    response = await conn.run(as_root(f"chmod +x /opt/ctrl/monitor/{script_cache_file}"), check = False)
     result['shell'].append(response.stdout)
 
     # Run install script in remote dir
-    response = await conn.run(f"/opt/ctrl/scripts/{config_cache_file}", check=False)
+    response = await conn.run(as_root(f"/opt/ctrl/scripts/{config_cache_file}"), check=False)
     result['shell'].append(response.stdout)
 
     return result
 
 
 def domain_unique(recipe_arguments):
-
     new_aliases = []
     if len(recipe_arguments['dev_domain']) > 0 and recipe_arguments['domain'] == recipe_arguments['dev_domain']:
        recipe_arguments['dev_domain'] = ''
