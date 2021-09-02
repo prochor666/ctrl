@@ -64,7 +64,9 @@ async def process_recipe_file(conn, recipe, result):
     cache_file = slugify(f"{utils.now()}-{recipe['name']}") + ".sh"
 
     # Check remote dir for scripts
-    response = await conn.run('xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)"', check=False)
+    response = await conn.run(as_root('mkdir -p /opt/ctrl/scripts'), check=False)
+    result['shell'].append(response.stdout)
+    response = await conn.run(as_root('chown $(ls - ld ~ | awk \'{print $3}\') /opt/ctrl/scripts'), check=False)
     result['shell'].append(response.stdout)
 
     # Cache recipe file localy
@@ -76,12 +78,12 @@ async def process_recipe_file(conn, recipe, result):
     await asyncssh.scp(f"{cache_dir}/{cache_file}", (conn, f"/opt/ctrl/scripts/{cache_file}"))
 
     # Make recipe file executable
-    response = await conn.run(f"chmod +x /opt/ctrl/scripts/{cache_file}", check=False)
+    response = await conn.run(as_root(f"chmod +x /opt/ctrl/scripts/{cache_file}"), check=False)
     result['shell'].append(response.stdout)
 
     # Run script in remote dir
     recipe['arguments'] = domain_unique(recipe['arguments'])
-    response = await conn.run(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}", check=False)
+    response = await conn.run(as_root(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}"), check=False)
     result['shell'].append(response.stdout)
 
     return result
@@ -234,7 +236,7 @@ def test_connection(server_id):
         'echo "SSH server hostname: $(hostname)"',
         'echo "$(uname -a)"',
         'echo "$(cat /etc/os-release)"',
-        'xnope="$(mkdir -p /opt/ctrl/scripts 2>&1)" | echo $xnope',
+        as_root('mkdir -p /opt/ctrl/scripts'),
         'echo "Monitoring service is $(systemctl is-active ctrl-monitor-collector.service)"',
     ]
 
