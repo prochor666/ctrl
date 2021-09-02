@@ -335,6 +335,30 @@ def validate_dns_entry(domain, server_ipv4):
     return True
 
 
+def detect_root(server_id):
+    server = servers.load_server({
+        'id': server_id
+    })
+
+    if type(server) is not dict or 'ipv4' not in server:
+        return {
+            'status': False,
+            'message': f"Server {server_id} not found",
+            'shell': []
+        }
+
+    tasks = [
+        f"if [[ $EUID == 0 ]];then AR=\"root\"; elif [[ $(which sudo) ]] && [[ $EUID != 0 ]];then AR=\"sudo\"; else AR=\"none\"; fi; echo -n $AR",
+    ]
+
+    return init_client(server, tasks)
+
+
+def as_root(command):
+    pattern = f"if [[ $EUID == 0 ]];then {command}; elif [[ $(which sudo) ]] && [[ $EUID != 0 ]];then sudo {command}; else echo \"No root condition, can't run on this machine\"; fi;"
+    return pattern
+
+
 def init_client(server, tasks, recipe=None, service_installer=False):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)

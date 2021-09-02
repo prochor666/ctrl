@@ -85,7 +85,8 @@
             "monitor_server": {},
             "monitor_servers": {},
             "install_monitoring_service": {},
-            "monitor": {}
+            "monitor": {},
+            "detect_root": {}
         },
         "rest_free": {
             "test": {},

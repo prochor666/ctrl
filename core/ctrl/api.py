@@ -267,6 +267,19 @@ def deploy(data_pass=None):
     return result
 
 
+def detect_root(data_pass=None):
+    result = {
+        'status': False,
+        'message': 'Data error',
+        'data': []
+    }
+
+    if 'id' in data_pass.keys() and type(data_pass['id']) is str and len(data_pass['id']) > 0:
+        result = remote.detect_root(data_pass['id'])
+
+    return result
+
+
 def validate_domain(data_pass=None):
     result = {
         'status': False,

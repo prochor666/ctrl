@@ -35,6 +35,7 @@ systemctl start ctrl-monitor-collector.service
 
     return config
 
+
 def monitor_service_script():
 
     script = '''#!/bin/bash
