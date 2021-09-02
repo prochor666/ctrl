@@ -83,7 +83,7 @@ async def process_recipe_file(conn, recipe, result):
 
     # Run script in remote dir
     recipe['arguments'] = domain_unique(recipe['arguments'])
-    response = await conn.run(as_root(f"/opt/ctrl/scripts/{cache_file} {compose_script_call_args(recipe['arguments'])}"), check=False)
+    response = await conn.run(as_root(f"cd /opt/ctrl/scripts; ./{cache_file} {compose_script_call_args(recipe['arguments'])}"), check=False)
     result['shell'].append(response.stdout)
 
     return result
