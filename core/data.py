@@ -21,7 +21,8 @@ def one(finder={}):
 
 
 def collect_one(document):
-    document['_id'] = str(document['_id'])
+    if '_id' in document:
+        document['_id'] = str(document['_id'])
     if 'creator' in document:
         document['creator'] = str(document['creator'])
     if 'owner' in document:
