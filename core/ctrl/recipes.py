@@ -1,5 +1,6 @@
+import json
 from bson.objectid import ObjectId
-from core import app, data, utils
+from core import app, data, utils, notifications
 
 
 def list_recipes(filter_data):
@@ -78,8 +79,9 @@ def modify(recipe_data):
             recipes.update_one({'_id': ObjectId(_id)}, {'$set': recipe})
 
             if changed == True:
-                # TO-DO: notification here
-                pass
+                # Notification comes here
+                notifications.db(
+                    'recipe', _id, f"Recipe {recipe['name']} was modified.", json.dumps(recipe, indent=4))
 
             result['status'] = True
             result['message'] = f"Recipe {recipe['name']} modified"
@@ -124,7 +126,19 @@ def insert(recipe_data):
                 recipe['target'] = 'site'
 
             recipes = app.db['recipes']
-            recipes.insert_one(recipe)
+            _id = recipes.insert_one(recipe)
+
+            # Notification comes here
+            html_message_data = {
+                'app_full_name': app.config['name'],
+                'username': app.config['user']['username'],
+                'message': f"Recipe {recipe['name']} was created."
+            }
+            notifications.email('settings.notifications.sites',
+                                'common-notification', f"{app.config['name']} - recipe created", html_message_data)
+            notifications.db(
+                'site', str(_id.inserted_id), f"Recipe {recipe['name']} was created.", json.dumps(recipe, indent=4))
+
             result['status'] = True
             result['message'] = f"Recipe {recipe['name']} created"
         else:

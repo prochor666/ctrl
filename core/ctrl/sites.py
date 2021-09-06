@@ -112,13 +112,6 @@ def modify(site_data):
 
             if changed == True:
                 # Notification comes here
-                html_message_data = {
-                    'app_full_name': app.config['name'],
-                    'username': app.config['user']['username'],
-                    'message': f"Site {site['name']} was modified."
-                }
-                notifications.email('settings.notifications.sites',
-                                    'common-notification', f"{app.config['name']} - site modified", html_message_data)
                 notifications.db(
                     'site', _id, f"Site {site['name']} was modified.", json.dumps(site, indent=4))
 
@@ -187,7 +180,7 @@ def insert(site_data):
                 'message': f"Site {site['name']} was created."
             }
             notifications.email('settings.notifications.sites',
-                                'common-notification', f"{app.config['name']} - site modified", html_message_data)
+                                'common-notification', f"{app.config['name']} - site created", html_message_data)
             notifications.db(
                 'site', str(_id.inserted_id), f"Site {site['name']} was created.", json.dumps(site, indent=4))
 

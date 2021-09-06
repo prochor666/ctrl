@@ -1,5 +1,7 @@
+import json
 from bson.objectid import ObjectId
 from core import app, data, utils
+from core.ctrl import notifications
 
 
 def list_servers(filter_data):
@@ -109,8 +111,9 @@ def modify(server_data):
                 servers.update_one({'_id': ObjectId(_id)}, {'$set': server})
 
                 if changed == True:
-                    # TO-DO: notification here
-                    pass
+                    # Notification comes here
+                    notifications.db(
+                        'server', _id, f"Server {server['name']} was modified.", json.dumps(server, indent=4))
 
                 result['status'] = True
                 result['message'] = f"Server {server['name']} modified"
@@ -165,7 +168,19 @@ def insert(server_data):
             server['creator'] = app.config['user']['_id']
 
             servers = app.db['servers']
-            servers.insert_one(server)
+            _id = servers.insert_one(server)
+
+            # Notification comes here
+            html_message_data = {
+                'app_full_name': app.config['name'],
+                'username': app.config['user']['username'],
+                'message': f"Site {server['name']} was created."
+            }
+            notifications.email('settings.notifications.servers',
+                                'common-notification', f"{app.config['name']} - server created", html_message_data)
+            notifications.db(
+                'server', str(_id.inserted_id), f"Server {server['name']} was created.", json.dumps(server, indent=4))
+
             result['status'] = True
             result['message'] = f"Server {server['name']} created"
         else:
