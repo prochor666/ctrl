@@ -1,7 +1,8 @@
 import re
+import json
 from bson.objectid import ObjectId
 from core import app, data, utils
-from core.ctrl import servers, recipes
+from core.ctrl import servers, recipes, notifications
 
 
 def list_sites(filter_data):
@@ -85,11 +86,6 @@ def modify(site_data):
             site.update(modify_site)
             site.update(site_data)
 
-            if modify_site['domain'] != site['domain']:
-                # Domain change deteced, we have to modify config file
-                # TO-DO: Autodeploy + changes
-                pass
-
             if 'home_dir' not in site.keys() or len(site['home_dir']) == 0:
                 site['home_dir'] = site['domain']
 
@@ -115,11 +111,19 @@ def modify(site_data):
                 {'$set': site})
 
             if changed == True:
-                # TO-DO: notification here
-                pass
+                # Notification comes here
+                html_message_data = {
+                    'app_full_name': app.config['name'],
+                    'username': app.config['user']['username'],
+                    'message': f"Site {site['name']} was modified."
+                }
+                notifications.email('settings.notifications.sites',
+                                    'common-notification', f"{app.config['name']} - site modified", html_message_data)
+                notifications.db(
+                    'site', _id, f"Site {site['name']} was modified.", json.dumps(site, indent=4))
 
             result['status'] = True
-            result['message'] = f"Site {site['name']} modified"
+            result['message'] = f"Site {site['name']} created"
             result['changed'] = changed
 
         else:
@@ -174,9 +178,21 @@ def insert(site_data):
             site['home_dir'] = site['domain']
 
             sites = app.db['sites']
-            sites.insert_one(site)
+            _id = sites.insert_one(site)
+
+            # Notification comes here
+            html_message_data = {
+                'app_full_name': app.config['name'],
+                'username': app.config['user']['username'],
+                'message': f"Site {site['name']} was created."
+            }
+            notifications.email('settings.notifications.sites',
+                                'common-notification', f"{app.config['name']} - site modified", html_message_data)
+            notifications.db(
+                'site', str(_id.inserted_id), f"Site {site['name']} was created.", json.dumps(site, indent=4))
+
             result['status'] = True
-            result['message'] = f"Site {site['name']} created"
+            result['message'] = f"Site {site['name']} was created"
         else:
 
             param_found = ''

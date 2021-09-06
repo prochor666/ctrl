@@ -4,7 +4,7 @@ import json
 import re
 from slugify import slugify
 from core import app, utils, data
-from core.ctrl import servers, recipes, sites, mailer, services
+from core.ctrl import servers, recipes, sites, mailer, services, notifications
 
 
 async def run_client(server, tasks=[], recipe=None, service_installer=False):
@@ -89,9 +89,9 @@ async def process_recipe_file(conn, recipe, result):
     return result
 
 
-def deploy(id):
+def deploy(site_id):
     site = sites.load_site({
-        'id': id
+        'id': site_id
     })
 
     # Site validation
@@ -167,10 +167,14 @@ def deploy(id):
     recipe['valid_domains'] = valid_domains
 
     result = init_client(server, tasks, recipe)
-    # TO-DO: notify and parse shell response
+
+    # Notify and parse shell response
     parsed = parse_shell_result("\n".join(result['shell']))
-    notify_deploy_result(
-        parsed['template'], parsed['html_message_data'], parsed['result'])
+    notifications.email('settings.notifications.sites',
+                        parsed['template'], f"{app.config['name']} - site deployed", parsed['html_message_data'], parsed['result'])
+    notifications.db(
+        'site', site_id, f"Site {site['name']} deployed.", parsed['nice'])
+
     result['shell'] = [parsed['nice']]
 
     return result
@@ -202,22 +206,6 @@ def parse_shell_result(result):
         'template': template,
         'html_message_data': html_message_data
     }
-
-
-def notify_deploy_result(template, html_message_data, att):
-    valid_users = data.collect(data.ex({
-        'collection': 'users',
-        'filter': {
-            'settings.notifications.sites': True
-        }
-    }))
-
-    for user in valid_users:
-        html_message_data['user'] = user
-        html_message = mailer.assign_template(
-            template, html_message_data)
-        mailer.send(
-            user['email'], f"{app.config['name']} site deployed", html_message, att)
 
 
 def test_connection(server_id):

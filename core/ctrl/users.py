@@ -68,7 +68,7 @@ def insert(user_data):
 
 
             es = mailer.send(
-                user['email'], f"{app.config['name']} new account", html_message)
+                user['email'], f"{app.config['name']} - new account", html_message)
             result['status'] = True
             result['message'] = f"User {user['username']} created"
             result['email_status'] = es
@@ -170,7 +170,7 @@ def modify(user_data):
 
 
                 es = mailer.send(
-                    user['email'], f"{app.config['name']} account updated", html_message)
+                    user['email'], f"{app.config['name']} - account updated", html_message)
                 result['email_status'] = es
 
             result['status'] = True
@@ -250,7 +250,7 @@ def recover(user_data, soft=True):
                 })
 
             es = mailer.send(
-                user['email'], f"{app.config['name']} {subject_suffix}", html_message)
+                user['email'], f"{app.config['name']} - {subject_suffix}", html_message)
             result['email_status'] = es
 
     return result

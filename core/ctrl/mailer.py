@@ -5,7 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from pyisemail import is_email
 from core import config, utils, app
-from flask import render_template
+from flask import Flask, render_template
 
 
 def send(to, subject, body, att = None):
