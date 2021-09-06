@@ -110,13 +110,15 @@ def modify(site_data):
                 {'_id': ObjectId(_id)},
                 {'$set': site})
 
+            result['message'] = f"Site {site['name']} not modified"
+
             if changed == True:
                 # Notification comes here
+                result['message'] = f"Site {site['name']} modified"
                 notifications.db(
                     'site', _id, f"Site {site['name']} was modified.", json.dumps(site, indent=4))
 
             result['status'] = True
-            result['message'] = f"Site {site['name']} created"
             result['changed'] = changed
 
         else:
@@ -185,7 +187,7 @@ def insert(site_data):
                 'site', str(_id.inserted_id), f"Site {site['name']} was created.", json.dumps(site, indent=4))
 
             result['status'] = True
-            result['message'] = f"Site {site['name']} was created"
+            result['message'] = f"Site {site['name']} created"
         else:
 
             param_found = ''

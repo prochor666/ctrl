@@ -79,13 +79,15 @@ def modify(recipe_data):
             recipe = recipe_model(recipe)
             recipes.update_one({'_id': ObjectId(_id)}, {'$set': recipe})
 
+            result['message'] = f"Recipe {recipe['name']} not modified"
+
             if changed == True:
                 # Notification comes here
+                result['message'] = f"Recipe {recipe['name']} modified"
                 notifications.db(
                     'recipe', _id, f"Recipe {recipe['name']} was modified.", json.dumps(recipe, indent=4))
 
             result['status'] = True
-            result['message'] = f"Recipe {recipe['name']} modified"
             result['changed'] = changed
 
         else:

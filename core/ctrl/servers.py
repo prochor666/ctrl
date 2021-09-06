@@ -110,13 +110,15 @@ def modify(server_data):
                 server = server_model(server)
                 servers.update_one({'_id': ObjectId(_id)}, {'$set': server})
 
+                result['message'] = f"Server {server['name']} not modified"
+
                 if changed == True:
                     # Notification comes here
+                    result['message'] = f"Server {server['name']} modified"
                     notifications.db(
                         'server', _id, f"Server {server['name']} was modified.", json.dumps(server, indent=4))
 
                 result['status'] = True
-                result['message'] = f"Server {server['name']} modified"
                 result['changed'] = changed
 
             else:
