@@ -131,7 +131,8 @@
             "monitor_server": {},
             "monitor_servers": {},
             "install_monitoring_service": {},
-            "monitor": {}
+            "monitor": {},
+            "notifications": {}
         }
     }
 }

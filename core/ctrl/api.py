@@ -2,7 +2,7 @@ import json
 import re
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote, monit
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote, monit, notifications as noti
 from bson import json_util
 
 
@@ -192,6 +192,24 @@ def soft_recovery(data_pass=None):
 
 def full_recovery(data_pass=None):
     return usr.recover(data_pass, False)
+
+
+def notifications(data_pass=None):
+    data_filter = utils.apply_filter(data_pass)
+
+    u = noti.list_notifications(data_filter)
+    result = {
+        'status': False,
+        'message': str(u) if type(u) is str else "No servers",
+        'notifications': [],
+        'count': 0 if type(u) is str or u == None else u.count()
+    }
+    if result['count'] > 0:
+        result['status'] = True
+        result['message'] = f"Found notifications: {result['count']}"
+        result['notifications'] = data.collect(u)
+
+    return result
 
 
 def servers(data_pass=None):

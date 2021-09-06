@@ -1,5 +1,13 @@
-from core import app, data
+from core import app, data, utils
 from core.ctrl import mailer
+
+
+def list_notifications(filter_data):
+    finder = {
+        'collection': 'notifications',
+        'filter': filter_data,
+    }
+    return data.ex(finder)
 
 
 def email(case, template, subject, html_message_data, att = None):
