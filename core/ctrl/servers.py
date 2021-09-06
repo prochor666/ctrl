@@ -116,7 +116,7 @@ def modify(server_data):
                     # Notification comes here
                     result['message'] = f"Server {server['name']} modified"
                     notifications.db(
-                        'server', _id, f"Server {server['name']} was modified.", json.dumps(server, indent=4))
+                        'server', _id, f"Server {server['name']} was modified.", json.dumps(data.collect_one(server), indent=4))
 
                 result['status'] = True
                 result['changed'] = changed
@@ -181,7 +181,7 @@ def insert(server_data):
             notifications.email('settings.notifications.servers',
                                 'common-notification', f"{app.config['name']} - server created", html_message_data)
             notifications.db(
-                'server', str(_id.inserted_id), f"Server {server['name']} was created.", json.dumps(server, indent=4))
+                'server', str(_id.inserted_id), f"Server {server['name']} was created.", json.dumps(data.collect_one(server), indent=4))
 
             result['status'] = True
             result['message'] = f"Server {server['name']} created"

@@ -85,7 +85,7 @@ def modify(recipe_data):
                 # Notification comes here
                 result['message'] = f"Recipe {recipe['name']} modified"
                 notifications.db(
-                    'recipe', _id, f"Recipe {recipe['name']} was modified.", json.dumps(recipe, indent=4))
+                    'recipe', _id, f"Recipe {recipe['name']} was modified.", json.dumps(data.collect_one(recipe), indent=4))
 
             result['status'] = True
             result['changed'] = changed
@@ -140,7 +140,7 @@ def insert(recipe_data):
             notifications.email('settings.notifications.recipes',
                                 'common-notification', f"{app.config['name']} - recipe created", html_message_data)
             notifications.db(
-                'site', str(_id.inserted_id), f"Recipe {recipe['name']} was created.", json.dumps(recipe, indent=4))
+                'site', str(_id.inserted_id), f"Recipe {recipe['name']} was created.", json.dumps(data.collect_one(recipe), indent=4))
 
             result['status'] = True
             result['message'] = f"Recipe {recipe['name']} created"
