@@ -137,7 +137,7 @@ def insert(recipe_data):
                 'username': app.config['user']['username'],
                 'message': f"Recipe {recipe['name']} was created."
             }
-            notifications.email('settings.notifications.sites',
+            notifications.email('settings.notifications.recipes',
                                 'common-notification', f"{app.config['name']} - recipe created", html_message_data)
             notifications.db(
                 'site', str(_id.inserted_id), f"Recipe {recipe['name']} was created.", json.dumps(recipe, indent=4))
