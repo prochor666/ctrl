@@ -1,6 +1,7 @@
 import json
 from bson.objectid import ObjectId
-from core import app, data, utils, notifications
+from core import app, data, utils
+from core.ctrl import notifications
 
 
 def list_recipes(filter_data):
