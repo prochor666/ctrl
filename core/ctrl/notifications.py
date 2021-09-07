@@ -2,10 +2,11 @@ from core import app, data, utils
 from core.ctrl import mailer
 
 
-def list_notifications(filter_data):
+def list_notifications(filter_data, sort):
     finder = {
         'collection': 'notifications',
         'filter': filter_data,
+        'sort':
     }
     return data.ex(finder)
 

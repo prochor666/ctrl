@@ -197,7 +197,12 @@ def full_recovery(data_pass=None):
 def notifications(data_pass=None):
     data_filter = utils.apply_filter(data_pass)
 
-    u = noti.list_notifications(data_filter)
+    if 'sort' in data_filter:
+        sort = data_filter.pop('sort', None)
+        u = noti.list_notifications(data_filter, sort)
+    else:
+        u = noti.list_notifications(data_filter)
+
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No servers",
