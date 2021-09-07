@@ -250,7 +250,7 @@ def apply_filter(data_pass):
 
 
     return {
-        'fiter': data_filter,
+        'filter': data_filter,
         'sort': data_sort
     }
 
