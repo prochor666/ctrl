@@ -225,19 +225,34 @@ def eval_key(key, data, data_type='str'):
 
 def apply_filter(data_pass):
     data_filter = {}
+    data_sort = ['Id', 1]
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is dict and len(data_pass['filter']) > 0:
-        data_filter = data_pass['filter']
+    if type(data_pass) is dict:
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
-        data_filter = filter_to_dict(data_pass['filter'])
+        if 'filter' in data_pass.keys() and type(data_pass['filter']) is dict and len(data_pass['filter']) > 0:
+            data_filter = data_pass['filter']
 
-    if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter']) > 0:
-        df = data_pass['filter'].split(':')
-        if len(df) == 2:
-            data_filter = {df[0]: df[1]}
+        if 'filter' in data_pass.keys() and type(data_pass['filter']) is list and len(data_pass['filter']) > 0:
+            data_filter = filter_to_dict(data_pass['filter'])
 
-    return data_filter
+        if 'filter' in data_pass.keys() and type(data_pass['filter']) is str and len(data_pass['filter']) > 0:
+            df = data_pass['filter'].split(':')
+            if len(df) == 2:
+                data_filter = {df[0]: df[1]}
+
+        if 'sort' in data_pass.keys() and type(data_pass['sort']) is list and len(data_pass['sort']) == 2:
+            data_sort = data_pass['sort']
+
+        if 'sort' in data_pass.keys() and type(data_pass['sort']) is str and len(data_pass['sort']) > 0:
+            df = data_pass['sort'].split(':')
+            if len(df) == 2:
+                data_sort = [df[0]: df[1]]
+
+
+    return {
+        'fiter': data_filter,
+        'sort': data_sort
+    }
 
 
 def filter_to_dict(data_filter):
