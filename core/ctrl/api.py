@@ -135,8 +135,8 @@ def get_enums(data_pass=None):
 def users(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
+    u = usr.list_users(data_filter['filter'], data_filter['sort'])
 
-    u = usr.list_users(data_filter['filter'])
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No users",
@@ -192,6 +192,7 @@ def full_recovery(data_pass=None):
 
 
 def notifications(data_pass=None):
+
     data_filter = utils.apply_filter(data_pass)
     u = noti.list_notifications(data_filter['filter'], data_filter['sort'])
 
@@ -212,8 +213,8 @@ def notifications(data_pass=None):
 def servers(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
+    u = srv.list_servers(data_filter['filter'], data_filter['sort'])
 
-    u = srv.list_servers(data_filter['filter'])
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No servers",
@@ -317,8 +318,8 @@ def validate_domain(data_pass=None):
 def recipes(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
+    u = rcps.list_recipes(data_filter['filter'], data_filter['sort'])
 
-    u = rcps.list_recipes(data_filter['filter'])
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No recipes",
@@ -352,8 +353,8 @@ def delete_recipe(data_pass=None):
 def sites(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
+    u = sts.list_sites(data_filter['filter'], data_filter['sort'])
 
-    u = sts.list_sites(data_filter['filter'])
     result = {
         'status': False,
         'message': str(u) if type(u) is str else "No sites",
