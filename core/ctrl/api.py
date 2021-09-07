@@ -197,7 +197,7 @@ def full_recovery(data_pass=None):
 def notifications(data_pass=None):
     data_filter = utils.apply_filter(data_pass)
 
-    if 'sort' in data_filter:
+    if 'sort' in data_filter.keys():
         sort = data_filter.pop('sort', None)
         u = noti.list_notifications(data_filter, sort)
     else:

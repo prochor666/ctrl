@@ -6,7 +6,7 @@ def list_notifications(filter_data, sort):
     finder = {
         'collection': 'notifications',
         'filter': filter_data,
-        'sort':
+        'sort': sort
     }
     return data.ex(finder)
 
