@@ -246,7 +246,7 @@ def apply_filter(data_pass):
         if 'sort' in data_pass.keys() and type(data_pass['sort']) is str and len(data_pass['sort']) > 0:
             df = data_pass['sort'].split(':')
             if len(df) == 2:
-                data_sort = [df[0]: df[1]]
+                data_sort = [df[0], df[1]]
 
 
     return {
