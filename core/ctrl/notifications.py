@@ -31,6 +31,7 @@ def db(obj_type, obj_id, message, json_data=''):
     notifs = app.db['notifications']
     notification = {
         'user_id': app.config['user']['_id'],
+        'created_at': utils.now(),
         'obj_type': obj_type,
         'obj_id': obj_id,
         'message': message,
