@@ -4,10 +4,11 @@ from core import app, data, utils
 from core.ctrl import notifications
 
 
-def list_servers(filter_data):
+def list_servers(filter_data, sort_data=None):
     finder = {
         'collection': 'servers',
         'filter': filter_data,
+        'sort': sort_data,
         'exclude': filter_server_pattern()
     }
     return data.ex(finder)

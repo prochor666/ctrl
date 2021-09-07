@@ -3,10 +3,11 @@ from core import app, utils, data
 from core.ctrl import secret, mailer
 
 
-def list_users(filter_data):
+def list_users(filter_data, sort_data=None):
     finder = {
         'collection': 'users',
         'filter': filter_data,
+        'sort': sort_data,
         'exclude': filter_user_pattern()
     }
     return data.ex(finder)

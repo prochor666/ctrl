@@ -5,12 +5,12 @@ from core import app, data, utils
 from core.ctrl import servers, recipes, notifications
 
 
-def list_sites(filter_data):
+def list_sites(filter_data, sort_data=None):
     finder = {
         'collection': 'sites',
         'filter': filter_data,
+        'sort': sort_data
     }
-
     return data.ex(finder)
 
 

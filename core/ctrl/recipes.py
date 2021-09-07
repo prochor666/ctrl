@@ -4,10 +4,11 @@ from core import app, data, utils
 from core.ctrl import notifications
 
 
-def list_recipes(filter_data):
+def list_recipes(filter_data, sort_data=None):
     finder = {
         'collection': 'recipes',
         'filter': filter_data,
+        'sort': sort_data
     }
     return data.ex(finder)
 
