@@ -1,0 +1,7 @@
+{
+    "enabled": false,
+    "app": "Python-control",
+    "slug": "slug",
+    "email": "email@dom.tld",
+    "apiKey": "validslugkey"
+}

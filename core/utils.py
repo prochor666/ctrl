@@ -187,7 +187,7 @@ def list_ssh_keys():
     files = []
     for f in glob.glob(ssh_dir):
         filename, file_extension = os.path.splitext(f)
-        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts', 'authorized_keys', 'config'] and file_extension in ['.pub', '.pem', '.key']:
+        if os.path.isfile(f) and os.path.basename(filename) not in ['known_hosts', 'authorized_keys', 'config'] and file_extension not in ['.pub','.key']:
             files.append(f)
 
     return files
@@ -226,6 +226,7 @@ def eval_key(key, data, data_type='str'):
 def apply_filter(data_pass):
     data_filter = {}
     data_sort = ['Id', 1]
+    data_exclude = None
 
     if type(data_pass) is dict:
 
@@ -248,10 +249,14 @@ def apply_filter(data_pass):
             if len(df) == 2:
                 data_sort = [df[0], df[1]]
 
+        if 'exclude' in data_pass.keys() and type(data_pass['exclude']) is dict and len(data_pass['exclude']) > 0:
+            data_exclude = data_pass['exclude']
+
 
     return {
         'filter': data_filter,
-        'sort': data_sort
+        'sort': data_sort,
+        'exclude': data_exclude
     }
 
 
@@ -264,6 +269,38 @@ def filter_to_dict(data_filter):
             d[s[0]] = s[1]
 
     return d
+
+
+def indexEval():
+    server_indexes = app.db['servers'].index_information()
+    recipe_indexes = app.db['recipes'].index_information()
+    user_indexes = app.db['users'].index_information()
+    site_indexes = app.db['sites'].index_information()
+
+    r = 'all created'
+
+    if 'name_-1_ipv4_-1_ipv6_-1' not in server_indexes:
+        r = app.db['servers'].create_index(
+            [('name', -1), ('ipv4', -1), ('ipv6', -1)])
+
+    if 'name_-1' not in recipe_indexes:
+        r = app.db['recipes'].create_index(
+            [('name', -1)])
+
+    if 'username_-1_email_-1_firstname_-1_lastname_-1' not in user_indexes:
+        r = app.db['users'].create_index(
+            [('username', -1), ('email', -1), ('firstname', -1), ('lastname', -1)])
+
+    if 'name_-1_domain_-1_dev_domain_-1' not in site_indexes:
+        r = app.db['sites'].create_index(
+            [('name', -1), ('domain', -1), ('dev_domain', -1)])
+
+    return {
+        'server_indexes': server_indexes,
+        'recipe_indexes': recipe_indexes,
+        'user_indexes': user_indexes,
+        'site_indexes': site_indexes
+    }
 
 
 def arg_json(arg):

@@ -1,8 +1,9 @@
 import json
 import re
+import importlib
 from flask import render_template
 from core import app, data, utils
-from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, billing, remote, monit, notifications as noti
+from core.ctrl import device, network as net, mailer, users as usr, servers as srv, recipes as rcps, sites as sts, remote, monit, notifications as noti
 from bson import json_util
 
 
@@ -194,7 +195,7 @@ def full_recovery(data_pass=None):
 def notifications(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
-    u = noti.list_notifications(data_filter['filter'], data_filter['sort'])
+    u = noti.list_notifications(data_filter['filter'], data_filter['sort'], data_filter['exclude'])
 
     result = {
         'status': False,
@@ -213,7 +214,8 @@ def notifications(data_pass=None):
 def servers(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
-    u = srv.list_servers(data_filter['filter'], data_filter['sort'])
+    u = srv.list_servers(
+        data_filter['filter'], data_filter['sort'], data_filter['exclude'])
 
     result = {
         'status': False,
@@ -318,7 +320,8 @@ def validate_domain(data_pass=None):
 def recipes(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
-    u = rcps.list_recipes(data_filter['filter'], data_filter['sort'])
+    u = rcps.list_recipes(
+        data_filter['filter'], data_filter['sort'], data_filter['exclude'])
 
     result = {
         'status': False,
@@ -353,7 +356,8 @@ def delete_recipe(data_pass=None):
 def sites(data_pass=None):
 
     data_filter = utils.apply_filter(data_pass)
-    u = sts.list_sites(data_filter['filter'], data_filter['sort'])
+    u = sts.list_sites(
+        data_filter['filter'], data_filter['sort'], data_filter['exclude'])
 
     result = {
         'status': False,
@@ -453,7 +457,114 @@ def monitor_servers(data_pass=None):
     return result
 
 
-# Billing
-def invoices(data_pass=None):
-    result = billing.load_invoices(data_pass)
+def search(data_pass=None):
+    if type(data_pass) is dict and 'search' in data_pass:
+        r = utils.indexEval()
+
+        servers = data.ex({
+            'collection': 'servers',
+            'filter': {
+                '$or': [
+                    {'name': {"$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'ipv4': {"$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'ipv6': {"$regex": f"{data_pass['search']}", "$options": "i"}}
+                ]
+            }
+        })
+
+        recipes = data.ex({
+            'collection': 'recipes',
+            'filter': {
+                '$or': [
+                    {'name': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}}
+                ]
+            },
+            'exclude': {
+                "content": 0
+            }
+        })
+
+        users = data.ex({
+            'collection': 'users',
+            'filter': {
+                '$or': [
+                    {'username': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'email': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'firstname': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'lastname': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}}
+                ]
+            }
+        })
+
+        sites = data.ex({
+            'collection': 'sites',
+            'filter': {
+                '$or': [
+                    {'name': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'domain': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}},
+                    {'dev_domain': {
+                        "$regex": f"{data_pass['search']}", "$options": "i"}}
+                ]
+            }
+        })
+
+        return {
+            'search_term': data_pass['search'],
+            'servers': data.collect(servers),
+            'recipes': data.collect(recipes),
+            'users': data.collect(users),
+            'sites': data.collect(sites)
+        }
+
+    return {}
+
+
+# Plugins
+def plugin(data_pass=None):
+
+    result = {
+        'status': False,
+        'message': f"Plugin is not defined",
+        'data': []
+    }
+
+    if type(data_pass) is dict and 'plugin' in data_pass:
+
+        result['message'] = f"Plugin {data_pass['plugin']} is not installed"
+
+        plugin_spec = importlib.util.find_spec(
+            f"core.plugins.{data_pass['plugin']}")
+
+        if plugin_spec is not None:
+
+            result['message'] = f"Plugin {data_pass['plugin']} is not valid"
+
+            plugin_spec_valid = importlib.util.find_spec(
+                f"core.plugins.{data_pass['plugin']}.plugin")
+
+            if plugin_spec_valid is not None:
+
+                plugin = getattr(__import__(
+                    f"core.plugins.{data_pass['plugin']}", fromlist=['plugin']), 'plugin')
+
+                plugin_filter = None
+                if 'filter' in data_pass:
+                    plugin_filter = data_pass['filter']
+
+                result['data'] = plugin.load(
+                    data_pass['plugin_method'], plugin_filter)
+
+                if result['data'] == False:
+                    result['message'] = 'Plugin is disabled or method is unknown'
+                else:
+                    result['status'] = True
+                    result['message'] = 'Plugin results'
+
     return result

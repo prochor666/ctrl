@@ -27,6 +27,8 @@ def collect_one(document):
         document['creator'] = str(document['creator'])
     if 'owner' in document:
         document['owner'] = str(document['owner'])
+    if 'user_id' in document:
+        document['user_id'] = str(document['user_id'])
 
     return document
 
@@ -49,6 +51,9 @@ def proxy(finder):
             'asc': 1,
             'desc': -1
         }
+
+        if _sort is None or type(_sort) is not list:
+            _sort = ['Id', 1]
 
         if 'id' in _filter:
             _filter['_id'] = ObjectId(_filter.pop('id'))

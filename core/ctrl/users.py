@@ -67,7 +67,6 @@ def insert(user_data):
                     'activation_link': activation_link(user, http_origin)
                 })
 
-
             es = mailer.send(
                 user['email'], f"{app.config['name']} - new account", html_message)
             result['status'] = True

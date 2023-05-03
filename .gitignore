@@ -5,3 +5,4 @@ app.json
 smtp.json
 .DS_Store
 package-lock.json
+core/plugins/*/config.json

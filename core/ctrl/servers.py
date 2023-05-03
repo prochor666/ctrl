@@ -4,28 +4,22 @@ from core import app, data, utils
 from core.ctrl import notifications
 
 
-def list_servers(filter_data, sort_data=None):
+def list_servers(filter_data={}, sort_data=None, exclude_data=None):
     finder = {
         'collection': 'servers',
         'filter': filter_data,
         'sort': sort_data,
-        'exclude': filter_server_pattern()
+        'exclude': exclude_data
     }
     return data.ex(finder)
 
 
-def load_server(filter_data, no_filter_pattern=False):
+def load_server(filter_data):
     finder = {
         'collection': 'servers',
         'filter': filter_data
     }
-    if not no_filter_pattern:
-        finder['exclude'] = filter_server_pattern()
     return data.one(finder)
-
-
-def filter_server_pattern():
-    return {'ssh_pub_key': 0, 'ssh_pw': 0}
 
 
 def modify(server_data):
@@ -79,7 +73,7 @@ def modify(server_data):
 
             modify_server = load_server({
                 '_id': ObjectId(server_data['id'])
-            }, no_filter_pattern=True)
+            })
 
             if type(finder) is not dict and type(modify_server) is dict:
                 _id = server_data.pop('id', None)
@@ -210,10 +204,7 @@ def delete(server_data):
     }
 
     if 'id' in server_data.keys():
-        """ modify_server = load_server({
-            '_id': ObjectId(server_data['id'])
-        }, no_filter_pattern=True)
-        """
+
         servers = app.db['servers']
         r = servers.delete_one({'_id': ObjectId(server_data['id'])})
         result['delete_status'] = r.deleted_count

@@ -54,6 +54,7 @@ then
     pip install asyncssh
     pip install python-slugify
     pip install fakturoid
+    pip install requests
 
     if [[ ! -d $RECIPESDIR ]];
     then

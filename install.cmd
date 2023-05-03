@@ -40,6 +40,7 @@ IF %ERRORLEVEL% NEQ 0 (
     pip install python-slugify
     pip install asyncssh
     pip install fakturoid
+    pip install requests
 
     IF exist storage\recipes (
         echo storage\recipes exists
